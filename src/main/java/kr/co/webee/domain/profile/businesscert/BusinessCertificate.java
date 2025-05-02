@@ -1,4 +1,4 @@
-package kr.co.webee.domain.businesscert;
+package kr.co.webee.domain.profile.businesscert;
 
 import jakarta.persistence.*;
 import kr.co.webee.domain.user.User;

@@ -2,6 +2,7 @@ package kr.co.webee.domain.bee.recommand;
 
 import jakarta.persistence.*;
 import kr.co.webee.domain.bee.BeeType;
+import kr.co.webee.domain.common.BaseTimeEntity;
 import kr.co.webee.domain.profile.crop.UserCrop;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -14,7 +15,7 @@ import java.util.Objects;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class RecommendedBee {
+public class RecommendedBee extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

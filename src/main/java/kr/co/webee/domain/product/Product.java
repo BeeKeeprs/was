@@ -2,6 +2,7 @@ package kr.co.webee.domain.product;
 
 import jakarta.persistence.*;
 import kr.co.webee.domain.bee.BeeType;
+import kr.co.webee.domain.common.BaseTimeEntity;
 import kr.co.webee.domain.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -14,7 +15,7 @@ import java.util.Objects;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class Product {
+public class Product extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

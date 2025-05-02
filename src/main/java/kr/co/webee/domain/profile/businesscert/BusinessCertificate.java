@@ -1,6 +1,7 @@
 package kr.co.webee.domain.profile.businesscert;
 
 import jakarta.persistence.*;
+import kr.co.webee.domain.common.BaseTimeEntity;
 import kr.co.webee.domain.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -15,7 +16,7 @@ import java.util.Objects;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class BusinessCertificate {
+public class BusinessCertificate extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

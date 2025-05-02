@@ -1,6 +1,7 @@
 package kr.co.webee.domain.bee.diagnosis;
 
 import jakarta.persistence.*;
+import kr.co.webee.domain.common.BaseTimeEntity;
 import kr.co.webee.domain.user.User;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -13,7 +14,7 @@ import java.util.Objects;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class BeeDiagnosis {
+public class BeeDiagnosis extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

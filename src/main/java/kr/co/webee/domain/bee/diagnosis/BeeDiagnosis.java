@@ -25,22 +25,21 @@ public class BeeDiagnosis extends BaseTimeEntity {
     @ColumnDefault("false")
     private boolean is_diseased;
 
+    @Enumerated(EnumType.STRING)
+    private DiseaseType diseaseType;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user__id", nullable = false)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bee_disease_id")
-    private BeeDisease beeDisease;
-
-    public BeeDiagnosis(String imageUrl, boolean is_diseased, User user, BeeDisease beeDisease) {
+    public BeeDiagnosis(String imageUrl, boolean is_diseased, DiseaseType diseaseType, User user) {
         if (!StringUtils.hasText(imageUrl)) {
             throw new IllegalArgumentException("imageUrl는 null이거나 빈 문자열이 될 수 없습니다.");
         }
 
         this.imageUrl = imageUrl;
         this.is_diseased = is_diseased;
+        this.diseaseType=diseaseType;
         this.user = Objects.requireNonNull(user, "user는 null이 될 수 없습니다.");
-        this.beeDisease = beeDisease;
     }
 }

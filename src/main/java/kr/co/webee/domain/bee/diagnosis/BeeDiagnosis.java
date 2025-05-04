@@ -32,13 +32,13 @@ public class BeeDiagnosis extends BaseTimeEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public BeeDiagnosis(String imageUrl, boolean is_diseased, DiseaseType diseaseType, User user) {
+    public BeeDiagnosis(String imageUrl, boolean isDiseased, DiseaseType diseaseType, User user) {
         if (!StringUtils.hasText(imageUrl)) {
             throw new IllegalArgumentException("imageUrl는 null이거나 빈 문자열이 될 수 없습니다.");
         }
 
         this.imageUrl = imageUrl;
-        this.is_diseased = is_diseased;
+        this.isDiseased = isDiseased;
         this.diseaseType=diseaseType;
         this.user = Objects.requireNonNull(user, "user는 null이 될 수 없습니다.");
     }

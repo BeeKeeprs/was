@@ -23,13 +23,13 @@ public class BeeDiagnosis extends BaseTimeEntity {
     private String imageUrl;
 
     @ColumnDefault("false")
-    private boolean is_diseased;
+    private boolean isDiseased;
 
     @Enumerated(EnumType.STRING)
     private DiseaseType diseaseType;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user__id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     public BeeDiagnosis(String imageUrl, boolean is_diseased, DiseaseType diseaseType, User user) {

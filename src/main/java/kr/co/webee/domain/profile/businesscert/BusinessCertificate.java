@@ -44,13 +44,15 @@ public class BusinessCertificate extends BaseTimeEntity {
 
     private String imageUrl;
 
+    private String smartStoreUrl;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Builder
     public BusinessCertificate(String registrationNumber, String representativeName, LocalDate commencementDate,
-                               String companyName, String address, Double latitude, Double longitude, String imageUrl, User user) {
+                               String companyName, String address, Double latitude, Double longitude, String imageUrl, User user, String smartStoreUrl) {
         if (!StringUtils.hasText(registrationNumber)) {
             throw new IllegalArgumentException("registrationNumber는 null이거나 빈 문자열이 될 수 없습니다.");
         }
@@ -72,6 +74,7 @@ public class BusinessCertificate extends BaseTimeEntity {
         this.latitude=Objects.requireNonNull(latitude, "latitude는 null이 될 수 없습니다.");
         this.longitude=Objects.requireNonNull(longitude, "longitude는 null이 될 수 없습니다.");
         this.imageUrl=imageUrl;
+        this.smartStoreUrl=smartStoreUrl;
         this.user=Objects.requireNonNull(user, "user는 null이 될 수 없습니다.");
     }
 }

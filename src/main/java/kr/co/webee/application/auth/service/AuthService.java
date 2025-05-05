@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthService {
     private final UserService userService;
+    private final JwtHelper jwtHelper;
     private final PasswordEncoder passwordEncoder;
 
     public void signup(SignUpRequest request) {
@@ -24,5 +25,16 @@ public class AuthService {
         String encodedPassword = passwordEncoder.encode(request.password());
         User user = request.toEntity(encodedPassword);
         userService.save(user);
+    }
+
+    public JwtTokenDto signIn(SignInDto signInDto) {
+        User user = userService.readByUsername(signInDto.username())
+                .orElseThrow(() -> new RuntimeException("사용자 존재하지 않음 예외"));
+
+        if (!passwordEncoder.matches(signInDto.password(), user.getPassword())) {
+            throw new RuntimeException("비밀번호 일치하지 않음 예외");
+        }
+
+        return jwtHelper.createToken(user.getId(), user.getUsername());
     }
 }

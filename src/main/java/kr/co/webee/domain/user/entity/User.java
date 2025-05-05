@@ -1,4 +1,4 @@
-package kr.co.webee.domain.user;
+package kr.co.webee.domain.user.entity;
 
 import jakarta.persistence.*;
 import kr.co.webee.domain.common.BaseTimeEntity;

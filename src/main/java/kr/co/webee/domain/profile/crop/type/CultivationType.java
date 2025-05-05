@@ -1,4 +1,4 @@
-package kr.co.webee.domain.profile.crop;
+package kr.co.webee.domain.profile.crop.type;
 
 import lombok.AccessLevel;
 import lombok.Getter;

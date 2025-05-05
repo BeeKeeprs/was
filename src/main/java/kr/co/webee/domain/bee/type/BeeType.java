@@ -1,4 +1,4 @@
-package kr.co.webee.domain.bee;
+package kr.co.webee.domain.bee.type;
 
 import lombok.AccessLevel;
 import lombok.Getter;

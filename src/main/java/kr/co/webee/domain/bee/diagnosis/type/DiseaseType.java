@@ -1,4 +1,4 @@
-package kr.co.webee.domain.bee.diagnosis;
+package kr.co.webee.domain.bee.diagnosis.type;
 
 import lombok.AccessLevel;
 import lombok.Getter;

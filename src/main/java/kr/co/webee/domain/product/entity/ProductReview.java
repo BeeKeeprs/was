@@ -1,8 +1,8 @@
-package kr.co.webee.domain.product;
+package kr.co.webee.domain.product.entity;
 
 import jakarta.persistence.*;
 import kr.co.webee.domain.common.BaseTimeEntity;
-import kr.co.webee.domain.user.User;
+import kr.co.webee.domain.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

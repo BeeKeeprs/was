@@ -1,8 +1,9 @@
-package kr.co.webee.domain.bee.diagnosis;
+package kr.co.webee.domain.bee.diagnosis.entity;
 
 import jakarta.persistence.*;
+import kr.co.webee.domain.bee.diagnosis.type.DiseaseType;
 import kr.co.webee.domain.common.BaseTimeEntity;
-import kr.co.webee.domain.user.User;
+import kr.co.webee.domain.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

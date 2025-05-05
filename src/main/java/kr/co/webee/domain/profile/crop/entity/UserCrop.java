@@ -1,8 +1,9 @@
-package kr.co.webee.domain.profile.crop;
+package kr.co.webee.domain.profile.crop.entity;
 
 import jakarta.persistence.*;
 import kr.co.webee.domain.common.BaseTimeEntity;
-import kr.co.webee.domain.user.User;
+import kr.co.webee.domain.profile.crop.type.CultivationType;
+import kr.co.webee.domain.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

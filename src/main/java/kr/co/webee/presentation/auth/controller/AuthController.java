@@ -5,10 +5,7 @@ import kr.co.webee.application.auth.dto.SignUpDto;
 import kr.co.webee.application.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
 
@@ -27,6 +24,17 @@ public class AuthController implements AuthApi {
     @PostMapping("/sign-in")
     public ResponseEntity<?> signIn(@RequestBody @Valid SignInDto signInDto) {
         JwtTokenDto jwtTokenDto = authService.signIn(signInDto);
+        return createTokenResponse(jwtTokenDto);
+    }
+
+    @PostMapping("/reissue")
+    public ResponseEntity<?> reissueToken(@CookieValue(name = JwtConstants.REFRESH_TOKEN_COOKIE_KEY, required = false) String refreshToken) {
+        System.out.println("refreshToken = " + refreshToken);
+
+        if (refreshToken == null) {
+            throw new RuntimeException("리프레시 토큰이 존재하지 않습니다.");
+        }
+        JwtTokenDto jwtTokenDto = authService.reissueToken(refreshToken);
         return createTokenResponse(jwtTokenDto);
     }
 

@@ -37,4 +37,8 @@ public class AuthService {
 
         return jwtHelper.createToken(user.getId(), user.getUsername());
     }
+
+    public JwtTokenDto reissueToken(String refreshToken) {
+        return jwtHelper.reissueToken(refreshToken);
+    }
 }

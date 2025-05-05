@@ -2,7 +2,9 @@ package kr.co.webee.application.auth.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import kr.co.webee.domain.user.entity.User;
+import lombok.Builder;
 
+@Builder
 public record SignUpDto(
         @NotBlank(message = "아이디는 필수 항목입니다.")
         String username,

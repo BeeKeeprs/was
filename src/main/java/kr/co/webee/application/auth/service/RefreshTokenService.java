@@ -16,17 +16,17 @@ public class RefreshTokenService {
     @Value("${spring.jwt.refresh-expiration}")
     private long refreshExpiration;
 
-    public void saveRefreshToken(Long userId, String refreshToken) {
+    public void save(Long userId, String refreshToken) {
         String key = getRefreshTokenKey(userId);
         redisService.set(key, refreshToken, Duration.ofSeconds(refreshExpiration));
     }
 
-    public void deleteRefreshToken(Long userId) {
+    public void delete(Long userId) {
         String key = getRefreshTokenKey(userId);
         redisService.delete(key);
     }
 
-    public boolean doseRefreshTokenExist(Long userId) {
+    public boolean existsByUserId(Long userId) {
         String key = getRefreshTokenKey(userId);
         return redisService.containsKey(key);
     }

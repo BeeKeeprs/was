@@ -1,5 +1,6 @@
 package kr.co.webee.presentation.auth;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import kr.co.webee.application.auth.dto.SignUpDto;
 import kr.co.webee.application.auth.service.AuthService;
@@ -36,6 +37,13 @@ public class AuthController implements AuthApi {
         }
         JwtTokenDto jwtTokenDto = authService.reissueToken(refreshToken);
         return createTokenResponse(jwtTokenDto);
+    }
+
+    @PostMapping("/sign-out")
+    public ResponseEntity<?> signOut(@CookieValue(name = JwtConstants.REFRESH_TOKEN_COOKIE_KEY, required = false) String refreshToken ,
+                                     HttpServletResponse response) {
+        authService.signOut(refreshToken, response);
+        return ResponseEntity.ok("성공 응답");
     }
 
     private ResponseEntity<?> createTokenResponse(JwtTokenDto jwtTokenDto) {

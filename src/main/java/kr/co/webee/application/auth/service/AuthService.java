@@ -22,8 +22,8 @@ public class AuthService {
             throw new BusinessException(ErrorType.ALREADY_EXIST_USERNAME, message);
         }
 
-        String encodedPassword = passwordEncoder.encode(request.password());
-        User user = request.toEntity(encodedPassword);
+        String encodedPassword = passwordEncoder.encode(signUpDto.password());
+        User user = signUpDto.toEntity(encodedPassword);
         userService.save(user);
     }
 
@@ -40,5 +40,9 @@ public class AuthService {
 
     public JwtTokenDto reissueToken(String refreshToken) {
         return jwtHelper.reissueToken(refreshToken);
+    }
+
+    public void signOut(String refreshToken, HttpServletResponse response) {
+        jwtHelper.deleteRefreshToken(refreshToken, response);
     }
 }

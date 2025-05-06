@@ -35,6 +35,8 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.4.0")
+
 	// testcontainers
 	testImplementation("org.springframework.boot:spring-boot-testcontainers")
 
@@ -46,3 +48,7 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+tasks.bootBuildImage.createdDate = "now"
+
+springBoot.buildInfo { properties {} }

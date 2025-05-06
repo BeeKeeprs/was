@@ -15,7 +15,7 @@ class UserRepositoryTest {
     private UserRepository userRepository;
 
     @Test
-    @DisplayName("username을 가진 User가 있으면 true, 없으면 false를 반환한다.")
+    @DisplayName("username을 가진 User가 있으면 true, 없으면 false를 반환")
     void existsByUsername() {
         //given
         User user = User.builder()

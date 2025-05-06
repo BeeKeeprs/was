@@ -36,6 +36,9 @@ public enum ErrorType {
     ENTITY_NOT_FOUND(NOT_FOUND, DEBUG, "DB_001", "해당 엔티티를 찾을 수 없습니다"),
     VIOLATION_OCCURRED(NOT_ACCEPTABLE, ERROR, "DB_002", "저장할 수 없는 값입니다"),
 
+    // UserErrorType
+    ALREADY_EXIST_USERNAME(CONFLICT, WARN, "USER_001", "이미 존재하는 아이디입니다"),
+
     ;
 
     private final HttpStatus httpStatus;

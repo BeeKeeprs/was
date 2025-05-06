@@ -4,6 +4,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import kr.co.webee.application.auth.dto.JwtTokenDto;
 import kr.co.webee.application.auth.service.RefreshTokenService;
 import kr.co.webee.common.auth.JwtProvider;
+import kr.co.webee.common.error.ErrorType;
+import kr.co.webee.common.error.exception.BusinessException;
 import kr.co.webee.common.util.cookie.CookieUtil;
 import kr.co.webee.common.util.jwt.JwtConstants;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +30,7 @@ public class JwtHelper {
         Long userId = jwtProvider.getUserId(refreshToken);
 
         if (!refreshTokenService.existsByUserId(userId)) {
-            throw new RuntimeException("리프레시 토큰 존재하지 않는 예외");
+            throw new BusinessException(ErrorType.INVALID_ACCESS_TOKEN);
         }
         refreshTokenService.delete(userId);
 

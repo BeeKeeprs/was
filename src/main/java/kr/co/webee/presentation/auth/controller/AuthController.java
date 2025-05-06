@@ -1,11 +1,19 @@
-package kr.co.webee.presentation.auth;
+package kr.co.webee.presentation.auth.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import kr.co.webee.application.auth.dto.SignUpDto;
+import kr.co.webee.application.auth.dto.JwtTokenDto;
 import kr.co.webee.application.auth.service.AuthService;
+import kr.co.webee.common.error.ErrorType;
+import kr.co.webee.common.error.exception.BusinessException;
+import kr.co.webee.common.util.cookie.CookieUtil;
+import kr.co.webee.common.util.jwt.JwtConstants;
+import kr.co.webee.presentation.auth.api.AuthApi;
+import kr.co.webee.presentation.auth.dto.request.SignInRequest;
+import kr.co.webee.presentation.auth.dto.request.SignUpRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
@@ -22,36 +30,35 @@ public class AuthController implements AuthApi {
         authService.signup(request);
     }
 
+    @Override
     @PostMapping("/sign-in")
-    public ResponseEntity<?> signIn(@RequestBody @Valid SignInDto signInDto) {
-        JwtTokenDto jwtTokenDto = authService.signIn(signInDto);
-        return createTokenResponse(jwtTokenDto);
+    public void signIn(@RequestBody @Valid SignInRequest request, HttpServletResponse response) {
+        JwtTokenDto jwtTokenDto = authService.signIn(request);
+        createTokenResponse(jwtTokenDto, response);
     }
 
+    @Override
     @PostMapping("/reissue")
-    public ResponseEntity<?> reissueToken(@CookieValue(name = JwtConstants.REFRESH_TOKEN_COOKIE_KEY, required = false) String refreshToken) {
-        System.out.println("refreshToken = " + refreshToken);
-
+    public void reissueToken(@CookieValue(name = JwtConstants.REFRESH_TOKEN_COOKIE_KEY, required = false) String refreshToken,
+                             HttpServletResponse response) {
         if (refreshToken == null) {
-            throw new RuntimeException("리프레시 토큰이 존재하지 않습니다.");
+            throw new BusinessException(ErrorType.COOKIE_NOT_FOND);
         }
         JwtTokenDto jwtTokenDto = authService.reissueToken(refreshToken);
-        return createTokenResponse(jwtTokenDto);
+        createTokenResponse(jwtTokenDto, response);
     }
 
+    @Override
     @PostMapping("/sign-out")
-    public ResponseEntity<?> signOut(@CookieValue(name = JwtConstants.REFRESH_TOKEN_COOKIE_KEY, required = false) String refreshToken ,
+    public void signOut(@CookieValue(name = JwtConstants.REFRESH_TOKEN_COOKIE_KEY, required = false) String refreshToken,
                                      HttpServletResponse response) {
         authService.signOut(refreshToken, response);
-        return ResponseEntity.ok("성공 응답");
     }
 
-    private ResponseEntity<?> createTokenResponse(JwtTokenDto jwtTokenDto) {
+    private void createTokenResponse(JwtTokenDto jwtTokenDto, HttpServletResponse response) {
         ResponseCookie cookie = CookieUtil.createCookie(JwtConstants.REFRESH_TOKEN_COOKIE_KEY, jwtTokenDto.refreshToken(), Duration.ofDays(7).toSeconds());
 
-        return ResponseEntity.ok()
-                .header(HttpHeaders.AUTHORIZATION, JwtConstants.ACCESS_TOKEN_HEADER_PREFIX + jwtTokenDto.accessToken())
-                .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body("성공 응답");
+        response.addHeader(HttpHeaders.AUTHORIZATION, JwtConstants.ACCESS_TOKEN_HEADER_PREFIX + jwtTokenDto.accessToken());
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     }
 }

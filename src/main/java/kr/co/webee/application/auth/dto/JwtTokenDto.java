@@ -1,5 +1,6 @@
 package kr.co.webee.application.auth.dto;
 
+
 public record JwtTokenDto(
         String accessToken,
         String refreshToken

@@ -1,10 +1,15 @@
 package kr.co.webee.application.auth.service;
 
+import kr.co.webee.application.auth.dto.JwtTokenDto;
+import kr.co.webee.application.auth.helper.JwtHelper;
+import kr.co.webee.common.auth.JwtProvider;
 import kr.co.webee.common.error.ErrorType;
 import kr.co.webee.common.error.exception.BusinessException;
+import kr.co.webee.presentation.auth.dto.request.SignInRequest;
 import kr.co.webee.presentation.auth.dto.request.SignUpRequest;
 import kr.co.webee.application.user.service.UserService;
 import kr.co.webee.domain.user.entity.User;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -14,9 +19,15 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -26,28 +37,45 @@ class AuthServiceTest {
     private UserService userService;
 
     @Mock
+    private JwtHelper jwtHelper;
+
+    @Mock
     private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private JwtProvider jwtProvider;
+
+    @Mock
+    private RefreshTokenService refreshTokenService;
 
     @InjectMocks
     private AuthService authService;
 
+    private final User user = User.builder()
+            .username("username")
+            .password("encodedPassword")
+            .name("name")
+            .build();
+
+    private final JwtTokenDto jwtTokenDto = JwtTokenDto.of("accessToken", "refreshToken");
+
     @Nested
     @DisplayName("회원가입")
-    class SignUp{
+    class SignUp {
+        private final SignUpRequest request = SignUpRequest.builder()
+                .username("username")
+                .password("password")
+                .name("name")
+                .build();
+
         @Captor
         private ArgumentCaptor<User> userCaptor;
 
         @Test
         @DisplayName("성공")
-        void signUp_success() {
+        void signUpSuccess() {
             //given
-            SignUpRequest request = SignUpRequest.builder()
-                    .username("username")
-                    .password("password")
-                    .name("name")
-                    .build();
-
-            String encodedPassword="encodedPassword";
+            String encodedPassword = "encodedPassword";
 
             when(userService.existsByUsername(request.username())).thenReturn(false);
             when(passwordEncoder.encode("password")).thenReturn(encodedPassword);
@@ -63,16 +91,10 @@ class AuthServiceTest {
         }
 
         @Test
-        @DisplayName("실패 - 동일한 username을 가진 user가 존재하는 경우")
-        void signUp_fail_same_username() {
+        @DisplayName("실패 - 동일한 아이디를 가진 사용자가 존재하는 경우")
+        void signUpFailSameUsername() {
             //given
-            SignUpRequest request = SignUpRequest.builder()
-                    .username("username")
-                    .password("password")
-                    .name("name")
-                    .build();
-
-            String encodedPassword="encodedPassword";
+            String encodedPassword = "encodedPassword";
 
             when(userService.existsByUsername(request.username())).thenReturn(true);
 
@@ -84,4 +106,56 @@ class AuthServiceTest {
         }
     }
 
+    @Nested
+    @DisplayName("로그인")
+    class SignIn {
+        private final SignInRequest request = SignInRequest.builder()
+                .username("username")
+                .password("password")
+                .build();
+
+        @Test
+        @DisplayName("성공")
+        void signInSuccess() {
+            //given
+            when(userService.readByUsername(request.username())).thenReturn(Optional.of(user));
+            when(passwordEncoder.matches("password", user.getPassword())).thenReturn(true);
+            when(jwtHelper.createToken(any(), any())).thenReturn(jwtTokenDto);
+
+            //when
+            JwtTokenDto result = authService.signIn(request);
+
+            //then
+            assertNotNull(result);
+            assertEquals("accessToken", result.accessToken());
+            assertEquals("refreshToken", result.refreshToken());
+        }
+
+        @Test
+        @DisplayName("실패 - 아이디가 존재하지 않는 경우")
+        void signInFailNotFoundUsername() {
+            //given
+            when(userService.readByUsername(request.username())).thenReturn(Optional.empty());
+
+            //when
+            BusinessException exception = assertThrows(BusinessException.class, () -> authService.signIn(request));
+
+            //then
+            assertEquals(exception.getType(), ErrorType.INVALID_CREDENTIALS);
+        }
+
+        @Test
+        @DisplayName("실패 - 비밀번호가 일치하지 않는 경우")
+        void signInFailPasswordMismatch() {
+            //given
+            when(userService.readByUsername(request.username())).thenReturn(Optional.of(user));
+            when(passwordEncoder.matches(request.password(), user.getPassword())).thenReturn(false);
+
+            //when
+            BusinessException exception = assertThrows(BusinessException.class, () -> authService.signIn(request));
+
+            // then
+            assertEquals(exception.getType(), ErrorType.FAILED_AUTHENTICATION);
+        }
+    }
 }

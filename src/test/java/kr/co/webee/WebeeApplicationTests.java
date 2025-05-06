@@ -1,9 +1,9 @@
 package kr.co.webee;
 
+import kr.co.webee.annotation.IntegrationTest;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+@IntegrationTest
 class WebeeApplicationTests {
 
 	@Test

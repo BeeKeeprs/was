@@ -11,6 +11,7 @@ import kr.co.webee.common.util.jwt.JwtConstants;
 import kr.co.webee.presentation.auth.api.AuthApi;
 import kr.co.webee.presentation.auth.dto.request.SignInRequest;
 import kr.co.webee.presentation.auth.dto.request.SignUpRequest;
+import kr.co.webee.presentation.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -32,27 +33,30 @@ public class AuthController implements AuthApi {
 
     @Override
     @PostMapping("/sign-in")
-    public void signIn(@RequestBody @Valid SignInRequest request, HttpServletResponse response) {
+    public ApiResponse<?> signIn(@RequestBody @Valid SignInRequest request, HttpServletResponse response) {
         JwtTokenDto jwtTokenDto = authService.signIn(request);
         createTokenResponse(jwtTokenDto, response);
+        return ApiResponse.success(null);
     }
 
     @Override
     @PostMapping("/reissue")
-    public void reissueToken(@CookieValue(name = JwtConstants.REFRESH_TOKEN_COOKIE_KEY, required = false) String refreshToken,
+    public ApiResponse<?> reissueToken(@CookieValue(name = JwtConstants.REFRESH_TOKEN_COOKIE_KEY, required = false) String refreshToken,
                              HttpServletResponse response) {
         if (refreshToken == null) {
             throw new BusinessException(ErrorType.COOKIE_NOT_FOND);
         }
         JwtTokenDto jwtTokenDto = authService.reissueToken(refreshToken);
         createTokenResponse(jwtTokenDto, response);
+        return ApiResponse.success(null);
     }
 
     @Override
     @PostMapping("/sign-out")
-    public void signOut(@CookieValue(name = JwtConstants.REFRESH_TOKEN_COOKIE_KEY, required = false) String refreshToken,
+    public ApiResponse<?> signOut(@CookieValue(name = JwtConstants.REFRESH_TOKEN_COOKIE_KEY, required = false) String refreshToken,
                                      HttpServletResponse response) {
         authService.signOut(refreshToken, response);
+        return ApiResponse.success(null);
     }
 
     private void createTokenResponse(JwtTokenDto jwtTokenDto, HttpServletResponse response) {

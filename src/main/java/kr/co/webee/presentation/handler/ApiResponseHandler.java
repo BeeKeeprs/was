@@ -43,10 +43,6 @@ public class ApiResponseHandler implements ResponseBodyAdvice<Object> {
             throw new UnsupportedOperationException("Unreachable response handling!" + body);
         }
 
-        if (body instanceof ApiResponse<?>) {
-            return body;
-        }
-
         if (body instanceof String) {
             // String 타입을 Wrapper로 감싸면 StringConverter에서 처리할 수 없음
             // 따라서 ObjectMapper를 통해 직렬화하여 반환

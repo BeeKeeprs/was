@@ -26,7 +26,8 @@ public enum ErrorType {
     TAMPERED_ACCESS_TOKEN(UNAUTHORIZED, DEBUG, "AUTH_005", "변조된 토큰입니다"),
     UNSUPPORTED_JWT_TOKEN(UNAUTHORIZED, DEBUG, "AUTH_006", "지원하지 않는 JWT 토큰입니다"),
     UNSUPPORTED_SOCIAL_TYPE(UNAUTHORIZED, DEBUG, "AUTH_007", "지원하지 않는 소셜 타입입니다"),
-    INVALID_CREDENTIALS(UNAUTHORIZED, DEBUG, "AUTH_008", "해당 사용자의 정보가 없거나 일치하지 않아 처리할 수 없습니다"),
+    UNKNOWN_TOKEN_ERROR(UNAUTHORIZED, DEBUG,"AUTH_008","알 수 없는 JWT 토큰 에러입니다."),
+    INVALID_CREDENTIALS(UNAUTHORIZED, DEBUG, "AUTH_009", "해당 사용자의 정보가 없거나 일치하지 않아 처리할 수 없습니다"),
 
     // OauthErrorType
     SOCIAL_MEMBER_NOT_FOUND(NOT_FOUND, DEBUG, "OAUTH_001", "찾을 수 없는 소셜 회원입니다"),

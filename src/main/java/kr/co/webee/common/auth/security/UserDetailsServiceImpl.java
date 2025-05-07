@@ -17,7 +17,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
         return userService.readById(Long.parseLong(userId))
-                .map(CustomUserDetails::new)
+                .map(CustomUserDetails::from)
                 .orElseThrow(()-> new NotFoundException(User.class, userId));
     }
 }

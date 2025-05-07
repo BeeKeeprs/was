@@ -1,6 +1,7 @@
 package kr.co.webee.infrastructure.config;
 
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -8,19 +9,24 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.util.StringUtils;
 
 @Configuration
+@RequiredArgsConstructor
 public class RedisConfig {
-    @Value("${spring.redis.host}")
-    private String host;
-
-    @Value("${spring.redis.port}")
-    private int port;
+    private final RedisProperties redisProperties;
 
     @Bean
-    public RedisConnectionFactory redisConnectionFactory() {
-        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(host, port);
-        return new LettuceConnectionFactory(redisStandaloneConfiguration);
+    RedisConnectionFactory redisConnectionFactory() {
+        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(
+                redisProperties.getHost(), redisProperties.getPort());
+
+        String password = redisProperties.getPassword();
+
+        if (StringUtils.hasText(password)) {
+            config.setPassword(password);
+        }
+        return new LettuceConnectionFactory(config);
     }
 
     @Bean

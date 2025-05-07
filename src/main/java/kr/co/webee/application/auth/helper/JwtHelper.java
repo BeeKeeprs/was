@@ -3,7 +3,7 @@ package kr.co.webee.application.auth.helper;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.co.webee.application.auth.dto.JwtTokenDto;
 import kr.co.webee.application.auth.service.RefreshTokenService;
-import kr.co.webee.common.auth.JwtProvider;
+import kr.co.webee.common.auth.jwt.JwtProvider;
 import kr.co.webee.common.error.ErrorType;
 import kr.co.webee.common.error.exception.BusinessException;
 import kr.co.webee.common.util.cookie.CookieUtil;

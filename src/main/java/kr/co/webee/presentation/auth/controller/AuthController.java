@@ -33,30 +33,30 @@ public class AuthController implements AuthApi {
 
     @Override
     @PostMapping("/sign-in")
-    public ApiResponse<?> signIn(@RequestBody @Valid SignInRequest request, HttpServletResponse response) {
+    public String signIn(@RequestBody @Valid SignInRequest request, HttpServletResponse response) {
         JwtTokenDto jwtTokenDto = authService.signIn(request);
         createTokenResponse(jwtTokenDto, response);
-        return ApiResponse.success(null);
+        return "OK";
     }
 
     @Override
     @PostMapping("/reissue")
-    public ApiResponse<?> reissueToken(@CookieValue(name = JwtConstants.REFRESH_TOKEN_COOKIE_KEY, required = false) String refreshToken,
+    public String reissueToken(@CookieValue(name = JwtConstants.REFRESH_TOKEN_COOKIE_KEY, required = false) String refreshToken,
                              HttpServletResponse response) {
         if (refreshToken == null) {
             throw new BusinessException(ErrorType.COOKIE_NOT_FOND);
         }
         JwtTokenDto jwtTokenDto = authService.reissueToken(refreshToken);
         createTokenResponse(jwtTokenDto, response);
-        return ApiResponse.success(null);
+        return "OK";
     }
 
     @Override
     @PostMapping("/sign-out")
-    public ApiResponse<?> signOut(@CookieValue(name = JwtConstants.REFRESH_TOKEN_COOKIE_KEY, required = false) String refreshToken,
+    public String signOut(@CookieValue(name = JwtConstants.REFRESH_TOKEN_COOKIE_KEY, required = false) String refreshToken,
                                      HttpServletResponse response) {
         authService.signOut(refreshToken, response);
-        return ApiResponse.success(null);
+        return "OK";
     }
 
     private void createTokenResponse(JwtTokenDto jwtTokenDto, HttpServletResponse response) {

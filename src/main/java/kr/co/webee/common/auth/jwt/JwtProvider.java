@@ -1,4 +1,4 @@
-package kr.co.webee.common.auth;
+package kr.co.webee.common.auth.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

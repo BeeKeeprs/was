@@ -24,7 +24,7 @@ public class UserCrop extends BaseTimeEntity {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column
     private String variety;
 
     @Column(nullable = false)
@@ -56,9 +56,6 @@ public class UserCrop extends BaseTimeEntity {
                     Integer cultivationArea, LocalDate plantingDate, User user) {
         if (!StringUtils.hasText(name)) {
             throw new IllegalArgumentException("name은 null이거나 빈 문자열이 될 수 없습니다.");
-        }
-        if (!StringUtils.hasText(variety)) {
-            throw new IllegalArgumentException("variety는 null이거나 빈 문자열이 될 수 없습니다.");
         }
         if (!StringUtils.hasText(cultivationRegion)) {
             throw new IllegalArgumentException("cultivationRegion은 null이거나 빈 문자열이 될 수 없습니다.");

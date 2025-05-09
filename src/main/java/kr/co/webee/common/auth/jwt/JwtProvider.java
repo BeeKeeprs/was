@@ -19,10 +19,10 @@ public class JwtProvider {
     private final long refreshExpiration;
     private final String issuer;
 
-    public JwtProvider(@Value("${spring.jwt.secret}") String secretKey,
-                       @Value("${spring.jwt.access-expiration}") long accessExpiration,
-                       @Value("${spring.jwt.refresh-expiration}") long refreshExpiration,
-                       @Value("${spring.jwt.issuer}") String issuer) {
+    public JwtProvider(@Value("${jwt.secret}") String secretKey,
+                       @Value("${jwt.access-expiration}") long accessExpiration,
+                       @Value("${jwt.refresh-expiration}") long refreshExpiration,
+                       @Value("${jwt.issuer}") String issuer) {
         this.secretKey = new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
         this.accessExpiration = accessExpiration;
         this.refreshExpiration = refreshExpiration;

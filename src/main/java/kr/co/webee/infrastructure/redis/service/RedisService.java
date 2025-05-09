@@ -1,4 +1,4 @@
-package kr.co.webee.infrastructure.redis;
+package kr.co.webee.infrastructure.redis.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;

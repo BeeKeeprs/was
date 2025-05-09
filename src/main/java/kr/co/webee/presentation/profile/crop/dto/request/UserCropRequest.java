@@ -19,7 +19,7 @@ public record UserCropRequest(
         @Schema(description = "품종", example = "설향")
         String variety,
 
-        @Schema(description = "재배 방식", example = "시설(또는 노지)")
+        @Schema(description = "재배 방식", example = "CONTROLLED", examples = {"CONTROLLED", "OPEN_FIELD"})
         @NotNull
         CultivationType cultivationType,
 

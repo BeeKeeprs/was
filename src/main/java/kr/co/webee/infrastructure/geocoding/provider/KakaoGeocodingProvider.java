@@ -15,7 +15,7 @@ public class KakaoGeocodingProvider {
     private final String ADDRESS_QUERY_PARAMETER = "query";
 
     @Value("${kakao.api-key}")
-    private String kakaoRestApiKey;
+    private String kakaoApiKey;
 
     public CoordinatesDto getCoordinatesFrom(String address) {
         KakaoGeocodingResponse response = requestKakaoGeocodingApi(address);
@@ -33,7 +33,7 @@ public class KakaoGeocodingProvider {
     private KakaoGeocodingResponse requestKakaoGeocodingApi(String address) {
         WebClient webClient = WebClient.builder()
                 .baseUrl(KAKAO_GEOCODING_API_URL)
-                .defaultHeader(HttpHeaders.AUTHORIZATION, AUTHORIZATION_HEADER_PREFIX + kakaoRestApiKey)
+                .defaultHeader(HttpHeaders.AUTHORIZATION, AUTHORIZATION_HEADER_PREFIX + kakaoApiKey)
                 .build();
 
         return webClient

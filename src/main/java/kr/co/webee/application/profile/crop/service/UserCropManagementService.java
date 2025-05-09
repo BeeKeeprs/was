@@ -7,8 +7,11 @@ import kr.co.webee.domain.user.entity.User;
 import kr.co.webee.infrastructure.geocoding.dto.CoordinatesDto;
 import kr.co.webee.infrastructure.geocoding.service.GeocodingService;
 import kr.co.webee.presentation.profile.crop.dto.request.UserCropRequest;
+import kr.co.webee.presentation.profile.crop.dto.response.UserCropListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -23,5 +26,14 @@ public class UserCropManagementService {
         UserCrop userCrop = request.toEntity(coordinatesDto, user);
 
         userCropService.save(userCrop);
+    }
+
+    public List<UserCropListResponse> getUserCropList(Long userId) {
+        User user = userService.readById(userId).orElseThrow(() -> new NotFoundException(User.class, userId));
+        List<UserCrop> userCrops = userCropService.readByUserId(userId);
+
+        return userCrops.stream()
+                .map(UserCropListResponse::from)
+                .toList();
     }
 }

@@ -1,12 +1,15 @@
 package kr.co.webee.application.profile.crop.service;
 
 import kr.co.webee.application.user.service.UserService;
+import kr.co.webee.common.error.ErrorType;
+import kr.co.webee.common.error.exception.BusinessException;
 import kr.co.webee.common.error.exception.NotFoundException;
 import kr.co.webee.domain.profile.crop.entity.UserCrop;
 import kr.co.webee.domain.user.entity.User;
 import kr.co.webee.infrastructure.geocoding.dto.CoordinatesDto;
 import kr.co.webee.infrastructure.geocoding.service.GeocodingService;
 import kr.co.webee.presentation.profile.crop.dto.request.UserCropRequest;
+import kr.co.webee.presentation.profile.crop.dto.response.UserCropDetailResponse;
 import kr.co.webee.presentation.profile.crop.dto.response.UserCropListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,5 +38,12 @@ public class UserCropManagementService {
         return userCrops.stream()
                 .map(UserCropListResponse::from)
                 .toList();
+    }
+
+    public UserCropDetailResponse getUserCropDetail(Long userCropId) {
+        UserCrop userCrop = userCropService.readById(userCropId)
+                .orElseThrow(() -> new NotFoundException(UserCrop.class, userCropId));
+
+        return UserCropDetailResponse.from(userCrop);
     }
 }

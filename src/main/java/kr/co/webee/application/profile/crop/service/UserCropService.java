@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,7 +17,12 @@ public class UserCropService {
         userCropRepository.save(userCrop);
     }
 
+    public Optional<UserCrop> readById(Long id) {
+        return userCropRepository.findById(id);
+    }
+
     public List<UserCrop> readByUserId(Long userId) {
         return userCropRepository.findByUserId(userId);
     }
+
 }

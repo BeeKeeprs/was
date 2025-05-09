@@ -1,13 +1,17 @@
 package kr.co.webee.presentation.profile.crop.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import kr.co.webee.domain.profile.crop.entity.UserCrop;
 import kr.co.webee.domain.profile.crop.type.CultivationType;
 import lombok.Builder;
 
+import java.time.LocalDate;
+
 @Builder
-@Schema(description = "사용자 재배 작물 정보 목록")
-public record UserCropListResponse(
+@Schema(description = "사용자 재배 작물 상세 정보")
+public record UserCropDetailResponse(
         @Schema(description = "작물ID", example = "1")
         Long id,
 
@@ -24,16 +28,20 @@ public record UserCropListResponse(
         String cultivationRegion,
 
         @Schema(description = "재배 면적", example = "1320")
-        Integer cultivationArea
+        Integer cultivationArea,
+
+        @Schema(description = "정식(또는 파종)일", example = "2024-02-25")
+        LocalDate plantingDate
 ) {
-    public static UserCropListResponse from(UserCrop userCrop) {
-        return UserCropListResponse.builder()
+    public static UserCropDetailResponse from(UserCrop userCrop) {
+        return UserCropDetailResponse.builder()
                 .id(userCrop.getId())
                 .name(userCrop.getName())
                 .variety(userCrop.getVariety())
                 .cultivationType(userCrop.getCultivationType())
                 .cultivationRegion(userCrop.getCultivationRegion())
                 .cultivationArea(userCrop.getCultivationArea())
+                .plantingDate(userCrop.getPlantingDate())
                 .build();
     }
 }

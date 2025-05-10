@@ -13,6 +13,7 @@ import kr.co.webee.presentation.profile.crop.dto.response.UserCropDetailResponse
 import kr.co.webee.presentation.profile.crop.dto.response.UserCropListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,6 +24,7 @@ public class UserCropManagementService {
     private final UserService userService;
     private final GeocodingService geocodingService;
 
+    @Transactional
     public void addUserCrop(UserCropRequest request, Long userId) {
         User user = userService.readById(userId)
                 .orElseThrow(() -> new NotFoundException(User.class, userId));
@@ -32,6 +34,7 @@ public class UserCropManagementService {
         userCropService.save(userCrop);
     }
 
+    @Transactional(readOnly = true)
     public List<UserCropListResponse> getUserCropList(Long userId) {
         List<UserCrop> userCrops = userCropService.readByUserId(userId);
 
@@ -40,6 +43,7 @@ public class UserCropManagementService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public UserCropDetailResponse getUserCropDetail(Long userCropId) {
         UserCrop userCrop = userCropService.readById(userCropId)
                 .orElseThrow(() -> new NotFoundException(UserCrop.class, userCropId));
@@ -47,6 +51,7 @@ public class UserCropManagementService {
         return UserCropDetailResponse.from(userCrop);
     }
 
+    @Transactional
     public void updateUserCrop(Long userCropId, UserCropRequest request, Long userId) {
         UserCrop userCrop = userCropService.readById(userCropId)
                 .orElseThrow(() -> new NotFoundException(UserCrop.class, userCropId));
@@ -72,6 +77,7 @@ public class UserCropManagementService {
         );
     }
 
+    @Transactional
     public void deleteUserCrop(Long userCropId, Long userId) {
         UserCrop userCrop = userCropService.readById(userCropId)
                 .orElseThrow(() -> new NotFoundException(UserCrop.class, userCropId));

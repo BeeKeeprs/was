@@ -25,4 +25,8 @@ public class UserCropService {
         return userCropRepository.findByUserId(userId);
     }
 
+    public void delete(Long id) {
+        userCropRepository.deleteById(id);
+    }
+
 }

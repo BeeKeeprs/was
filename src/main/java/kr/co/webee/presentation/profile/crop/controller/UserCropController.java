@@ -30,8 +30,21 @@ public class UserCropController implements UserCropApi {
         return userCropManagementService.getUserCropList(userId);
     }
 
+    @Override
     @GetMapping("/{userCropId}")
     public UserCropDetailResponse getUserCropDetail(@PathVariable Long userCropId) {
         return userCropManagementService.getUserCropDetail(userCropId);
+    }
+
+    @PutMapping("/{userCropId}")
+    @Override
+    public void updateUserCrop(@PathVariable Long userCropId, @RequestBody @Valid UserCropRequest request, @UserId Long userId) {
+        userCropManagementService.updateUserCrop(userCropId, request, userId);
+    }
+
+    @Override
+    @DeleteMapping("/{userCropId}")
+    public void deleteUserCrop(@PathVariable Long userCropId, @UserId Long userId) {
+        userCropManagementService.deleteUserCrop(userCropId, userId);
     }
 }

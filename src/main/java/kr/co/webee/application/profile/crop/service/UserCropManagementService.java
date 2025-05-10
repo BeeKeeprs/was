@@ -24,7 +24,8 @@ public class UserCropManagementService {
     private final GeocodingService geocodingService;
 
     public void addUserCrop(UserCropRequest request, Long userId) {
-        User user = userService.readById(userId).orElseThrow(() -> new NotFoundException(User.class, userId));
+        User user = userService.readById(userId)
+                .orElseThrow(() -> new NotFoundException(User.class, userId));
         CoordinatesDto coordinatesDto = geocodingService.searchCoordinatesFrom(request.cultivationRegion());
         UserCrop userCrop = request.toEntity(coordinatesDto, user);
 
@@ -32,7 +33,6 @@ public class UserCropManagementService {
     }
 
     public List<UserCropListResponse> getUserCropList(Long userId) {
-        User user = userService.readById(userId).orElseThrow(() -> new NotFoundException(User.class, userId));
         List<UserCrop> userCrops = userCropService.readByUserId(userId);
 
         return userCrops.stream()
@@ -45,5 +45,45 @@ public class UserCropManagementService {
                 .orElseThrow(() -> new NotFoundException(UserCrop.class, userCropId));
 
         return UserCropDetailResponse.from(userCrop);
+    }
+
+    public void updateUserCrop(Long userCropId, UserCropRequest request, Long userId) {
+        UserCrop userCrop = userCropService.readById(userCropId)
+                .orElseThrow(() -> new NotFoundException(UserCrop.class, userCropId));
+
+        validateCropOwner(userId, userCrop);
+
+        if (userCrop.isNotSameCultivationRegion(request.cultivationRegion())) {
+            CoordinatesDto coordinatesDto = geocodingService.searchCoordinatesFrom(request.cultivationRegion());
+
+            userCrop.updateRegionInfo(
+                    request.cultivationRegion(),
+                    coordinatesDto.latitude(),
+                    coordinatesDto.longitude()
+            );
+        }
+
+        userCrop.updateCultivationInfo(
+                request.name(),
+                request.variety(),
+                request.cultivationType(),
+                request.cultivationArea(),
+                request.plantingDate()
+        );
+    }
+
+    public void deleteUserCrop(Long userCropId, Long userId) {
+        UserCrop userCrop = userCropService.readById(userCropId)
+                .orElseThrow(() -> new NotFoundException(UserCrop.class, userCropId));
+
+        validateCropOwner(userId, userCrop);
+
+        userCropService.delete(userCropId);
+    }
+
+    private static void validateCropOwner(Long userId, UserCrop userCrop) {
+        if (userCrop.isNotOwnedBy(userId)) {
+            throw new BusinessException(ErrorType.ACCESS_DENIED);
+        }
     }
 }

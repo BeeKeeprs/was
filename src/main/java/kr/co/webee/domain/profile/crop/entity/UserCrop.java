@@ -71,4 +71,43 @@ public class UserCrop extends BaseTimeEntity {
         this.plantingDate = Objects.requireNonNull(plantingDate, "plantingDate는 null이 될 수 없습니다.");
         this.user = Objects.requireNonNull(user, "user는 null이 될 수 없습니다.");
     }
+
+    public void updateCultivationInfo(String name, String variety, CultivationType cultivationType,
+                                      Integer cultivationArea, LocalDate plantingDate) {
+        if (!StringUtils.hasText(name)) {
+            throw new IllegalArgumentException("name은 null이거나 빈 문자열이 될 수 없습니다.");
+        }
+
+        this.name = name;
+        this.variety = variety;
+        this.cultivationType = Objects.requireNonNull(cultivationType, "cultivationType은 null이 될 수 없습니다.");
+        this.cultivationArea = Objects.requireNonNull(cultivationArea, "cultivationArea는 null이 될 수 없습니다.");
+        this.plantingDate = Objects.requireNonNull(plantingDate, "plantingDate는 null이 될 수 없습니다.");
+    }
+
+    public void updateRegionInfo(String cultivationRegion, Double latitude, Double longitude) {
+        if (!StringUtils.hasText(cultivationRegion)) {
+            throw new IllegalArgumentException("cultivationRegion은 null이거나 빈 문자열이 될 수 없습니다.");
+        }
+
+        this.cultivationRegion = cultivationRegion;
+        this.latitude = Objects.requireNonNull(latitude, "latitude는 null이 될 수 없습니다.");
+        this.longitude = Objects.requireNonNull(longitude, "longitude는 null이 될 수 없습니다.");
+    }
+
+    public boolean isSameCultivationRegion(String region) {
+        return this.cultivationRegion.equals(region);
+    }
+
+    public boolean isNotSameCultivationRegion(String region) {
+        return !isSameCultivationRegion(region);
+    }
+
+    public boolean isOwnedBy(Long userId) {
+        return user.isSameId(userId);
+    }
+
+    public boolean isNotOwnedBy(Long userId) {
+        return !isOwnedBy(userId);
+    }
 }

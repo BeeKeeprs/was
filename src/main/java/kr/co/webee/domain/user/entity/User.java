@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.util.StringUtils;
 
+import java.util.Objects;
+
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -46,5 +48,9 @@ public class User extends BaseTimeEntity {
         this.password = password;
         this.name = name;
         this.businessRegistered=businessRegistered;
+    }
+
+    public boolean isSameId(Long userId) {
+        return Objects.equals(this.id, userId);
     }
 }

@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
+import static kr.co.webee.common.error.ErrorType.ACCESS_DENIED;
+
 @Tag(name = "UserCrop")
 public interface UserCropApi {
     @Operation(summary = "사용자 재배 작물 정보 등록", description = "사용자가 재배하는 작물 정보를 등록하는 API")
@@ -27,4 +29,12 @@ public interface UserCropApi {
     @Operation(summary = "사용자 재배 작물 정보 상세 조회", description = "사용자가 재배하는 작물 상세 정보를 조회하는 API")
     @ApiDocsErrorType(ErrorType.ENTITY_NOT_FOUND)
     UserCropDetailResponse getUserCropDetail(@PathVariable Long userCropId);
+
+    @Operation(summary = "사용자 재배 작물 정보 수정", description = "사용자가 재배하는 작물 상세 정보를 수정하는 API")
+    @ApiDocsErrorType({ErrorType.ENTITY_NOT_FOUND, ACCESS_DENIED})
+    void updateUserCrop(@PathVariable Long userCropId, @RequestBody @Valid UserCropRequest request, @UserId Long userId);
+
+    @Operation(summary = "사용자 재배 작물 정보 삭제", description = "사용자가 재배하는 작물 상세 정보를 삭제하는 API")
+    @ApiDocsErrorType({ErrorType.ENTITY_NOT_FOUND, ACCESS_DENIED})
+    void deleteUserCrop(@PathVariable Long userCropId, @UserId Long userId);
 }

@@ -3,10 +3,11 @@ package kr.co.webee.presentation.profile.crop.dto.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import kr.co.webee.domain.profile.crop.entity.Coordinates;
+import kr.co.webee.domain.profile.crop.entity.Location;
 import kr.co.webee.domain.profile.crop.entity.UserCrop;
 import kr.co.webee.domain.profile.crop.type.CultivationType;
 import kr.co.webee.domain.user.entity.User;
-import kr.co.webee.infrastructure.geocoding.dto.CoordinatesDto;
 import lombok.Builder;
 
 import java.time.LocalDate;
@@ -27,7 +28,7 @@ public record UserCropRequest(
 
         @Schema(description = "재배 지역", example = "충청남도 논산시 연무읍 봉동리")
         @NotBlank
-        String cultivationRegion,
+        String cultivationAddress,
 
         @Schema(description = "재배 면적", example = "1320")
         @NotNull
@@ -37,17 +38,20 @@ public record UserCropRequest(
         @NotNull
         LocalDate plantingDate
 ) {
-        public UserCrop toEntity(CoordinatesDto coordinatesDto, User user) {
-                return UserCrop.builder()
-                        .name(name)
-                        .variety(variety)
-                        .cultivationType(cultivationType)
-                        .cultivationRegion(cultivationRegion)
-                        .latitude(coordinatesDto.latitude())
-                        .longitude(coordinatesDto.longitude())
-                        .cultivationArea(cultivationArea)
-                        .plantingDate(plantingDate)
-                        .user(user)
-                        .build();
-        }
+    public UserCrop toEntity(Coordinates coordinates, User user) {
+        Location cultivationLocation = Location.builder()
+                .address(cultivationAddress)
+                .coordinates(coordinates)
+                .build();
+
+        return UserCrop.builder()
+                .name(name)
+                .variety(variety)
+                .cultivationType(cultivationType)
+                .cultivationLocation(cultivationLocation)
+                .cultivationArea(cultivationArea)
+                .plantingDate(plantingDate)
+                .user(user)
+                .build();
+    }
 }

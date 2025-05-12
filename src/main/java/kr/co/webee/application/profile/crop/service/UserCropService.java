@@ -3,11 +3,12 @@ package kr.co.webee.application.profile.crop.service;
 import jakarta.persistence.EntityNotFoundException;
 import kr.co.webee.common.error.ErrorType;
 import kr.co.webee.common.error.exception.BusinessException;
+import kr.co.webee.domain.profile.crop.entity.Coordinates;
+import kr.co.webee.domain.profile.crop.entity.Location;
 import kr.co.webee.domain.profile.crop.entity.UserCrop;
 import kr.co.webee.domain.profile.crop.repository.UserCropRepository;
 import kr.co.webee.domain.user.entity.User;
 import kr.co.webee.domain.user.repository.UserRepository;
-import kr.co.webee.infrastructure.geocoding.dto.CoordinatesDto;
 import kr.co.webee.infrastructure.geocoding.service.GeocodingService;
 import kr.co.webee.presentation.profile.crop.dto.request.UserCropRequest;
 import kr.co.webee.presentation.profile.crop.dto.response.UserCropDetailResponse;
@@ -31,9 +32,9 @@ public class UserCropService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-        CoordinatesDto coordinatesDto = geocodingService.searchCoordinatesFrom(request.cultivationRegion());
+        Coordinates coordinates = geocodingService.searchCoordinatesFrom(request.cultivationAddress());
 
-        UserCrop userCrop = request.toEntity(coordinatesDto, user);
+        UserCrop userCrop = request.toEntity(coordinates, user);
         userCropRepository.save(userCrop);
 
         return Map.of("userCropId",userCrop.getId());
@@ -63,12 +64,18 @@ public class UserCropService {
 
         validateCropOwner(userId, userCrop);
 
-        if (userCrop.isNotSameCultivationRegion(request.cultivationRegion())) {
-            CoordinatesDto coordinatesDto = geocodingService.searchCoordinatesFrom(request.cultivationRegion());
-            userCrop.updateRegionInfo(request.cultivationRegion(), coordinatesDto.latitude(), coordinatesDto.longitude());
+        if (userCrop.isNotSameCultivationAddress(request.cultivationAddress())) {
+            Coordinates coordinates = geocodingService.searchCoordinatesFrom(request.cultivationAddress());
+
+            Location cultivationLocation = Location.builder()
+                    .address(request.cultivationAddress())
+                    .coordinates(coordinates)
+                    .build();
+
+            userCrop.updateCultivationLocation(cultivationLocation);
         }
 
-        userCrop.updateCultivationInfo(request.name(), request.variety(), request.cultivationType(), request.cultivationArea(), request.plantingDate());
+        userCrop.update(request.name(), request.variety(), request.cultivationType(), request.cultivationArea(), request.plantingDate());
     }
 
     @Transactional

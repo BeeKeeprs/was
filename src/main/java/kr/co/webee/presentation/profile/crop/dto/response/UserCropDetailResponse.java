@@ -23,7 +23,7 @@ public record UserCropDetailResponse(
         CultivationType cultivationType,
 
         @Schema(description = "재배 지역", example = "충청남도 논산시 연무읍 봉동리 123")
-        String cultivationRegion,
+        String cultivationAddress,
 
         @Schema(description = "재배 면적", example = "1320")
         Integer cultivationArea,
@@ -37,7 +37,7 @@ public record UserCropDetailResponse(
                 .name(userCrop.getName())
                 .variety(userCrop.getVariety())
                 .cultivationType(userCrop.getCultivationType())
-                .cultivationRegion(userCrop.getCultivationRegion())
+                .cultivationAddress(userCrop.getCultivationAddress())
                 .cultivationArea(userCrop.getCultivationArea())
                 .plantingDate(userCrop.getPlantingDate())
                 .build();

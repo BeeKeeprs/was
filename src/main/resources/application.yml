@@ -28,4 +28,4 @@ jwt:
   issuer: ${JWT_ISSUER:webee}
 
 kakao:
-  api-key: ${KAKAO_REST_API_KEY}
+  api-key: ${KAKAO_REST_API_KEY:}

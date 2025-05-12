@@ -44,6 +44,8 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-impl:0.12.6'
     implementation 'io.jsonwebtoken:jjwt-jackson:0.12.6'
 
+	implementation("org.apache.commons:commons-pool2:2.12.1")
+
 	// testcontainers
 	testImplementation("org.springframework.boot:spring-boot-testcontainers")
 	testImplementation("com.redis.testcontainers:testcontainers-redis:1.6.4")

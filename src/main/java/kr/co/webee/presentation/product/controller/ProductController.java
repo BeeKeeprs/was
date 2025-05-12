@@ -1,0 +1,55 @@
+package kr.co.webee.presentation.product.controller;
+
+import jakarta.validation.Valid;
+import kr.co.webee.application.product.service.ProductService;
+import kr.co.webee.common.auth.security.CustomUserDetails;
+import kr.co.webee.presentation.product.api.ProductApi;
+import kr.co.webee.presentation.product.dto.request.ProductCreateRequest;
+import kr.co.webee.presentation.product.dto.request.ProductUpdateRequest;
+import kr.co.webee.presentation.product.dto.response.ProductResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/v1/products")
+public class ProductController implements ProductApi {
+
+    private final ProductService productService;
+
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public Long createProduct(
+            @RequestPart("request") @Valid ProductCreateRequest request,
+            @RequestPart("images") List<MultipartFile> images,
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        return productService.createProduct(request, images, userDetails.getUserId());
+    }
+
+    @GetMapping("/{productId}")
+    public ProductResponse getProduct(@PathVariable Long productId) {
+        return productService.getProduct(productId);
+    }
+
+    @PutMapping("/{productId}")
+    public String updateProduct(
+            @PathVariable Long productId,
+            @RequestBody @Valid ProductUpdateRequest request
+    ) {
+        // TODO : 이미지 업데이트 로직 추가
+        // TODO : 소유자 확인 로직 추가
+        productService.updateProduct(productId, request);
+        return "OK";
+    }
+
+    @DeleteMapping("/{productId}")
+    public String deleteProduct(@PathVariable Long productId) {
+        productService.deleteProduct(productId);
+        return "OK";
+    }
+}

@@ -1,6 +1,7 @@
 package kr.co.webee.common.auth.security;
 
 import kr.co.webee.domain.user.entity.User;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,10 +10,11 @@ import java.util.Collection;
 
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
+    @Getter
     private final Long userId;
     private final String username;
 
-    public static CustomUserDetails from(User user){
+    public static CustomUserDetails from(User user) {
         return new CustomUserDetails(user.getId(), user.getUsername());
     }
 

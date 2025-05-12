@@ -1,6 +1,6 @@
 package kr.co.webee.infrastructure.geocoding.provider;
 
-import kr.co.webee.infrastructure.geocoding.dto.CoordinatesDto;
+import kr.co.webee.domain.profile.crop.entity.Coordinates;
 import kr.co.webee.infrastructure.geocoding.dto.KakaoGeocodingResponse;
 import kr.co.webee.infrastructure.geocoding.dto.KakaoCoordResponse;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,17 +17,21 @@ public class KakaoGeocodingProvider {
     @Value("${kakao.api-key}")
     private String kakaoApiKey;
 
-    public CoordinatesDto getCoordinatesFrom(String address) {
+    public Coordinates getCoordinatesFrom(String address) {
         KakaoGeocodingResponse response = requestKakaoGeocodingApi(address);
         return extractCoordinatesFrom(response);
     }
 
-    private CoordinatesDto extractCoordinatesFrom(KakaoGeocodingResponse response) {
+    private Coordinates extractCoordinatesFrom(KakaoGeocodingResponse response) {
         if (response.kakaoCoordResponse().isEmpty()) {
             throw new IllegalArgumentException("해당 주소에 대한 정보가 없습니다.");
         }
         KakaoCoordResponse coordResponse = response.kakaoCoordResponse().get(0);
-        return CoordinatesDto.of(coordResponse.latitude(), coordResponse.longitude());
+
+        return Coordinates.builder()
+                .latitude(coordResponse.latitude())
+                .longitude(coordResponse.longitude())
+                .build();
     }
 
     private KakaoGeocodingResponse requestKakaoGeocodingApi(String address) {

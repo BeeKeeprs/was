@@ -32,13 +32,7 @@ public class UserCrop extends BaseTimeEntity {
     private CultivationType cultivationType;
 
     @Column(nullable = false)
-    private String cultivationRegion;
-
-    @Column(nullable = false)
-    private Double latitude;
-
-    @Column(nullable = false)
-    private Double longitude;
+    private Location cultivationLocation;
 
     @Column(nullable = false)
     private Integer cultivationArea;
@@ -52,28 +46,22 @@ public class UserCrop extends BaseTimeEntity {
 
     @Builder
     public UserCrop(String name, String variety, CultivationType cultivationType,
-                    String cultivationRegion, Double latitude, Double longitude,
-                    Integer cultivationArea, LocalDate plantingDate, User user) {
+                    Location cultivationLocation, Integer cultivationArea, LocalDate plantingDate, User user) {
         if (!StringUtils.hasText(name)) {
             throw new IllegalArgumentException("name은 null이거나 빈 문자열이 될 수 없습니다.");
-        }
-        if (!StringUtils.hasText(cultivationRegion)) {
-            throw new IllegalArgumentException("cultivationRegion은 null이거나 빈 문자열이 될 수 없습니다.");
         }
 
         this.name = name;
         this.variety = variety;
         this.cultivationType = Objects.requireNonNull(cultivationType, "cultivationType은 null이 될 수 없습니다.");
-        this.cultivationRegion = cultivationRegion;
-        this.latitude = Objects.requireNonNull(latitude, "latitude는 null이 될 수 없습니다.");
-        this.longitude = Objects.requireNonNull(longitude, "longitude는 null이 될 수 없습니다.");
+        this.cultivationLocation =Objects.requireNonNull(cultivationLocation,"cultivationLocation은 null이 될 수 없습니다.");
         this.cultivationArea = Objects.requireNonNull(cultivationArea, "cultivationArea는 null이 될 수 없습니다.");
         this.plantingDate = Objects.requireNonNull(plantingDate, "plantingDate는 null이 될 수 없습니다.");
         this.user = Objects.requireNonNull(user, "user는 null이 될 수 없습니다.");
     }
 
-    public void updateCultivationInfo(String name, String variety, CultivationType cultivationType,
-                                      Integer cultivationArea, LocalDate plantingDate) {
+    public void update(String name, String variety, CultivationType cultivationType,
+                       Integer cultivationArea, LocalDate plantingDate) {
         if (!StringUtils.hasText(name)) {
             throw new IllegalArgumentException("name은 null이거나 빈 문자열이 될 수 없습니다.");
         }
@@ -85,22 +73,16 @@ public class UserCrop extends BaseTimeEntity {
         this.plantingDate = Objects.requireNonNull(plantingDate, "plantingDate는 null이 될 수 없습니다.");
     }
 
-    public void updateRegionInfo(String cultivationRegion, Double latitude, Double longitude) {
-        if (!StringUtils.hasText(cultivationRegion)) {
-            throw new IllegalArgumentException("cultivationRegion은 null이거나 빈 문자열이 될 수 없습니다.");
-        }
-
-        this.cultivationRegion = cultivationRegion;
-        this.latitude = Objects.requireNonNull(latitude, "latitude는 null이 될 수 없습니다.");
-        this.longitude = Objects.requireNonNull(longitude, "longitude는 null이 될 수 없습니다.");
+    public void updateCultivationLocation(Location cultivationLocation) {
+        this.cultivationLocation=cultivationLocation;
     }
 
-    public boolean isSameCultivationRegion(String region) {
-        return this.cultivationRegion.equals(region);
+    public boolean isSameCultivationAddress(String address) {
+        return this.cultivationLocation.isSameAddress(address);
     }
 
-    public boolean isNotSameCultivationRegion(String region) {
-        return !isSameCultivationRegion(region);
+    public boolean isNotSameCultivationAddress(String address) {
+        return !isSameCultivationAddress(address);
     }
 
     public boolean isOwnedBy(Long userId) {
@@ -109,5 +91,9 @@ public class UserCrop extends BaseTimeEntity {
 
     public boolean isNotOwnedBy(Long userId) {
         return !isOwnedBy(userId);
+    }
+
+    public String getCultivationAddress() {
+        return cultivationLocation.getAddress();
     }
 }

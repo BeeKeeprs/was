@@ -9,7 +9,7 @@ import kr.co.webee.domain.profile.crop.entity.UserCrop;
 import kr.co.webee.domain.profile.crop.repository.UserCropRepository;
 import kr.co.webee.domain.user.entity.User;
 import kr.co.webee.domain.user.repository.UserRepository;
-import kr.co.webee.infrastructure.geocoding.service.GeocodingService;
+import kr.co.webee.infrastructure.geocoding.client.GeocodingClient;
 import kr.co.webee.presentation.profile.crop.dto.request.UserCropRequest;
 import kr.co.webee.presentation.profile.crop.dto.response.UserCropDetailResponse;
 import kr.co.webee.presentation.profile.crop.dto.response.UserCropListResponse;
@@ -24,7 +24,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserCropService {
     private final UserCropRepository userCropRepository;
-    private final GeocodingService geocodingService;
+    private final GeocodingClient geocodingClient;
     private final UserRepository userRepository;
 
     @Transactional
@@ -32,7 +32,7 @@ public class UserCropService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-        Coordinates coordinates = geocodingService.searchCoordinatesFrom(request.cultivationAddress());
+        Coordinates coordinates = geocodingClient.getCoordinateFrom(request.cultivationAddress());
 
         UserCrop userCrop = request.toEntity(coordinates, user);
         userCropRepository.save(userCrop);
@@ -65,7 +65,7 @@ public class UserCropService {
         validateCropOwner(userId, userCrop);
 
         if (userCrop.isNotSameCultivationAddress(request.cultivationAddress())) {
-            Coordinates coordinates = geocodingService.searchCoordinatesFrom(request.cultivationAddress());
+            Coordinates coordinates = geocodingClient.getCoordinateFrom(request.cultivationAddress());
 
             Location cultivationLocation = Location.builder()
                     .address(request.cultivationAddress())

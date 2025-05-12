@@ -1,32 +1,89 @@
 package kr.co.webee.application.profile.crop.service;
 
+import jakarta.persistence.EntityNotFoundException;
+import kr.co.webee.common.error.ErrorType;
+import kr.co.webee.common.error.exception.BusinessException;
 import kr.co.webee.domain.profile.crop.entity.UserCrop;
 import kr.co.webee.domain.profile.crop.repository.UserCropRepository;
+import kr.co.webee.domain.user.entity.User;
+import kr.co.webee.domain.user.repository.UserRepository;
+import kr.co.webee.infrastructure.geocoding.dto.CoordinatesDto;
+import kr.co.webee.infrastructure.geocoding.service.GeocodingService;
+import kr.co.webee.presentation.profile.crop.dto.request.UserCropRequest;
+import kr.co.webee.presentation.profile.crop.dto.response.UserCropDetailResponse;
+import kr.co.webee.presentation.profile.crop.dto.response.UserCropListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class UserCropService {
     private final UserCropRepository userCropRepository;
+    private final GeocodingService geocodingService;
+    private final UserRepository userRepository;
 
-    public void save(UserCrop userCrop) {
+    @Transactional
+    public Map<String,Long> createUserCrop(UserCropRequest request, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        CoordinatesDto coordinatesDto = geocodingService.searchCoordinatesFrom(request.cultivationRegion());
+
+        UserCrop userCrop = request.toEntity(coordinatesDto, user);
         userCropRepository.save(userCrop);
+
+        return Map.of("userCropId",userCrop.getId());
     }
 
-    public Optional<UserCrop> readById(Long id) {
-        return userCropRepository.findById(id);
+    @Transactional(readOnly = true)
+    public List<UserCropListResponse> getUserCropList(Long userId) {
+        List<UserCrop> userCrops = userCropRepository.findByUserId(userId);
+
+        return userCrops.stream()
+                .map(UserCropListResponse::from)
+                .toList();
     }
 
-    public List<UserCrop> readByUserId(Long userId) {
-        return userCropRepository.findByUserId(userId);
+    @Transactional(readOnly = true)
+    public UserCropDetailResponse getUserCropDetail(Long userCropId) {
+        UserCrop userCrop = userCropRepository.findById(userCropId)
+                .orElseThrow(() -> new EntityNotFoundException("User Crop not found"));
+
+        return UserCropDetailResponse.from(userCrop);
     }
 
-    public void delete(Long id) {
-        userCropRepository.deleteById(id);
+    @Transactional
+    public void updateUserCrop(Long userCropId, UserCropRequest request, Long userId) {
+        UserCrop userCrop = userCropRepository.findById(userCropId)
+                .orElseThrow(() -> new EntityNotFoundException("User Crop not found"));
+
+        validateCropOwner(userId, userCrop);
+
+        if (userCrop.isNotSameCultivationRegion(request.cultivationRegion())) {
+            CoordinatesDto coordinatesDto = geocodingService.searchCoordinatesFrom(request.cultivationRegion());
+            userCrop.updateRegionInfo(request.cultivationRegion(), coordinatesDto.latitude(), coordinatesDto.longitude());
+        }
+
+        userCrop.updateCultivationInfo(request.name(), request.variety(), request.cultivationType(), request.cultivationArea(), request.plantingDate());
     }
 
+    @Transactional
+    public void deleteUserCrop(Long userCropId, Long userId) {
+        UserCrop userCrop = userCropRepository.findById(userCropId)
+                .orElseThrow(() -> new EntityNotFoundException("User Crop not found"));
+
+        validateCropOwner(userId, userCrop);
+
+        userCropRepository.deleteById(userCropId);
+    }
+
+    private static void validateCropOwner(Long userId, UserCrop userCrop) {
+        if (userCrop.isNotOwnedBy(userId)) {
+            throw new BusinessException(ErrorType.ACCESS_DENIED);
+        }
+    }
 }

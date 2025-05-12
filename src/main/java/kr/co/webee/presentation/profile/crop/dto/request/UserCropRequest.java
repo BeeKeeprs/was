@@ -7,9 +7,11 @@ import kr.co.webee.domain.profile.crop.entity.UserCrop;
 import kr.co.webee.domain.profile.crop.type.CultivationType;
 import kr.co.webee.domain.user.entity.User;
 import kr.co.webee.infrastructure.geocoding.dto.CoordinatesDto;
+import lombok.Builder;
 
 import java.time.LocalDate;
 
+@Builder
 @Schema(description = "사용자 재배 작물 정보 request")
 public record UserCropRequest(
         @Schema(description = "작물명", example = "딸기")
@@ -23,7 +25,7 @@ public record UserCropRequest(
         @NotNull
         CultivationType cultivationType,
 
-        @Schema(description = "재배 지역", example = "충청남도 논산시 연무읍 봉동리 123")
+        @Schema(description = "재배 지역", example = "충청남도 논산시 연무읍 봉동리")
         @NotBlank
         String cultivationRegion,
 

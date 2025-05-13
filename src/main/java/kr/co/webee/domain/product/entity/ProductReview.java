@@ -40,4 +40,11 @@ public class ProductReview extends BaseTimeEntity {
         this.product = Objects.requireNonNull(product, "product는 null이 될 수 없습니다.");
         this.user = Objects.requireNonNull(user, "user는 null이 될 수 없습니다.");
     }
+
+    public void updateContent(String content) {
+        if (!StringUtils.hasText(content)) {
+            throw new IllegalArgumentException("content는 null이거나 빈 문자열이 될 수 없습니다.");
+        }
+        this.content = content;
+    }
 }

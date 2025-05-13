@@ -2,6 +2,7 @@ package kr.co.webee.application.auth.service;
 
 import jakarta.servlet.http.HttpServletResponse;
 import kr.co.webee.application.auth.dto.JwtTokenDto;
+import kr.co.webee.application.auth.dto.SignInResponse;
 import kr.co.webee.application.auth.helper.JwtHelper;
 import kr.co.webee.presentation.auth.dto.request.SignInRequest;
 import kr.co.webee.presentation.auth.dto.request.SignUpRequest;
@@ -32,7 +33,7 @@ public class AuthService {
         userService.save(user);
     }
 
-    public JwtTokenDto signIn(SignInRequest request) {
+    public SignInResponse signIn(SignInRequest request) {
         User user = userService.readByUsername(request.username())
                 .orElseThrow(() -> {
                     String message = String.format("username: %s", request.username());
@@ -43,7 +44,8 @@ public class AuthService {
             throw new BusinessException(ErrorType.FAILED_AUTHENTICATION);
         }
 
-        return jwtHelper.createToken(user.getId(), user.getUsername());
+        JwtTokenDto token = jwtHelper.createToken(user.getId(), user.getUsername());
+        return SignInResponse.of(user.getName(), token);
     }
 
     public JwtTokenDto reissueToken(String refreshToken) {

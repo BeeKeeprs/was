@@ -15,13 +15,17 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import kr.co.webee.presentation.annotation.ApiDocsErrorType;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.customizers.OperationCustomizer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.ObjectUtils;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -30,8 +34,12 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
 @RequiredArgsConstructor
 @Configuration
+
 public class SwaggerConfig {
     private final BuildProperties buildProperties;
+
+    @Value("${was.api}")
+    private List<String> apiUrls;
 
     @Bean
     OpenAPI openAPI() {
@@ -46,6 +54,11 @@ public class SwaggerConfig {
 
         return new OpenAPI()
                 .info(info())
+                .servers(
+                        apiUrls.stream()
+                                .map(url -> new io.swagger.v3.oas.models.servers.Server().url(url))
+                                .toList()
+                )
                 .addSecurityItem(new SecurityRequirement().addList(JWT))
                 .components(new Components().addSecuritySchemes(JWT, securityScheme));
     }

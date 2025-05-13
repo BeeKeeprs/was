@@ -3,7 +3,9 @@ package kr.co.webee.presentation.auth.controller;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import kr.co.webee.application.auth.dto.JwtTokenDto;
+import kr.co.webee.application.auth.dto.SignInResponse;
 import kr.co.webee.application.auth.service.AuthService;
+import kr.co.webee.common.auth.security.CustomUserDetails;
 import kr.co.webee.common.error.ErrorType;
 import kr.co.webee.common.error.exception.BusinessException;
 import kr.co.webee.common.util.cookie.CookieUtil;
@@ -15,9 +17,11 @@ import kr.co.webee.presentation.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -33,10 +37,10 @@ public class AuthController implements AuthApi {
 
     @Override
     @PostMapping("/sign-in")
-    public String signIn(@RequestBody @Valid SignInRequest request, HttpServletResponse response) {
-        JwtTokenDto jwtTokenDto = authService.signIn(request);
-        createTokenResponse(jwtTokenDto, response);
-        return "OK";
+    public Map<String,String> signIn(@RequestBody @Valid SignInRequest request, HttpServletResponse response) {
+        SignInResponse signInResponse = authService.signIn(request);
+        createTokenResponse(signInResponse.jwtTokenDto(), response);
+        return Map.of("name", signInResponse.name());
     }
 
     @Override

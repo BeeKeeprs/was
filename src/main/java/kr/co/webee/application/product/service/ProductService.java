@@ -51,7 +51,7 @@ public class ProductService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new EntityNotFoundException("Product not found: " + productId));
 
-        product.update(dto.price(), dto.beeType(), dto.content());
+        product.update(dto.name(), dto.price(), dto.beeType(), dto.content());
     }
 
     @Transactional

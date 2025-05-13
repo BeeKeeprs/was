@@ -7,20 +7,18 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.validation.Valid;
-import kr.co.webee.common.auth.security.CustomUserDetails;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.webee.presentation.product.dto.request.ProductCreateRequest;
 import kr.co.webee.presentation.product.dto.request.ProductUpdateRequest;
 import kr.co.webee.presentation.product.dto.response.ProductResponse;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-@RequestMapping("/api/v1/products")
+@Tag(name = "Product", description = "상품 관련 API")
 public interface ProductApi {
 
     @Operation(
@@ -50,9 +48,7 @@ public interface ProductApi {
                     )
             )
             @RequestPart(value = "images", required = false) List<MultipartFile> images,
-
-            @Parameter(hidden = true)
-            @AuthenticationPrincipal CustomUserDetails userDetails
+            Long userId
     );
 
     @Operation(
@@ -70,7 +66,7 @@ public interface ProductApi {
     })
     ProductResponse getProduct(
             @Parameter(description = "조회할 상품 ID", example = "1", required = true)
-            @PathVariable Long productId
+            Long productId
     );
 
     @Operation(
@@ -84,10 +80,10 @@ public interface ProductApi {
     })
     String updateProduct(
             @Parameter(description = "상품 ID", example = "1")
-            @PathVariable Long productId,
+            Long productId,
 
             @Parameter(description = "수정할 상품 정보(JSON)", required = true)
-            @RequestBody @Valid ProductUpdateRequest request
+            ProductUpdateRequest request
     );
 
     @Operation(
@@ -100,6 +96,6 @@ public interface ProductApi {
     })
     String deleteProduct(
             @Parameter(description = "상품 ID", example = "1")
-            @PathVariable Long productId
+            Long productId
     );
 }

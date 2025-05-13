@@ -5,8 +5,6 @@ import kr.co.webee.domain.product.entity.Product;
 import kr.co.webee.domain.product.entity.ProductImage;
 import kr.co.webee.domain.product.repository.ProductImageRepository;
 import kr.co.webee.domain.product.repository.ProductRepository;
-import kr.co.webee.domain.user.entity.User;
-import kr.co.webee.domain.user.repository.UserRepository;
 import kr.co.webee.infrastructure.storage.FileStorage;
 import kr.co.webee.presentation.product.dto.request.ProductCreateRequest;
 import kr.co.webee.presentation.product.dto.request.ProductUpdateRequest;
@@ -17,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,32 +24,14 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final FileStorage fileStorage;
     private final ProductImageRepository productImageRepository;
-    private final UserRepository userRepository;
+    private final ProductSaverService productSaverService;
 
-    @Transactional
     public Long createProduct(ProductCreateRequest request, List<MultipartFile> images, Long sellerId) {
-        User seller = userRepository.findById(sellerId)
-                .orElseThrow(() -> new EntityNotFoundException("Seller not found"));
+        List<String> imageUrls = Optional.ofNullable(images).orElseGet(List::of).stream()
+                .map(fileStorage::upload)
+                .toList();
 
-        Product product = Product.builder()
-                .price(request.price())
-                .beeType(request.beeType())
-                .content(request.content())
-                .seller(seller)
-                .build();
-
-        productRepository.save(product);
-
-        for (MultipartFile image : images) {
-            String imageUrl = fileStorage.upload(image); // 외부 스토리지에 업로드 (S3 등)
-            ProductImage productImage = ProductImage.builder()
-                    .imageUrl(imageUrl)
-                    .product(product)
-                    .build();
-            productImageRepository.save(productImage);
-        }
-
-        return product.getId();
+        return productSaverService.save(request, imageUrls, sellerId);
     }
 
     @Transactional(readOnly = true)

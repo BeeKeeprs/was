@@ -26,6 +26,7 @@ public class ProductSaverService {
         User seller = userRepository.getReferenceById(sellerId);
 
         Product product = Product.builder()
+                .name(request.name())
                 .price(request.price())
                 .beeType(request.beeType())
                 .content(request.content())

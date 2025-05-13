@@ -23,6 +23,9 @@ public class Product extends BaseTimeEntity {
     private Long id;
 
     @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
     private Integer price;
 
     @Column(nullable = false)
@@ -37,18 +40,26 @@ public class Product extends BaseTimeEntity {
     private User seller;
 
     @Builder
-    public Product(Integer price, BeeType beeType, String content, User seller) {
+    public Product(String name, Integer price, BeeType beeType, String content, User seller) {
+        if (!StringUtils.hasText(name)) {
+            throw new IllegalArgumentException("name은 null이거나 빈 문자열이 될 수 없습니다.");
+        }
         if (!StringUtils.hasText(content)) {
             throw new IllegalArgumentException("content는 null이거나 빈 문자열이 될 수 없습니다.");
         }
 
+        this.name = name;
         this.price = Objects.requireNonNull(price, "price는 null이 될 수 없습니다.");
         this.beeType = Objects.requireNonNull(beeType, "beeType은 null이 될 수 없습니다.");
         this.content = content;
         this.seller = Objects.requireNonNull(seller, "seller는 null이 될 수 없습니다.");
     }
 
-    public void update(Integer price, BeeType beeType, String content) {
+    public void update(String name, Integer price, BeeType beeType, String content) {
+        if (!StringUtils.hasText(name)) {
+            throw new IllegalArgumentException("name은 null이거나 빈 문자열이 될 수 없습니다.");
+        }
+        this.name = name;
         this.price = Objects.requireNonNull(price, "price는 null이 될 수 없습니다.");
         this.beeType = Objects.requireNonNull(beeType, "beeType은 null이 될 수 없습니다.");
         if (!StringUtils.hasText(content)) {

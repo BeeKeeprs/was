@@ -1,5 +1,6 @@
 package kr.co.webee.presentation.handler;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.constraints.NotNull;
@@ -119,6 +120,11 @@ public class ExceptionRestHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ApiErrorDto> handleConstraintViolationException(ConstraintViolationException ex) {
         return toResponseEntity(ErrorType.VIOLATION_OCCURRED, ex);
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ApiErrorDto> handleEntityNotFoundException(EntityNotFoundException ex) {
+        return toResponseEntity(ErrorType.ENTITY_NOT_FOUND, ex);
     }
 
     private static ResponseEntity<ApiErrorDto> toResponseEntity(@NotNull ErrorType type, Exception exception) {

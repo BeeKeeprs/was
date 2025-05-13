@@ -2,14 +2,13 @@ package kr.co.webee.presentation.product.controller;
 
 import jakarta.validation.Valid;
 import kr.co.webee.application.product.service.ProductService;
-import kr.co.webee.common.auth.security.CustomUserDetails;
+import kr.co.webee.presentation.annotation.UserId;
 import kr.co.webee.presentation.product.api.ProductApi;
 import kr.co.webee.presentation.product.dto.request.ProductCreateRequest;
 import kr.co.webee.presentation.product.dto.request.ProductUpdateRequest;
 import kr.co.webee.presentation.product.dto.response.ProductResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,9 +25,9 @@ public class ProductController implements ProductApi {
     public Long createProduct(
             @RequestPart("request") @Valid ProductCreateRequest request,
             @RequestPart("images") List<MultipartFile> images,
-            @AuthenticationPrincipal CustomUserDetails userDetails
+            @UserId Long userId
     ) {
-        return productService.createProduct(request, images, userDetails.getUserId());
+        return productService.createProduct(request, images, userId);
     }
 
     @GetMapping("/{productId}")

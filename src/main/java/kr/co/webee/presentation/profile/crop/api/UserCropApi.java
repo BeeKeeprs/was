@@ -7,7 +7,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kr.co.webee.presentation.annotation.UserId;
-import kr.co.webee.presentation.profile.crop.dto.request.UserCropRequest;
+import kr.co.webee.presentation.profile.crop.dto.request.UserCropCreateRequest;
+import kr.co.webee.presentation.profile.crop.dto.request.UserCropUpdateRequest;
 import kr.co.webee.presentation.profile.crop.dto.response.UserCropCreateResponse;
 import kr.co.webee.presentation.profile.crop.dto.response.UserCropDetailResponse;
 import kr.co.webee.presentation.profile.crop.dto.response.UserCropListResponse;
@@ -28,7 +29,7 @@ public interface UserCropApi {
     })
     UserCropCreateResponse createUserCrop(
             @Parameter(description = "등록할 사용자 재배 작물 정보", required = true)
-            @RequestBody @Valid UserCropRequest request,
+            @RequestBody @Valid UserCropCreateRequest request,
 
             @Parameter(hidden = true)
             @UserId Long userId
@@ -73,7 +74,7 @@ public interface UserCropApi {
             @PathVariable Long userCropId,
 
             @Parameter(description = "수정할 사용자 재배 작물 정보", required = true)
-            @RequestBody @Valid UserCropRequest request,
+            @RequestBody @Valid UserCropUpdateRequest request,
 
             @Parameter(hidden = true)
             @UserId Long userId

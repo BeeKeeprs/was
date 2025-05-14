@@ -9,6 +9,7 @@ import kr.co.webee.presentation.auth.dto.request.SignInRequest;
 import kr.co.webee.presentation.auth.dto.request.SignUpRequest;
 import kr.co.webee.common.error.ErrorType;
 import kr.co.webee.presentation.annotation.ApiDocsErrorType;
+import kr.co.webee.presentation.auth.dto.response.SignInResponse;
 import kr.co.webee.presentation.response.ApiResponse;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +24,7 @@ public interface AuthApi {
 
     @Operation(summary = "로그인", description = "사용자 인증을 하는 API")
     @ApiDocsErrorType(value = {ErrorType.INVALID_CREDENTIALS, ErrorType.FAILED_AUTHENTICATION})
-    Map<String,String> signIn(@RequestBody @Valid SignInRequest request, HttpServletResponse response);
+    SignInResponse signIn(@RequestBody @Valid SignInRequest request, HttpServletResponse response);
 
     @Operation(summary = "access token 재발급", description = "refresh token을 통해 access token을 재발급 받는 API")
     @ApiDocsErrorType(value = {ErrorType.COOKIE_NOT_FOND, ErrorType.INVALID_ACCESS_TOKEN})

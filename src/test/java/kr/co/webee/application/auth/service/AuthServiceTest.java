@@ -1,7 +1,7 @@
 package kr.co.webee.application.auth.service;
 
 import kr.co.webee.application.auth.dto.JwtTokenDto;
-import kr.co.webee.application.auth.dto.SignInResponse;
+import kr.co.webee.application.auth.dto.SignInDto;
 import kr.co.webee.application.auth.helper.JwtHelper;
 import kr.co.webee.common.auth.jwt.JwtProvider;
 import kr.co.webee.common.error.ErrorType;
@@ -121,7 +121,7 @@ class AuthServiceTest {
             when(jwtHelper.createToken(any(), any())).thenReturn(jwtTokenDto);
 
             //when
-            SignInResponse response = authService.signIn(request);
+            SignInDto response = authService.signIn(request);
 
             //then
             assertNotNull(response);

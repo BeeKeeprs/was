@@ -3,12 +3,12 @@ package kr.co.webee.application.auth.dto;
 import lombok.Builder;
 
 @Builder
-public record SignInResponse(
+public record SignInDto(
         String name,
         JwtTokenDto jwtTokenDto
 ) {
-    public static SignInResponse of(String name, JwtTokenDto jwtTokenDto) {
-        return SignInResponse.builder()
+    public static SignInDto of(String name, JwtTokenDto jwtTokenDto) {
+        return SignInDto.builder()
                 .name(name)
                 .jwtTokenDto(jwtTokenDto)
                 .build();

@@ -3,9 +3,8 @@ package kr.co.webee.presentation.auth.controller;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import kr.co.webee.application.auth.dto.JwtTokenDto;
-import kr.co.webee.application.auth.dto.SignInResponse;
+import kr.co.webee.application.auth.dto.SignInDto;
 import kr.co.webee.application.auth.service.AuthService;
-import kr.co.webee.common.auth.security.CustomUserDetails;
 import kr.co.webee.common.error.ErrorType;
 import kr.co.webee.common.error.exception.BusinessException;
 import kr.co.webee.common.util.cookie.CookieUtil;
@@ -13,11 +12,10 @@ import kr.co.webee.common.util.jwt.JwtConstants;
 import kr.co.webee.presentation.auth.api.AuthApi;
 import kr.co.webee.presentation.auth.dto.request.SignInRequest;
 import kr.co.webee.presentation.auth.dto.request.SignUpRequest;
-import kr.co.webee.presentation.response.ApiResponse;
+import kr.co.webee.presentation.auth.dto.response.SignInResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
@@ -37,10 +35,10 @@ public class AuthController implements AuthApi {
 
     @Override
     @PostMapping("/sign-in")
-    public Map<String,String> signIn(@RequestBody @Valid SignInRequest request, HttpServletResponse response) {
-        SignInResponse signInResponse = authService.signIn(request);
-        createTokenResponse(signInResponse.jwtTokenDto(), response);
-        return Map.of("name", signInResponse.name());
+    public SignInResponse signIn(@RequestBody @Valid SignInRequest request, HttpServletResponse response) {
+        SignInDto signInDto = authService.signIn(request);
+        createTokenResponse(signInDto.jwtTokenDto(), response);
+        return SignInResponse.of(signInDto.name());
     }
 
     @Override

@@ -8,13 +8,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kr.co.webee.presentation.annotation.UserId;
 import kr.co.webee.presentation.profile.crop.dto.request.UserCropRequest;
+import kr.co.webee.presentation.profile.crop.dto.response.UserCropCreateResponse;
 import kr.co.webee.presentation.profile.crop.dto.response.UserCropDetailResponse;
 import kr.co.webee.presentation.profile.crop.dto.response.UserCropListResponse;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
-import java.util.Map;
 
 
 @Tag(name = "UserCrop")
@@ -26,7 +26,7 @@ public interface UserCropApi {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "사용자 재배 작물 등록 성공"),
     })
-    Map<String, Long> createUserCrop(
+    UserCropCreateResponse createUserCrop(
             @Parameter(description = "등록할 사용자 재배 작물 정보", required = true)
             @RequestBody @Valid UserCropRequest request,
 

@@ -11,6 +11,7 @@ import kr.co.webee.domain.user.entity.User;
 import kr.co.webee.domain.user.repository.UserRepository;
 import kr.co.webee.infrastructure.geocoding.client.GeocodingClient;
 import kr.co.webee.presentation.profile.crop.dto.request.UserCropRequest;
+import kr.co.webee.presentation.profile.crop.dto.response.UserCropCreateResponse;
 import kr.co.webee.presentation.profile.crop.dto.response.UserCropDetailResponse;
 import kr.co.webee.presentation.profile.crop.dto.response.UserCropListResponse;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +28,7 @@ public class UserCropService {
     private final UserRepository userRepository;
 
     @Transactional
-    public Map<String,Long> createUserCrop(UserCropRequest request, Long userId) {
+    public UserCropCreateResponse createUserCrop(UserCropRequest request, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
@@ -37,7 +37,7 @@ public class UserCropService {
         UserCrop userCrop = request.toEntity(coordinates, user);
         userCropRepository.save(userCrop);
 
-        return Map.of("userCropId",userCrop.getId());
+        return UserCropCreateResponse.of(userCrop.getId());
     }
 
     @Transactional(readOnly = true)

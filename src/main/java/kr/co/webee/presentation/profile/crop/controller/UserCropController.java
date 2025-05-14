@@ -4,7 +4,8 @@ import jakarta.validation.Valid;
 import kr.co.webee.application.profile.crop.service.UserCropService;
 import kr.co.webee.presentation.annotation.UserId;
 import kr.co.webee.presentation.profile.crop.api.UserCropApi;
-import kr.co.webee.presentation.profile.crop.dto.request.UserCropRequest;
+import kr.co.webee.presentation.profile.crop.dto.request.UserCropCreateRequest;
+import kr.co.webee.presentation.profile.crop.dto.request.UserCropUpdateRequest;
 import kr.co.webee.presentation.profile.crop.dto.response.UserCropCreateResponse;
 import kr.co.webee.presentation.profile.crop.dto.response.UserCropDetailResponse;
 import kr.co.webee.presentation.profile.crop.dto.response.UserCropListResponse;
@@ -21,7 +22,7 @@ public class UserCropController implements UserCropApi {
 
     @Override
     @PostMapping("")
-    public UserCropCreateResponse createUserCrop(@RequestBody @Valid UserCropRequest request, @UserId Long userId) {
+    public UserCropCreateResponse createUserCrop(@RequestBody @Valid UserCropCreateRequest request, @UserId Long userId) {
         return userCropService.createUserCrop(request, userId);
     }
 
@@ -39,7 +40,7 @@ public class UserCropController implements UserCropApi {
 
     @PutMapping("/{userCropId}")
     @Override
-    public void updateUserCrop(@PathVariable Long userCropId, @RequestBody @Valid UserCropRequest request, @UserId Long userId) {
+    public void updateUserCrop(@PathVariable Long userCropId, @RequestBody @Valid UserCropUpdateRequest request, @UserId Long userId) {
         userCropService.updateUserCrop(userCropId, request, userId);
     }
 

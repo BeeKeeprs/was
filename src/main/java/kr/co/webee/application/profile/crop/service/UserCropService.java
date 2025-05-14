@@ -10,7 +10,8 @@ import kr.co.webee.domain.profile.crop.repository.UserCropRepository;
 import kr.co.webee.domain.user.entity.User;
 import kr.co.webee.domain.user.repository.UserRepository;
 import kr.co.webee.infrastructure.geocoding.client.GeocodingClient;
-import kr.co.webee.presentation.profile.crop.dto.request.UserCropRequest;
+import kr.co.webee.presentation.profile.crop.dto.request.UserCropCreateRequest;
+import kr.co.webee.presentation.profile.crop.dto.request.UserCropUpdateRequest;
 import kr.co.webee.presentation.profile.crop.dto.response.UserCropCreateResponse;
 import kr.co.webee.presentation.profile.crop.dto.response.UserCropDetailResponse;
 import kr.co.webee.presentation.profile.crop.dto.response.UserCropListResponse;
@@ -28,7 +29,7 @@ public class UserCropService {
     private final UserRepository userRepository;
 
     @Transactional
-    public UserCropCreateResponse createUserCrop(UserCropRequest request, Long userId) {
+    public UserCropCreateResponse createUserCrop(UserCropCreateRequest request, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
@@ -58,7 +59,7 @@ public class UserCropService {
     }
 
     @Transactional
-    public void updateUserCrop(Long userCropId, UserCropRequest request, Long userId) {
+    public void updateUserCrop(Long userCropId, UserCropUpdateRequest request, Long userId) {
         UserCrop userCrop = userCropRepository.findById(userCropId)
                 .orElseThrow(() -> new EntityNotFoundException("User Crop not found"));
 

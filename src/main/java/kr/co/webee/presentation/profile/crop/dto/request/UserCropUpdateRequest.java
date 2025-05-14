@@ -13,13 +13,13 @@ import lombok.Builder;
 import java.time.LocalDate;
 
 @Builder
-@Schema(description = "사용자 재배 작물 정보 request")
-public record UserCropRequest(
+@Schema(description = "수정할 사용자 재배 작물 정보 request")
+public record UserCropUpdateRequest(
         @Schema(description = "작물명", example = "딸기")
         @NotBlank
         String name,
 
-        @Schema(description = "품종", example = "설향")
+        @Schema(description = "품종", example = "파인베리")
         String variety,
 
         @Schema(description = "재배 방식", example = "CONTROLLED", examples = {"CONTROLLED", "OPEN_FIELD"})
@@ -30,7 +30,7 @@ public record UserCropRequest(
         @NotBlank
         String cultivationAddress,
 
-        @Schema(description = "재배 면적", example = "1320")
+        @Schema(description = "재배 면적", example = "1500")
         @NotNull
         Integer cultivationArea,
 

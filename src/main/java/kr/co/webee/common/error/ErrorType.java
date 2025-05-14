@@ -41,6 +41,9 @@ public enum ErrorType {
     // UserErrorType
     ALREADY_EXIST_USERNAME(CONFLICT, WARN, "USER_001", "이미 존재하는 아이디입니다"),
 
+    // FileErrorType
+    FILE_UPLOAD_FAILED(BAD_GATEWAY, ERROR, "FILE_001", "파일 업로드에 실패했습니다"),
+
     ;
 
     private final HttpStatus httpStatus;

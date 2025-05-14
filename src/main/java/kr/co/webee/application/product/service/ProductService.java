@@ -5,7 +5,7 @@ import kr.co.webee.domain.product.entity.Product;
 import kr.co.webee.domain.product.entity.ProductImage;
 import kr.co.webee.domain.product.repository.ProductImageRepository;
 import kr.co.webee.domain.product.repository.ProductRepository;
-import kr.co.webee.infrastructure.storage.FileStorage;
+import kr.co.webee.infrastructure.storage.FileStorageClient;
 import kr.co.webee.presentation.product.dto.request.ProductCreateRequest;
 import kr.co.webee.presentation.product.dto.request.ProductUpdateRequest;
 import kr.co.webee.presentation.product.dto.response.ProductResponse;
@@ -22,13 +22,14 @@ import java.util.Optional;
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final FileStorage fileStorage;
+    private final FileStorageClient fileStorageClient;
     private final ProductImageRepository productImageRepository;
     private final ProductSaverService productSaverService;
 
     public Long createProduct(ProductCreateRequest request, List<MultipartFile> images, Long sellerId) {
+        String prefix = "products/" + sellerId;
         List<String> imageUrls = Optional.ofNullable(images).orElseGet(List::of).stream()
-                .map(fileStorage::upload)
+                .map(image -> fileStorageClient.upload(image, prefix))
                 .toList();
 
         return productSaverService.save(request, imageUrls, sellerId);

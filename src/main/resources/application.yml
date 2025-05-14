@@ -33,3 +33,13 @@ kakao:
 was:
   api: ${WAS_API:http://localhost:8080}
   cors-allow-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:8080}
+
+cloud:
+    aws:
+        credentials:
+          access-key: ${AWS_ACCESS_KEY_ID:}
+          secret-key: ${AWS_SECRET_ACCESS_KEY:}
+          region: ${AWS_REGION:ap-northeast-2}
+        s3:
+          bucket: ${AWS_S3_BUCKET:}
+          cdn-url: ${AWS_CDN_URL:}

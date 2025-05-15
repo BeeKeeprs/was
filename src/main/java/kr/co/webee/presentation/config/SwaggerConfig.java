@@ -36,7 +36,7 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 @Configuration
 
 public class SwaggerConfig {
-    private final BuildProperties buildProperties;
+//    private final BuildProperties buildProperties;
 
     @Value("${was.api}")
     private List<String> apiUrls;
@@ -119,9 +119,9 @@ public class SwaggerConfig {
 
     private Info info() {
         return new Info()
-                .title("WeBee API")
-                .description("API 명세 문서 <br> 빌드 일자: " + buildProperties.getTime().atZone(ZoneId.of("Asia/Seoul"))
-                        + "<br> 실행 일자: " + ZonedDateTime.now())
-                .version(buildProperties.getVersion());
+                .title("WeBee API");
+//                .description("API 명세 문서 <br> 빌드 일자: " + buildProperties.getTime().atZone(ZoneId.of("Asia/Seoul"))
+//                        + "<br> 실행 일자: " + ZonedDateTime.now())
+//                .version(buildProperties.getVersion());
     }
 }

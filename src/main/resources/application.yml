@@ -21,6 +21,22 @@ spring:
       ssl:
         enabled: ${REDIS_SSL_ENABLED:false}
 
+  ai:
+    openai:
+      api-key: aaa 
+      chat:
+        options:
+          model: gpt-4o
+          temperature: 0.7
+          maxCompletionTokens: 10000
+
+    vectorstore:
+      redis:
+        uri: ${RAG_REDIS_URI:redis://localhost:6379}
+        initialize-schema: true
+        index: 'app-index'
+        prefix: 'app:'
+
 jwt:
   secret: ${JWT_SECRET_KEY:webee-temporary-secret-key}
   access-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION:3600000}
@@ -43,3 +59,24 @@ cloud:
         s3:
           bucket: ${AWS_S3_BUCKET:}
           cdn-url: ${AWS_CDN_URL:}
+
+app:
+  ai:
+    max-messages: 10
+    vectorstore:
+      topK: 5
+      similarity-threshold: 0.75
+
+    system-prompt: >
+      You are an artificial intelligence known as an omniscient scholar. When you speak, use {language} and answer with a {character} personality.
+    rag-prompt: >
+        You are an agricultural assistant. Use the information below to answer
+        the user's question as clearly and helpfully as possible.
+
+        ---------------------
+        {question_answer_context}
+        ---------------------
+
+        - If a direct answer is not found, infer a relevant one from the context.
+        - Avoid vague or speculative responses.
+        - Only say "No information available" if nothing relevant exists at all.

@@ -23,14 +23,14 @@ spring:
 
   ai:
     openai:
-      api-key: aaa 
+      api-key: ${OPENAI_API_KEY:}
       chat:
         options:
           model: gpt-4o
           temperature: 0.7
           maxCompletionTokens: 10000
 
-    vectorstore:
+    vector-store:
       redis:
         uri: ${RAG_REDIS_URI:redis://localhost:6379}
         initialize-schema: true
@@ -51,32 +51,33 @@ was:
   cors-allow-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:8080}
 
 cloud:
-    aws:
-        credentials:
-          access-key: ${AWS_ACCESS_KEY_ID:}
-          secret-key: ${AWS_SECRET_ACCESS_KEY:}
-          region: ${AWS_REGION:ap-northeast-2}
-        s3:
-          bucket: ${AWS_S3_BUCKET:}
-          cdn-url: ${AWS_CDN_URL:}
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY_ID:}
+      secret-key: ${AWS_SECRET_ACCESS_KEY:}
+      region: ${AWS_REGION:ap-northeast-2}
+    s3:
+      bucket: ${AWS_S3_BUCKET:}
+      cdn-url: ${AWS_CDN_URL:}
 
 app:
   ai:
-    max-messages: 10
-    vectorstore:
+    max-messages: 5
+    vector-store:
       topK: 5
       similarity-threshold: 0.75
 
     system-prompt: >
       You are an artificial intelligence known as an omniscient scholar. When you speak, use {language} and answer with a {character} personality.
     rag-prompt: >
-        You are an agricultural assistant. Use the information below to answer
-        the user's question as clearly and helpfully as possible.
-
-        ---------------------
-        {question_answer_context}
-        ---------------------
-
-        - If a direct answer is not found, infer a relevant one from the context.
-        - Avoid vague or speculative responses.
-        - Only say "No information available" if nothing relevant exists at all.
+      You are an agricultural assistant. Use the information below to answer
+      the user's question as clearly and helpfully as possible.
+      
+      ---------------------
+      {question_answer_context}
+      ---------------------
+      
+      - Use the following context *only if it directly answers the question*. Otherwise, rely on your own knowledge.
+      - If a direct answer is not found, infer a relevant one from the context.
+      - Avoid vague or speculative responses.
+      - Only say "No information available" if nothing relevant exists at all.

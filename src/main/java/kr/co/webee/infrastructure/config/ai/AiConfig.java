@@ -1,12 +1,11 @@
 package kr.co.webee.infrastructure.config.ai;
 
-import java.net.URI;
-
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.client.advisor.vectorstore.QuestionAnswerAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
+import org.springframework.ai.chat.memory.ChatMemoryRepository;
 import org.springframework.ai.chat.memory.InMemoryChatMemoryRepository;
 import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.chat.prompt.PromptTemplate;
@@ -24,8 +23,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
-
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.jdbc.core.JdbcTemplate;
 import redis.clients.jedis.JedisPooled;
+
+import java.net.URI;
 
 @Configuration
 public class AiConfig {
@@ -39,10 +41,10 @@ public class AiConfig {
     @Value("${app.ai.max-messages}")
     private int maxMessageSize;
 
-    @Value("${app.ai.vectorstore.topK}")
+    @Value("${app.ai.vector-store.topK}")
     private int topK;
-    
-    @Value("${app.ai.vectorstore.similarity-threshold}")
+
+    @Value("${app.ai.vector-store.similarity-threshold}")
     private double similarityThreshold;
 
     @Bean
@@ -56,27 +58,34 @@ public class AiConfig {
     @Bean
     VectorStore vectorStore(
             EmbeddingModel embeddingModel,
-            @Value("${spring.ai.vectorstore.redis.uri}") String redisUri,
-            @Value("${spring.ai.vectorstore.redis.index}") String index,
-            @Value("${spring.ai.vectorstore.redis.prefix}") String prefix,
-            @Value("${spring.ai.vectorstore.redis.initialize-schema}") boolean initializeSchema) {
+            @Value("${spring.ai.vector-store.redis.uri}") String redisUri,
+            @Value("${spring.ai.vector-store.redis.index}") String index,
+            @Value("${spring.ai.vector-store.redis.prefix}") String prefix,
+            @Value("${spring.ai.vector-store.redis.initialize-schema}") boolean initializeSchema) {
 
-        URI uri = URI.create(redisUri);
-        String host = uri.getHost();
-        int port = uri.getPort() == -1 ? 6379 : uri.getPort();
-
-        return RedisVectorStore.builder(new JedisPooled(host, port), embeddingModel)
+        return RedisVectorStore.builder(new JedisPooled(URI.create(redisUri)), embeddingModel)
                 .indexName(index)
                 .prefix(prefix)
                 .metadataFields(
-                	    MetadataField.tag("category"),
-                	    MetadataField.tag("type"),
-                	    MetadataField.tag("created_by"),
-                	    MetadataField.tag("origin"),
-                	    MetadataField.numeric("confidence"),
-                	    MetadataField.text("created_at")
+                        MetadataField.tag("category"),
+                        MetadataField.tag("type"),
+                        MetadataField.tag("created_by"),
+                        MetadataField.tag("origin"),
+                        MetadataField.numeric("confidence"),
+                        MetadataField.text("created_at")
                 )
                 .initializeSchema(initializeSchema)
+                .build();
+    }
+
+    @Bean
+    @Qualifier("vanillaChatClientWithMemory")
+    public ChatClient vanillaChatClientWithMemory(ChatClient.Builder builder, ChatMemory chatMemory) {
+        return builder
+                .defaultAdvisors(
+                        new SimpleLoggerAdvisor(Ordered.LOWEST_PRECEDENCE - 1),
+                        MessageChatMemoryAdvisor.builder(chatMemory).build()
+                )
                 .build();
     }
 
@@ -96,10 +105,8 @@ public class AiConfig {
 
         return builder
                 .defaultAdvisors(
-                		advisor, 
-                		MessageChatMemoryAdvisor.builder(chatMemory)
-	                        .order(Ordered.LOWEST_PRECEDENCE)
-	                        .build())
+                        advisor,
+                        MessageChatMemoryAdvisor.builder(chatMemory).build())
                 .build();
     }
 
@@ -123,8 +130,8 @@ public class AiConfig {
         return builder
                 .defaultSystem(systemPrompt)
                 .defaultAdvisors(
-                    new SimpleLoggerAdvisor(Ordered.LOWEST_PRECEDENCE - 1),
-                    qaAdvisor
+                        new SimpleLoggerAdvisor(Ordered.LOWEST_PRECEDENCE - 1),
+                        qaAdvisor
                 )
                 .build();
     }

@@ -1,17 +1,15 @@
-package kr.co.webee.application.ai;
+package kr.co.webee.presentation.ai.chat.controller;
+
+import kr.co.webee.application.ai.AiGenerationService;
+import kr.co.webee.presentation.ai.chat.dto.QuestionRequest;
+import kr.co.webee.presentation.ai.chat.dto.ChatResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import lombok.RequiredArgsConstructor;
-
 @RestController
-@RequestMapping("/api/v1/faq")
+@RequestMapping("/api/v1/chat")
 @RequiredArgsConstructor
 public class FaqController {
 
@@ -21,7 +19,7 @@ public class FaqController {
      * 예상 질문 리스트를 반환합니다.
      * 필터: category = 'bee', type = 'faq'
      */
-    @GetMapping("/questions")
+    @GetMapping("/examples")
     public List<String> getBeeFaqQuestions() {
         return aiGenerationService.getBeeFaqQuestions();
     }
@@ -33,7 +31,7 @@ public class FaqController {
      * @return AI가 생성한 응답 문자열
      */
     @PostMapping("/ask")
-    public String answerUserQuestion(@RequestBody QuestionRequest request) {
-        return aiGenerationService.answerUserQuestion(request.getQuestion());
+    public ChatResponse answerUserQuestion(@RequestBody QuestionRequest request) {
+        return aiGenerationService.answerUserQuestion2(request.question(), request.conversationId());
     }
 }

@@ -19,11 +19,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.util.ObjectUtils;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
@@ -36,7 +34,7 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 @Configuration
 
 public class SwaggerConfig {
-//    private final BuildProperties buildProperties;
+    private final BuildProperties buildProperties;
 
     @Value("${was.api}")
     private List<String> apiUrls;
@@ -119,9 +117,9 @@ public class SwaggerConfig {
 
     private Info info() {
         return new Info()
-                .title("WeBee API");
-//                .description("API 명세 문서 <br> 빌드 일자: " + buildProperties.getTime().atZone(ZoneId.of("Asia/Seoul"))
-//                        + "<br> 실행 일자: " + ZonedDateTime.now())
-//                .version(buildProperties.getVersion());
+                .title("WeBee API")
+                .description("API 명세 문서 <br> 빌드 일자: " + buildProperties.getTime().atZone(ZoneId.of("Asia/Seoul"))
+                        + "<br> 실행 일자: " + ZonedDateTime.now())
+                .version(buildProperties.getVersion());
     }
 }

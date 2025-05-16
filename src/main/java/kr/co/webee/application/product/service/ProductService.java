@@ -10,6 +10,8 @@ import kr.co.webee.presentation.product.dto.request.ProductCreateRequest;
 import kr.co.webee.presentation.product.dto.request.ProductUpdateRequest;
 import kr.co.webee.presentation.product.dto.response.ProductResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,6 +27,20 @@ public class ProductService {
     private final FileStorageClient fileStorageClient;
     private final ProductImageRepository productImageRepository;
     private final ProductSaverService productSaverService;
+
+    @Transactional(readOnly = true)
+    public Slice<ProductResponse> getAllProducts(Pageable pageable) {
+        Slice<Product> products = productRepository.findAll(pageable);
+
+        return products.map(product -> {
+            List<String> imageUrls = productImageRepository.findAllByProductId(product.getId())
+                    .stream()
+                    .map(ProductImage::getImageUrl)
+                    .toList();
+
+            return ProductResponse.from(product, imageUrls);
+        });
+    }
 
     public Long createProduct(ProductCreateRequest request, List<MultipartFile> images, Long sellerId) {
         String prefix = "products/" + sellerId;
@@ -62,4 +78,5 @@ public class ProductService {
 
         productRepository.delete(product);
     }
+
 }

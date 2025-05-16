@@ -8,7 +8,12 @@ import kr.co.webee.presentation.product.dto.request.ProductCreateRequest;
 import kr.co.webee.presentation.product.dto.request.ProductUpdateRequest;
 import kr.co.webee.presentation.product.dto.response.ProductResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,6 +25,14 @@ import java.util.List;
 public class ProductController implements ProductApi {
 
     private final ProductService productService;
+
+    @GetMapping
+    public ResponseEntity<Slice<ProductResponse>> getAllProducts(
+            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        Slice<ProductResponse> result = productService.getAllProducts(pageable);
+        return ResponseEntity.ok(result);
+    }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Long createProduct(

@@ -1,87 +1,93 @@
 package kr.co.webee.infrastructure.config.ai;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.client.ChatClient.AdvisorSpec;
-import org.springframework.ai.chat.client.ChatClient.ChatClientRequestSpec;
+import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
+import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
+import org.springframework.ai.chat.client.advisor.api.Advisor;
+import org.springframework.ai.chat.client.advisor.vectorstore.QuestionAnswerAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.ai.chat.prompt.PromptTemplate;
+import org.springframework.ai.vectorstore.SearchRequest;
+import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class AiGenerationClient {
 
-    private final ChatClient vanillaChatClient;
-    private final ChatClient ragChatDefaultClient;
-    private final ChatClient ragChatCustomClient;
+    private final ChatClient chatClient;
+    private final VectorStore vectorStore;
+    private final MessageChatMemoryAdvisor memoryAdvisor;
+    private final SimpleLoggerAdvisor loggerAdvisor;
 
-    public AiGenerationClient(
-            @Qualifier("vanillaChatClientWithMemory") ChatClient vanillaChatClient,
-            @Qualifier("ragChatDefaultClient") ChatClient ragChatDefaultClient,
-            @Qualifier("ragChatCustomClient") ChatClient ragChatCustomClient
-    ) {
-        this.vanillaChatClient = vanillaChatClient;
-        this.ragChatDefaultClient = ragChatDefaultClient;
-        this.ragChatCustomClient = ragChatCustomClient;
-    }
+    @Value("${app.ai.rag-prompt}")
+    private String ragPrompt;
+
+    @Value("${app.ai.vector-store.topK}")
+    private int topK;
+
+    @Value("${app.ai.vector-store.similarity-threshold}")
+    private double similarityThreshold;
 
     /**
-     * 사용자 입력에 대해 AI 응답을 생성합니다.
-     * <p>
-     * 이 메서드는 사용자 입력을 바탕으로 AI가 답변을 생성합니다.
-     *
-     * @param userInput 사용자의 질문 또는 입력 텍스트
-     * @return AI가 생성한 응답 텍스트
+     * 일반 텍스트 질문에 대해 AI 응답을 생성합니다.
      */
     public String generate(String userInput, String conversationId) {
-        return vanillaChatClient.prompt()
-                .system(s -> s
-                        .param("language", "Korean")
-                        .param("character", "챗봇")
-                )
-                .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, conversationId))
-                .user(userInput)
+        return buildPrompt(userInput, conversationId, List.of(loggerAdvisor, memoryAdvisor))
                 .call()
                 .content();
     }
 
     /**
-     * 사용자 입력에 대해 RAG(Retrieval-Augmented Generation) 기반 응답을 생성합니다.
-     * <p>
-     * 이 메서드는 사용자 입력을 바탕으로 VectorStore에서 관련 문서를 검색하고,
-     * 검색된 문서(context)를 기반으로 AI가 답변을 생성합니다.
-     *
-     * @param userInput     사용자의 질문 또는 입력 텍스트
-     * @param contextOnly   true인 경우 검색된 문서(context)만으로 응답을 구성하며, AI의 자유 응답 없이 제한된 답변을 생성합니다.
-     *                      false인 경우 context와 사용자 입력을 함께 활용하여 AI가 더 유연한 응답을 생성합니다.
-     * @param advisorParams 문서 검색 시 사용할 필터 조건입니다.
-     *                      예: Map.of(QuestionAnswerAdvisor.FILTER_EXPRESSION, "type == 'faq'")
-     * @return RAG 기반으로 생성된 최종 응답 텍스트
-     * <p>
-     * 예시:
-     * ragGeneration("수정벌은 언제 투입하나요?", false, Map.of("type", "faq"));
+     * RAG 기반 질문에 대해 벡터 검색을 포함한 AI 응답을 생성합니다.
      */
-    public String ragGenerate(String userInput, String conversationId, boolean contextOnly, Map<String, Object> advisorParams) {
-        ChatClient chatClient = contextOnly ? ragChatDefaultClient : ragChatCustomClient;
+    public String ragGenerate(String userInput, String conversationId, Map<String, Object> advisorParams) {
+        List<Advisor> advisors = new ArrayList<>(List.of(loggerAdvisor, memoryAdvisor));
 
-        ChatClientRequestSpec promptSpec = chatClient.prompt()
-                .system(s -> s
-                        .param("language", "Korean")
-                        .param("character", "챗봇")
-                )
-                .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, conversationId))
-                .user(userInput);
-
-        // Consumer<AdvisorSpec> spec = a -> a.param(QuestionAnswerAdvisor.FILTER_EXPRESSION, "category=='text'");
         if (advisorParams != null && !advisorParams.isEmpty()) {
-            Consumer<AdvisorSpec> advisorSpec = a -> a.params(advisorParams);
-            promptSpec.advisors(advisorSpec);
+            var searchRequest = SearchRequest.builder()
+                    .query(userInput)
+                    .topK(topK)
+                    .similarityThreshold(similarityThreshold)
+                    .build();
+
+            var template = PromptTemplate.builder()
+                    .template(ragPrompt)
+                    .variables(Map.of("userInput", userInput))
+                    .build();
+
+            var qaAdvisor = QuestionAnswerAdvisor.builder(vectorStore)
+                    .searchRequest(searchRequest)
+                    .promptTemplate(template)
+                    .build();
+
+            advisors.add(qaAdvisor);
         }
 
-        return promptSpec.call().content();
+        return buildPrompt(userInput, conversationId, advisors)
+                .call()
+                .content();
+    }
+
+    /**
+     * ChatClientRequestSpec 공통 생성 메서드.
+     */
+    private ChatClient.ChatClientRequestSpec buildPrompt(String userInput, String conversationId, List<Advisor> advisors) {
+        return chatClient.prompt()
+                .system(s -> s
+                        .param("language", "Korean")
+                        .param("character", "챗봇"))
+                .advisors(a -> a
+                        .param(ChatMemory.CONVERSATION_ID, conversationId)
+                        .advisors(advisors))
+                .user(userInput);
     }
 }

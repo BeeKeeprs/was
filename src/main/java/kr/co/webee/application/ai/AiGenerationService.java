@@ -4,6 +4,7 @@ import kr.co.webee.infrastructure.config.ai.AiGenerationClient;
 import kr.co.webee.presentation.ai.chat.dto.ChatResponse;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.ai.chat.client.advisor.vectorstore.QuestionAnswerAdvisor;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
@@ -35,15 +36,6 @@ public class AiGenerationService {
                 .toList();
     }
 
-    public ChatResponse answerUserQuestion2(String userQuestion, String conversationId) {
-        if (StringUtils.isBlank(conversationId)) {
-            conversationId = UUID.randomUUID().toString();
-        }
-
-        String content = aiGenerationClient.generate(userQuestion, conversationId);
-        return new ChatResponse(content, conversationId);
-    }
-
     public ChatResponse answerUserQuestion(String userQuestion, String conversationId) {
         if (StringUtils.isBlank(conversationId)) {
             conversationId = UUID.randomUUID().toString();
@@ -52,9 +44,7 @@ public class AiGenerationService {
         String content = aiGenerationClient.ragGenerate(
                 userQuestion,
                 conversationId,
-                false, // contextOnly: false → 커스텀 context + 벡터 + AI 사용
-                Map.of()
-//                Map.of(QuestionAnswerAdvisor.FILTER_EXPRESSION, "type != 'faq' AND category == 'bee'")
+                Map.of(QuestionAnswerAdvisor.FILTER_EXPRESSION, "type != 'faq'")
         );
 
         return new ChatResponse(content, conversationId);

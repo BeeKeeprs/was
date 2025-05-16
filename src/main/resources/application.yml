@@ -37,6 +37,10 @@ spring:
         index: 'app-index'
         prefix: 'app:'
 
+logging:
+  level:
+    org.springframework.ai.chat.client.advisor: DEBUG
+
 jwt:
   secret: ${JWT_SECRET_KEY:webee-temporary-secret-key}
   access-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION:3600000}
@@ -67,17 +71,13 @@ app:
       topK: 5
       similarity-threshold: 0.75
 
-    system-prompt: >
-      You are an artificial intelligence known as an omniscient scholar. When you speak, use {language} and answer with a {character} personality.
     rag-prompt: >
-      You are an agricultural assistant. Use the information below to answer
-      the user's question as clearly and helpfully as possible.
+      Question: {userInput}
+        
+        ---------------------
+        {question_answer_context}
+        ---------------------
       
-      ---------------------
-      {question_answer_context}
-      ---------------------
-      
-      - Use the following context *only if it directly answers the question*. Otherwise, rely on your own knowledge.
-      - If a direct answer is not found, infer a relevant one from the context.
-      - Avoid vague or speculative responses.
-      - Only say "No information available" if nothing relevant exists at all.
+      - Answer briefly and politely, like a helpful chat assistant.
+      - Use the context only if it directly answers the question.
+      - If nothing is relevant, respond: "요청하신 정보를 찾을 수 없습니다."

@@ -68,15 +68,4 @@ app:
       topK: 5
       similarity-threshold: 0.75
 
-    rag-prompt: >
-      Question: {userInput}
-    
-      ---------------------
-      {question_answer_context}
-      ---------------------
-    
-      - If the context clearly answers the question, provide a short and clear response in Korean.
-      - If the context contains general information only, start your answer with "일반적으로는" and explain it’s not specific to the user's question.
-      - If the context is unrelated, respond in Korean: "요청하신 정보를 찾을 수 없습니다."
-      - Do not guess, assume, or use any external knowledge not in the context.
-      - Keep the language simple and trustworthy, suitable for farmers with little AI experience.
+    rag-prompt: classpath:prompts/direct_answer_strict.txt

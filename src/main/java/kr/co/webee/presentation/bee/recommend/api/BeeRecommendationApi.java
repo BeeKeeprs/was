@@ -4,7 +4,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.webee.infrastructure.config.ai.dto.BeeRecommendationAiResponse;
+import kr.co.webee.presentation.annotation.UserId;
+import kr.co.webee.presentation.bee.recommend.dto.request.BeeRecommendationRequest;
 import kr.co.webee.presentation.bee.recommend.dto.request.UserCropInfoRequest;
+import kr.co.webee.presentation.bee.recommend.dto.response.BeeRecommendationCreateResponse;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Tag(name = "수정벌 추천 API", description = "수정벌 추천 관련 API")
@@ -15,4 +18,12 @@ public interface BeeRecommendationApi {
     )
     @ApiResponse(responseCode = "200", description = "성공")
     BeeRecommendationAiResponse recommendBee(@RequestBody UserCropInfoRequest request);
+
+    @Operation(
+            summary = "수정벌 추천 내역 저장",
+            description = "AI로부터 응답받은 수정벌 추천 내역을 저장합니다. 로그인한 사용자만 저장할 수 있습니다."
+    )
+    @ApiResponse(responseCode = "200", description = "성공")
+    @ApiResponse(responseCode = "404", description = "사용자 재배 작물 없음")
+    BeeRecommendationCreateResponse createBeeRecommendation(@RequestBody BeeRecommendationRequest request, @UserId Long userId);
 }

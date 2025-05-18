@@ -1,10 +1,17 @@
 package kr.co.webee.application.bee.recommend.service;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.persistence.EntityNotFoundException;
 import kr.co.webee.application.ai.RagSearchOptions;
+import kr.co.webee.domain.bee.recommend.entity.BeeRecommendation;
+import kr.co.webee.domain.bee.recommend.repository.BeeRecommendationRepository;
+import kr.co.webee.domain.profile.crop.entity.UserCrop;
+import kr.co.webee.domain.profile.crop.repository.UserCropRepository;
 import kr.co.webee.infrastructure.config.ai.BeeRecommendationAiExecutor;
 import kr.co.webee.infrastructure.config.ai.dto.BeeRecommendationAiResponse;
+import kr.co.webee.presentation.bee.recommend.dto.request.BeeRecommendationRequest;
 import kr.co.webee.presentation.bee.recommend.dto.request.UserCropInfoRequest;
+import kr.co.webee.presentation.bee.recommend.dto.response.BeeRecommendationCreateResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -19,6 +26,8 @@ import java.nio.charset.StandardCharsets;
 @RequiredArgsConstructor
 public class BeeRecommendationService {
     private final BeeRecommendationAiExecutor aiExecutor;
+    private final BeeRecommendationRepository beeRecommendationRepository;
+    private final UserCropRepository userCropRepository;
 
     @Value("${app.ai.bee-recommendation-rag-prompt}")
     private Resource ragPromptResource;
@@ -57,5 +66,14 @@ public class BeeRecommendationService {
         );
 
         return aiExecutor.recommendBeeWithRag(request.describe(), ragPrompt, ragQuery, searchOptions);
+    }
+
+    public BeeRecommendationCreateResponse createBeeRecommendation(BeeRecommendationRequest request, Long userId) {
+        UserCrop userCrop = userCropRepository.findById(request.userCropId())
+                .orElseThrow(() -> new EntityNotFoundException("user crop not found"));
+
+        BeeRecommendation beeRecommendation = request.toEntity(userCrop);
+        beeRecommendationRepository.save(beeRecommendation);
+        return BeeRecommendationCreateResponse.of(beeRecommendation.getId());
     }
 }

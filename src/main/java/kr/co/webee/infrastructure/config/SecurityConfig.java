@@ -31,7 +31,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private static final String[] PUBLIC_ENDPOINTS = {
-            "/api/v1/auth/**", "/api/v1/assistants/**", "/api/v1/bee/recommendations",
+            "/api/v1/auth/**", "/api/v1/assistants/**", "/api/v1/bee/recommendations/ai",
             "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**",
     };
 

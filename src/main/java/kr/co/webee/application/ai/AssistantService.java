@@ -22,7 +22,7 @@ public class AssistantService {
 
     private final AssistantAiExecutor aiExecutor;
 
-    @Value("${app.ai.rag-prompt}")
+    @Value("${app.ai.assistant-rag-prompt}")
     private Resource ragPromptResource;
 
     private String ragPrompt;

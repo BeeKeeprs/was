@@ -68,4 +68,6 @@ app:
       topK: 5
       similarity-threshold: 0.75
 
-    rag-prompt: classpath:prompts/direct_answer_strict.txt
+    assistant-rag-prompt: classpath:prompts/direct_answer_strict.txt
+    bee-recommendation-rag-prompt: classpath:prompts/bee_recommendation_prompt.txt
+    bee-recommendation-rag-query: classpath:prompts/bee_recommendation_query.txt

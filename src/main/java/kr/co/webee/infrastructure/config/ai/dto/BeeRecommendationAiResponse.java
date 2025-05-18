@@ -12,9 +12,9 @@ public record BeeRecommendationAiResponse(
 
         @Schema(
                 description = "수정벌 특징",
-                example = "[\"서양 뒤영벌은 온도 변화에 강하며, 특히 저온에서도 활발하게 활동할 수 있어 시설 재배에 적합합니다.\", " +
-                        "\"크기가 작아 딸기 꽃을 손쉽게 이동하며 수정할 수 있습니다.\", " +
-                        "\"하루에 여러 번 같은 꽃을 방문할 수 있어 수정 효율이 높습니다.\"]"
+                example = "[\"서양뒤영벌은 온실 환경에서의 우수한 활동성\", " +
+                        "\"추운 날씨에도 활동 가능한 장점\", " +
+                        "\"효율적인 꽃가루 전달 능력\"]"
         )
         List<String> characteristics,
 
@@ -26,8 +26,8 @@ public record BeeRecommendationAiResponse(
 
         @Schema(
                 description = "주의사항",
-                example = "[\"서양 뒤영벌은 습도에 민감하므로, 시설 내 습도를 적절히 유지해야 합니다.\", " +
-                        "\"농약 사용 시에는 벌의 활동에 영향을 줄 수 있으니 주의가 필요합니다.\"]"
+                example = "[\"서양뒤영벌은 높은 온도와 습도에 민감한 점\", " +
+                        "\"과도한 농약 사용은 서양뒤영벌의 활동에 부정적 영향\"]"
         )
         List<String> caution,
 

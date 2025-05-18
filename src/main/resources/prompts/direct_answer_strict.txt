@@ -7,7 +7,7 @@ Ignore the context if it is irrelevant or only loosely related.
 Do not explain the context or refer to it unless it adds essential value.
 Keep the answer focused only on the user's question, in 1–2 sentences.
 
-Question: {userInput}
+Question: {query}
 
 ---------------------
 {question_answer_context}

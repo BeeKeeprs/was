@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -71,6 +72,7 @@ public class BeeRecommendationService {
         return aiExecutor.recommendBeeWithRag(request.describe(), ragPrompt, ragQuery, searchOptions);
     }
 
+    @Transactional
     public BeeRecommendationCreateResponse createBeeRecommendation(BeeRecommendationRequest request) {
         UserCrop userCrop = userCropRepository.findById(request.userCropId())
                 .orElseThrow(() -> new EntityNotFoundException("User Crop not found"));
@@ -80,12 +82,14 @@ public class BeeRecommendationService {
         return BeeRecommendationCreateResponse.of(beeRecommendation.getId());
     }
 
+    @Transactional(readOnly = true)
     public List<BeeRecommendationListResponse> getBeeRecommendationList(Long userId) {
         return beeRecommendationRepository.findByUserId(userId).stream()
                 .map(BeeRecommendationListResponse::from)
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public BeeRecommendationDetailResponse getBeeRecommendationDetail(Long beeRecommendId) {
         BeeRecommendation beeRecommendation = beeRecommendationRepository.findById(beeRecommendId)
                 .orElseThrow(() -> new EntityNotFoundException("Bee Recommendation not found"));

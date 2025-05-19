@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import kr.co.webee.presentation.annotation.UserId;
 import kr.co.webee.presentation.profile.crop.dto.request.UserCropCreateRequest;
 import kr.co.webee.presentation.profile.crop.dto.request.UserCropUpdateRequest;
+import kr.co.webee.presentation.profile.crop.dto.response.UserCropAddressListResponse;
 import kr.co.webee.presentation.profile.crop.dto.response.UserCropCreateResponse;
 import kr.co.webee.presentation.profile.crop.dto.response.UserCropDetailResponse;
 import kr.co.webee.presentation.profile.crop.dto.response.UserCropListResponse;
@@ -58,6 +59,18 @@ public interface UserCropApi {
     UserCropDetailResponse getUserCropDetail(
             @Parameter(description = "사용자 재배 작물 ID", example ="1", required = true)
             @PathVariable Long userCropId
+    );
+
+    @Operation(
+            summary = "사용자 작물 재배지 목록 조회",
+            description = "사용자가 재배하는 작물의 재배지 목록 정보를 조회합니다."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "사용자 작물 재배지 목록 조회 성공"),
+    })
+    UserCropAddressListResponse getUserCropAddressList(
+            @Parameter(hidden = true)
+            @UserId Long userId
     );
 
     @Operation(

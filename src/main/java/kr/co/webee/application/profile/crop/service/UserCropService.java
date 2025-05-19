@@ -12,6 +12,7 @@ import kr.co.webee.domain.user.repository.UserRepository;
 import kr.co.webee.infrastructure.geocoding.client.GeocodingClient;
 import kr.co.webee.presentation.profile.crop.dto.request.UserCropCreateRequest;
 import kr.co.webee.presentation.profile.crop.dto.request.UserCropUpdateRequest;
+import kr.co.webee.presentation.profile.crop.dto.response.UserCropAddressListResponse;
 import kr.co.webee.presentation.profile.crop.dto.response.UserCropCreateResponse;
 import kr.co.webee.presentation.profile.crop.dto.response.UserCropDetailResponse;
 import kr.co.webee.presentation.profile.crop.dto.response.UserCropListResponse;
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -56,6 +58,12 @@ public class UserCropService {
                 .orElseThrow(() -> new EntityNotFoundException("User Crop not found"));
 
         return UserCropDetailResponse.from(userCrop);
+    }
+
+    @Transactional(readOnly = true)
+    public UserCropAddressListResponse getUserCropAddressList(Long userId) {
+        List<String> addresses = userCropRepository.findAddressesByUserId(userId);
+        return UserCropAddressListResponse.of(addresses);
     }
 
     @Transactional

@@ -6,6 +6,7 @@ import kr.co.webee.presentation.annotation.UserId;
 import kr.co.webee.presentation.profile.crop.api.UserCropApi;
 import kr.co.webee.presentation.profile.crop.dto.request.UserCropCreateRequest;
 import kr.co.webee.presentation.profile.crop.dto.request.UserCropUpdateRequest;
+import kr.co.webee.presentation.profile.crop.dto.response.UserCropAddressListResponse;
 import kr.co.webee.presentation.profile.crop.dto.response.UserCropCreateResponse;
 import kr.co.webee.presentation.profile.crop.dto.response.UserCropDetailResponse;
 import kr.co.webee.presentation.profile.crop.dto.response.UserCropListResponse;
@@ -36,6 +37,12 @@ public class UserCropController implements UserCropApi {
     @GetMapping("/{userCropId}")
     public UserCropDetailResponse getUserCropDetail(@PathVariable Long userCropId) {
         return userCropService.getUserCropDetail(userCropId);
+    }
+
+    @Override
+    @GetMapping("/addresses")
+    public UserCropAddressListResponse getUserCropAddressList(@UserId Long userId) {
+        return userCropService.getUserCropAddressList(userId);
     }
 
     @PutMapping("/{userCropId}")

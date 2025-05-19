@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 
 
-@Tag(name = "UserCrop")
+@Tag(name = "UserCrop", description = "사용자 재배 작물 정보 관련 API")
 public interface UserCropApi {
     @Operation(
             summary = "사용자 재배 작물 정보 등록",

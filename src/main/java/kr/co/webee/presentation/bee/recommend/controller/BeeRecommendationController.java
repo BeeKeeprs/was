@@ -7,6 +7,7 @@ import kr.co.webee.presentation.bee.recommend.api.BeeRecommendationApi;
 import kr.co.webee.presentation.bee.recommend.dto.request.BeeRecommendationRequest;
 import kr.co.webee.presentation.bee.recommend.dto.request.UserCropInfoRequest;
 import kr.co.webee.presentation.bee.recommend.dto.response.BeeRecommendationCreateResponse;
+import kr.co.webee.presentation.bee.recommend.dto.response.BeeRecommendationDetailResponse;
 import kr.co.webee.presentation.bee.recommend.dto.response.BeeRecommendationListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -35,5 +36,11 @@ public class BeeRecommendationController implements BeeRecommendationApi {
     @GetMapping("")
     public List<BeeRecommendationListResponse> getBeeRecommendationList(@UserId Long userId) {
         return beeRecommendationService.getBeeRecommendationList(userId);
+    }
+
+    @Override
+    @GetMapping("/{beeRecommendId}")
+    public BeeRecommendationDetailResponse getBeeRecommendationDetail(@PathVariable Long beeRecommendId) {
+        return beeRecommendationService.getBeeRecommendationDetail(beeRecommendId);
     }
 }

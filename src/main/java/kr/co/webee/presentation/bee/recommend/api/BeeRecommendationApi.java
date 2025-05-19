@@ -8,7 +8,9 @@ import kr.co.webee.presentation.annotation.UserId;
 import kr.co.webee.presentation.bee.recommend.dto.request.BeeRecommendationRequest;
 import kr.co.webee.presentation.bee.recommend.dto.request.UserCropInfoRequest;
 import kr.co.webee.presentation.bee.recommend.dto.response.BeeRecommendationCreateResponse;
+import kr.co.webee.presentation.bee.recommend.dto.response.BeeRecommendationDetailResponse;
 import kr.co.webee.presentation.bee.recommend.dto.response.BeeRecommendationListResponse;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
@@ -36,4 +38,12 @@ public interface BeeRecommendationApi {
     )
     @ApiResponse(responseCode = "200", description = "성공")
     List<BeeRecommendationListResponse> getBeeRecommendationList(@UserId Long userId);
+
+    @Operation(
+            summary = "수정벌 추천 내역 상세 조회",
+            description = "수정벌 추천 내역을 상세 조회합니다."
+    )
+    @ApiResponse(responseCode = "200", description = "성공")
+    @ApiResponse(responseCode = "404", description = "수정벌 추천 내역 없음")
+    BeeRecommendationDetailResponse getBeeRecommendationDetail(@PathVariable Long beeRecommendId);
 }

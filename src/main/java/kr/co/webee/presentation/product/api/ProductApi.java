@@ -8,12 +8,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import kr.co.webee.domain.bee.type.BeeType;
 import kr.co.webee.presentation.product.dto.request.ProductCreateRequest;
 import kr.co.webee.presentation.product.dto.request.ProductUpdateRequest;
 import kr.co.webee.presentation.product.dto.response.ProductResponse;
-import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +28,7 @@ public interface ProductApi {
     @Operation(summary = "전체 상품 조회 (페이징)", description = "전체 상품 목록을 페이지 단위로 조회합니다.")
     @GetMapping
     ResponseEntity<?> getAllProducts(
-            Pageable pageable
+            Pageable pageable, BeeType beeType
     );
 
     @Operation(

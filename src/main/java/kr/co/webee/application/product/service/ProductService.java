@@ -1,6 +1,7 @@
 package kr.co.webee.application.product.service;
 
 import jakarta.persistence.EntityNotFoundException;
+import kr.co.webee.domain.bee.type.BeeType;
 import kr.co.webee.domain.product.entity.Product;
 import kr.co.webee.domain.product.entity.ProductImage;
 import kr.co.webee.domain.product.repository.ProductImageRepository;
@@ -29,8 +30,8 @@ public class ProductService {
     private final ProductSaverService productSaverService;
 
     @Transactional(readOnly = true)
-    public Slice<ProductResponse> getAllProducts(Pageable pageable) {
-        Slice<Product> products = productRepository.findAll(pageable);
+    public Slice<ProductResponse> getAllProducts(Pageable pageable, BeeType beeType) {
+        Slice<Product> products = beeType == null ? productRepository.findAll(pageable) : productRepository.findByBeeType(beeType, pageable);
 
         return products.map(product -> {
             List<String> imageUrls = productImageRepository.findAllByProductId(product.getId())
@@ -78,5 +79,4 @@ public class ProductService {
 
         productRepository.delete(product);
     }
-
 }

@@ -2,6 +2,7 @@ package kr.co.webee.presentation.product.controller;
 
 import jakarta.validation.Valid;
 import kr.co.webee.application.product.service.ProductService;
+import kr.co.webee.domain.bee.type.BeeType;
 import kr.co.webee.presentation.annotation.UserId;
 import kr.co.webee.presentation.product.api.ProductApi;
 import kr.co.webee.presentation.product.dto.request.ProductCreateRequest;
@@ -28,9 +29,10 @@ public class ProductController implements ProductApi {
 
     @GetMapping
     public ResponseEntity<Slice<ProductResponse>> getAllProducts(
-            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+            @RequestParam(value = "bee", required = false) BeeType beeType
     ) {
-        Slice<ProductResponse> result = productService.getAllProducts(pageable);
+        Slice<ProductResponse> result = productService.getAllProducts(pageable, beeType);
         return ResponseEntity.ok(result);
     }
 

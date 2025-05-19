@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Map;
 
-@Tag(name = "Auth")
+@Tag(name = "Auth", description = "사용자 인증 관련 API")
 public interface AuthApi {
     @Operation(summary = "회원가입", description = "사용자 정보를 등록하는 API")
     @ApiDocsErrorType(ErrorType.ALREADY_EXIST_USERNAME)

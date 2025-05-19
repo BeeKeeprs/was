@@ -12,6 +12,7 @@ import kr.co.webee.infrastructure.config.ai.dto.BeeRecommendationAiResponse;
 import kr.co.webee.presentation.bee.recommend.dto.request.BeeRecommendationRequest;
 import kr.co.webee.presentation.bee.recommend.dto.request.UserCropInfoRequest;
 import kr.co.webee.presentation.bee.recommend.dto.response.BeeRecommendationCreateResponse;
+import kr.co.webee.presentation.bee.recommend.dto.response.BeeRecommendationListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -68,12 +70,18 @@ public class BeeRecommendationService {
         return aiExecutor.recommendBeeWithRag(request.describe(), ragPrompt, ragQuery, searchOptions);
     }
 
-    public BeeRecommendationCreateResponse createBeeRecommendation(BeeRecommendationRequest request, Long userId) {
+    public BeeRecommendationCreateResponse createBeeRecommendation(BeeRecommendationRequest request) {
         UserCrop userCrop = userCropRepository.findById(request.userCropId())
                 .orElseThrow(() -> new EntityNotFoundException("user crop not found"));
 
         BeeRecommendation beeRecommendation = request.toEntity(userCrop);
         beeRecommendationRepository.save(beeRecommendation);
         return BeeRecommendationCreateResponse.of(beeRecommendation.getId());
+    }
+
+    public List<BeeRecommendationListResponse> getBeeRecommendationList(Long userId) {
+        return beeRecommendationRepository.findByUserId(userId).stream()
+                .map(BeeRecommendationListResponse::from)
+                .toList();
     }
 }

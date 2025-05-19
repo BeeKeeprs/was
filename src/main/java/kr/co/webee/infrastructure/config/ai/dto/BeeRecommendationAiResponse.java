@@ -7,7 +7,7 @@ import java.util.List;
 
 @Schema(description = "수정벌 추천 ai 응답")
 public record BeeRecommendationAiResponse(
-        @Schema(description = "수정벌 종류", example = "서양 뒤영벌")
+        @Schema(description = "수정벌 종류", example = "서양뒤영벌")
         String beeType,
 
         @Schema(

@@ -8,7 +8,10 @@ import kr.co.webee.presentation.annotation.UserId;
 import kr.co.webee.presentation.bee.recommend.dto.request.BeeRecommendationRequest;
 import kr.co.webee.presentation.bee.recommend.dto.request.UserCropInfoRequest;
 import kr.co.webee.presentation.bee.recommend.dto.response.BeeRecommendationCreateResponse;
+import kr.co.webee.presentation.bee.recommend.dto.response.BeeRecommendationListResponse;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.List;
 
 @Tag(name = "수정벌 추천 API", description = "수정벌 추천 관련 API")
 public interface BeeRecommendationApi {
@@ -25,5 +28,12 @@ public interface BeeRecommendationApi {
     )
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "404", description = "사용자 재배 작물 없음")
-    BeeRecommendationCreateResponse createBeeRecommendation(@RequestBody BeeRecommendationRequest request, @UserId Long userId);
+    BeeRecommendationCreateResponse createBeeRecommendation(@RequestBody BeeRecommendationRequest request);
+
+    @Operation(
+            summary = "수정벌 추천 내역 목록 조회",
+            description = "수정벌 추천 내역 목록을 조회합니다."
+    )
+    @ApiResponse(responseCode = "200", description = "성공")
+    List<BeeRecommendationListResponse> getBeeRecommendationList(@UserId Long userId);
 }

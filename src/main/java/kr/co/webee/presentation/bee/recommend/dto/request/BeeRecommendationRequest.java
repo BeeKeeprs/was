@@ -10,7 +10,7 @@ import java.time.LocalDate;
 
 @Schema(description = "수정벌 추천 내역 저장 request")
 public record BeeRecommendationRequest(
-        @Schema(description = "수정벌 종류", example = "서양 뒤영벌")
+        @Schema(description = "수정벌 종류", example = "EUROPEAN_BUMBLEBEE")
         BeeType beeType,
 
         @Schema(

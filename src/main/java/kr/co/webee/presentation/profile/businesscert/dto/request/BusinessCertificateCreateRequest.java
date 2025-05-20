@@ -9,6 +9,7 @@ import kr.co.webee.domain.user.entity.User;
 
 import java.time.LocalDate;
 
+@Schema(description = "사업자등록정보 등록 정보 request")
 public record BusinessCertificateCreateRequest(
         @Schema(description = "사업자등록번호", example = "1023456798")
         @NotNull

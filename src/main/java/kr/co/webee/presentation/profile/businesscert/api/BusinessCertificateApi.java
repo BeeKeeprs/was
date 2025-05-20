@@ -9,7 +9,10 @@ import jakarta.validation.Valid;
 import kr.co.webee.presentation.annotation.UserId;
 import kr.co.webee.presentation.profile.businesscert.dto.request.BusinessCertificateCreateRequest;
 import kr.co.webee.presentation.profile.businesscert.dto.response.BusinessCertificateCreateResponse;
+import kr.co.webee.presentation.profile.businesscert.dto.response.BusinessCertificateListResponse;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.List;
 
 @Tag(name = "사업자등록정보 API", description = "사업자등록정보 관련 API")
 public interface BusinessCertificateApi {
@@ -27,4 +30,13 @@ public interface BusinessCertificateApi {
             @Parameter(hidden = true)
             @UserId Long userId
     );
+
+    @Operation(
+            summary = "사업자등록정보 목록 조회",
+            description = "사업자등록정보 목록을 조회합니다."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "사업자등록정보 목록 조회 성공"),
+    })
+    List<BusinessCertificateListResponse> getBusinessCertificateList();
 }

@@ -2,6 +2,7 @@ package kr.co.webee.domain.profile.businesscert.entity;
 
 import jakarta.persistence.*;
 import kr.co.webee.domain.common.BaseTimeEntity;
+import kr.co.webee.domain.profile.crop.entity.Coordinates;
 import kr.co.webee.domain.profile.crop.entity.Location;
 import kr.co.webee.domain.user.entity.User;
 import lombok.AccessLevel;
@@ -41,7 +42,7 @@ public class BusinessCertificate extends BaseTimeEntity {
 
     private String onlineStoreUrl;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -66,5 +67,13 @@ public class BusinessCertificate extends BaseTimeEntity {
         this.imageUrl=imageUrl;
         this.onlineStoreUrl = onlineStoreUrl;
         this.user=Objects.requireNonNull(user, "user는 null이 될 수 없습니다.");
+    }
+
+    public String getBusinessAddress() {
+        return businessLocation.getAddress();
+    }
+
+    public Coordinates getAddressCoordinates() {
+        return businessLocation.getCoordinates();
     }
 }

@@ -2,6 +2,7 @@ package kr.co.webee.domain.profile.businesscert.entity;
 
 import jakarta.persistence.*;
 import kr.co.webee.domain.common.BaseTimeEntity;
+import kr.co.webee.domain.profile.crop.entity.Location;
 import kr.co.webee.domain.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -34,25 +35,19 @@ public class BusinessCertificate extends BaseTimeEntity {
     private String companyName;
 
     @Column(nullable = false)
-    private String address;
-
-    @Column(nullable = false)
-    private Double latitude;
-
-    @Column(nullable = false)
-    private Double longitude;
+    private Location businessLocation;
 
     private String imageUrl;
 
-    private String smartStoreUrl;
+    private String onlineStoreUrl;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Builder
-    public BusinessCertificate(String registrationNumber, String representativeName, LocalDate commencementDate,
-                               String companyName, String address, Double latitude, Double longitude, String imageUrl, User user, String smartStoreUrl) {
+    public BusinessCertificate(String registrationNumber, String representativeName, LocalDate commencementDate, String companyName,
+                               Location businessLocation, String imageUrl, User user, String onlineStoreUrl) {
         if (!StringUtils.hasText(registrationNumber)) {
             throw new IllegalArgumentException("registrationNumber는 null이거나 빈 문자열이 될 수 없습니다.");
         }
@@ -62,19 +57,14 @@ public class BusinessCertificate extends BaseTimeEntity {
         if (!StringUtils.hasText(companyName)) {
             throw new IllegalArgumentException("companyName은 null이거나 빈 문자열이 될 수 없습니다.");
         }
-        if (!StringUtils.hasText(address)) {
-            throw new IllegalArgumentException("address는 null이거나 빈 문자열이 될 수 없습니다.");
-        }
 
         this.registrationNumber=registrationNumber;
         this.representativeName=representativeName;
         this.commencementDate= Objects.requireNonNull(commencementDate, "commencementDate는 null이 될 수 없습니다.");
         this.companyName=companyName;
-        this.address=address;
-        this.latitude=Objects.requireNonNull(latitude, "latitude는 null이 될 수 없습니다.");
-        this.longitude=Objects.requireNonNull(longitude, "longitude는 null이 될 수 없습니다.");
+        this.businessLocation= Objects.requireNonNull(businessLocation, "businessLocation은 null이 될 수 없습니다.");
         this.imageUrl=imageUrl;
-        this.smartStoreUrl=smartStoreUrl;
+        this.onlineStoreUrl = onlineStoreUrl;
         this.user=Objects.requireNonNull(user, "user는 null이 될 수 없습니다.");
     }
 }

@@ -6,6 +6,7 @@ import kr.co.webee.presentation.annotation.UserId;
 import kr.co.webee.presentation.profile.businesscert.api.BusinessCertificateApi;
 import kr.co.webee.presentation.profile.businesscert.dto.request.BusinessCertificateCreateRequest;
 import kr.co.webee.presentation.profile.businesscert.dto.response.BusinessCertificateCreateResponse;
+import kr.co.webee.presentation.profile.businesscert.dto.response.BusinessCertificateDetailResponse;
 import kr.co.webee.presentation.profile.businesscert.dto.response.BusinessCertificateListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -31,4 +32,9 @@ public class BusinessCertificateController implements BusinessCertificateApi {
         return businessCertificateService.getBusinessCertificateList();
     }
 
+    @Override
+    @GetMapping("/{businessCertificateId}")
+    public BusinessCertificateDetailResponse getBusinessCertificateDetail(@PathVariable Long businessCertificateId) {
+        return businessCertificateService.getBusinessCertificateDetail(businessCertificateId);
+    }
 }

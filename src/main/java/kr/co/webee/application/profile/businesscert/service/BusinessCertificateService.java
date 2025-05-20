@@ -9,6 +9,7 @@ import kr.co.webee.domain.user.repository.UserRepository;
 import kr.co.webee.infrastructure.geocoding.client.GeocodingClient;
 import kr.co.webee.presentation.profile.businesscert.dto.request.BusinessCertificateCreateRequest;
 import kr.co.webee.presentation.profile.businesscert.dto.response.BusinessCertificateCreateResponse;
+import kr.co.webee.presentation.profile.businesscert.dto.response.BusinessCertificateDetailResponse;
 import kr.co.webee.presentation.profile.businesscert.dto.response.BusinessCertificateListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -50,4 +51,11 @@ public class BusinessCertificateService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
+    public BusinessCertificateDetailResponse getBusinessCertificateDetail(Long businessCertificateId) {
+        BusinessCertificate businessCertificate = businessCertificateRepository.findById(businessCertificateId)
+                .orElseThrow(() -> new EntityNotFoundException("Business Certificate not found"));
+
+        return BusinessCertificateDetailResponse.from(businessCertificate);
+    }
 }

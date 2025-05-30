@@ -1,9 +1,8 @@
 package kr.co.webee.infrastructure.config;
 
-
-import kr.co.webee.common.auth.filter.JwtAuthenticationEntryPoint;
-import kr.co.webee.common.auth.filter.JwtAuthenticationFilter;
-import kr.co.webee.common.auth.filter.JwtExceptionFilter;
+import kr.co.webee.presentation.support.filter.JwtAuthenticationEntryPoint;
+import kr.co.webee.presentation.support.filter.JwtAuthenticationFilter;
+import kr.co.webee.presentation.support.filter.JwtExceptionFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

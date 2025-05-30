@@ -1,6 +1,6 @@
 package kr.co.webee.presentation.config;
 
-import kr.co.webee.presentation.resolver.UserIdArgumentResolver;
+import kr.co.webee.presentation.support.resolver.UserIdArgumentResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;

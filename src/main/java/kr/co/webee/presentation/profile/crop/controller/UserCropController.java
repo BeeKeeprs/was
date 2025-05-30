@@ -2,7 +2,7 @@ package kr.co.webee.presentation.profile.crop.controller;
 
 import jakarta.validation.Valid;
 import kr.co.webee.application.profile.crop.service.UserCropService;
-import kr.co.webee.presentation.annotation.UserId;
+import kr.co.webee.presentation.support.annotation.UserId;
 import kr.co.webee.presentation.profile.crop.api.UserCropApi;
 import kr.co.webee.presentation.profile.crop.dto.request.UserCropCreateRequest;
 import kr.co.webee.presentation.profile.crop.dto.request.UserCropUpdateRequest;

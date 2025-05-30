@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import kr.co.webee.presentation.annotation.UserId;
+import kr.co.webee.presentation.support.annotation.UserId;
 import kr.co.webee.presentation.profile.crop.dto.request.UserCropCreateRequest;
 import kr.co.webee.presentation.profile.crop.dto.request.UserCropUpdateRequest;
 import kr.co.webee.presentation.profile.crop.dto.response.UserCropAddressListResponse;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
-
 
 @Tag(name = "UserCrop", description = "사용자 재배 작물 정보 관련 API")
 public interface UserCropApi {
@@ -57,7 +56,7 @@ public interface UserCropApi {
             @ApiResponse(responseCode = "404", description = "해당 사용자 재배 작물 없음")
     })
     UserCropDetailResponse getUserCropDetail(
-            @Parameter(description = "사용자 재배 작물 ID", example ="1", required = true)
+            @Parameter(description = "사용자 재배 작물 ID", example = "1", required = true)
             @PathVariable Long userCropId
     );
 
@@ -83,7 +82,7 @@ public interface UserCropApi {
             @ApiResponse(responseCode = "403", description = "수정 권한 없음")
     })
     void updateUserCrop(
-            @Parameter(description = "사용자 재배 작물 ID", example ="1", required = true)
+            @Parameter(description = "사용자 재배 작물 ID", example = "1", required = true)
             @PathVariable Long userCropId,
 
             @Parameter(description = "수정할 사용자 재배 작물 정보", required = true)
@@ -103,7 +102,7 @@ public interface UserCropApi {
             @ApiResponse(responseCode = "403", description = "삭제 권한 없음")
     })
     void deleteUserCrop(
-            @Parameter(description = "사용자 재배 작물 ID", example ="1", required = true)
+            @Parameter(description = "사용자 재배 작물 ID", example = "1", required = true)
             @PathVariable Long userCropId,
 
             @Parameter(hidden = true)

@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import kr.co.webee.presentation.annotation.UserId;
+import kr.co.webee.presentation.support.annotation.UserId;
 import kr.co.webee.presentation.profile.businesscert.dto.request.BusinessCertificateCreateRequest;
 import kr.co.webee.presentation.profile.businesscert.dto.response.BusinessCertificateCreateResponse;
 import kr.co.webee.presentation.profile.businesscert.dto.response.BusinessCertificateDetailResponse;

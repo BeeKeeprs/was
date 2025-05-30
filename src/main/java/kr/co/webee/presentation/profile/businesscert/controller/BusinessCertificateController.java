@@ -2,7 +2,7 @@ package kr.co.webee.presentation.profile.businesscert.controller;
 
 import jakarta.validation.Valid;
 import kr.co.webee.application.profile.businesscert.service.BusinessCertificateService;
-import kr.co.webee.presentation.annotation.UserId;
+import kr.co.webee.presentation.support.annotation.UserId;
 import kr.co.webee.presentation.profile.businesscert.api.BusinessCertificateApi;
 import kr.co.webee.presentation.profile.businesscert.dto.request.BusinessCertificateCreateRequest;
 import kr.co.webee.presentation.profile.businesscert.dto.response.BusinessCertificateCreateResponse;

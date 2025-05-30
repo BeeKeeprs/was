@@ -3,7 +3,7 @@ package kr.co.webee.presentation.product.controller;
 import jakarta.validation.Valid;
 import kr.co.webee.application.product.service.ProductService;
 import kr.co.webee.domain.bee.type.BeeType;
-import kr.co.webee.presentation.annotation.UserId;
+import kr.co.webee.presentation.support.annotation.UserId;
 import kr.co.webee.presentation.product.api.ProductApi;
 import kr.co.webee.presentation.product.dto.request.ProductCreateRequest;
 import kr.co.webee.presentation.product.dto.request.ProductUpdateRequest;

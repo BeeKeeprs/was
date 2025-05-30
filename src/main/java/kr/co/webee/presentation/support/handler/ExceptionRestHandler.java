@@ -1,4 +1,4 @@
-package kr.co.webee.presentation.handler;
+package kr.co.webee.presentation.support.handler;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -6,7 +6,8 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.constraints.NotNull;
 import kr.co.webee.common.error.ErrorType;
 import kr.co.webee.common.error.exception.BaseException;
-import kr.co.webee.presentation.response.ApiErrorDto;
+import kr.co.webee.common.error.exception.BusinessException;
+import kr.co.webee.presentation.support.response.ApiErrorDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
@@ -25,47 +26,52 @@ import java.util.Arrays;
 @RestControllerAdvice
 public class ExceptionRestHandler {
     @ExceptionHandler(BaseException.class)
-    public ResponseEntity<ApiErrorDto> handleBaseException(BaseException e) {
-        return toResponseEntity(e.getType(), e.getMessage());
+    public ResponseEntity<ApiErrorDto> handleBaseException(HttpServletRequest request, BaseException e) {
+        return toResponseEntity(request, e.getType(), e.getMessage());
+    }
+
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ApiErrorDto> handleBusinessException(HttpServletRequest request, BusinessException e) {
+        return toResponseEntity(request, e.getType(), e.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiErrorDto> handleException(Exception e, HttpServletRequest request) {
+    public ResponseEntity<ApiErrorDto> handleException(HttpServletRequest request, Exception e) {
         log.error(
                 "Unhandled exception[{}]: {}, method: {}, uri: {}",
                 e.getClass(),
                 e.getMessage(),
                 request.getMethod(),
                 request.getRequestURI());
-        return toResponseEntity(ErrorType.UNHANDLED_EXCEPTION, e.getMessage());
+        return toResponseEntity(request, ErrorType.UNHANDLED_EXCEPTION, e.getMessage());
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
-    public ResponseEntity<ApiErrorDto> handleNoResourceFoundException(NoResourceFoundException e) {
-        return toResponseEntity(ErrorType.UNSUPPORTED_API, e.getMessage());
+    public ResponseEntity<ApiErrorDto> handleNoResourceFoundException(HttpServletRequest request, NoResourceFoundException e) {
+        return toResponseEntity(request, ErrorType.UNSUPPORTED_API, e.getMessage());
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<ApiErrorDto> handleHttpRequestMethodNotSupportedException(
-            HttpRequestMethodNotSupportedException e) {
-        return toResponseEntity(ErrorType.UNSUPPORTED_API, e.getMessage());
+    public ResponseEntity<ApiErrorDto> handleHttpRequestMethodNotSupportedException(HttpServletRequest request,
+                                                                                    HttpRequestMethodNotSupportedException e) {
+        return toResponseEntity(request, ErrorType.UNSUPPORTED_API, e.getMessage());
     }
 
     @ExceptionHandler(InsufficientAuthenticationException.class)
-    public ResponseEntity<ApiErrorDto> handleInsufficientAuthenticationException(
-            InsufficientAuthenticationException e) {
-        return toResponseEntity(ErrorType.FAILED_AUTHENTICATION, e.getMessage());
+    public ResponseEntity<ApiErrorDto> handleInsufficientAuthenticationException(HttpServletRequest request,
+                                                                                 InsufficientAuthenticationException e) {
+        return toResponseEntity(request, ErrorType.FAILED_AUTHENTICATION, e.getMessage());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ApiErrorDto> handleIllegalArgumentException(IllegalArgumentException e) {
-        return toResponseEntity(ErrorType.FAILED_VALIDATION, e.getMessage());
+    public ResponseEntity<ApiErrorDto> handleIllegalArgumentException(HttpServletRequest request, IllegalArgumentException e) {
+        return toResponseEntity(request, ErrorType.FAILED_VALIDATION, e.getMessage());
     }
 
     /// /////////////// 요청 파라미터 예외 / 타입 불일치, Enum 매개변수 관련 예외
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<ApiErrorDto> handleMethodArgumentTypeMismatchException(
-            MethodArgumentTypeMismatchException ex) {
+    public ResponseEntity<ApiErrorDto> handleMethodArgumentTypeMismatchException(HttpServletRequest request,
+                                                                                 MethodArgumentTypeMismatchException ex) {
 
         String parameterName = ex.getName(); // 파라미터 이름
         Object receivedValue = ex.getValue(); // 잘못된 값
@@ -95,44 +101,45 @@ public class ExceptionRestHandler {
                 parameterName, receivedValue, expectedTypeError, expectedValuesError);
 
         log.warn("{}; {}", errorMessage, ex.getMessage());
-        return toResponseEntity(ErrorType.FAILED_VALIDATION, errorMessage);
+        return toResponseEntity(request, ErrorType.FAILED_VALIDATION, errorMessage);
     }
 
     /// /////////////// 직렬화 / 역직렬화 예외
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiErrorDto> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-        return toResponseEntity(
+    public ResponseEntity<ApiErrorDto> handleMethodArgumentNotValidException(HttpServletRequest request, MethodArgumentNotValidException ex) {
+        return toResponseEntity(request,
                 ErrorType.FAILED_VALIDATION,
                 ex.getBindingResult().getAllErrors().toString());
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ApiErrorDto> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
-        return toResponseEntity(ErrorType.FAILED_PARSING, ex);
+    public ResponseEntity<ApiErrorDto> handleHttpMessageNotReadableException(HttpServletRequest request, HttpMessageNotReadableException ex) {
+        return toResponseEntity(request, ErrorType.FAILED_PARSING, ex);
     }
 
     /// /////////////// Database 관련 예외
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ApiErrorDto> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
-        return toResponseEntity(ErrorType.VIOLATION_OCCURRED, ex);
+    public ResponseEntity<ApiErrorDto> handleDataIntegrityViolationException(HttpServletRequest request, DataIntegrityViolationException ex) {
+        return toResponseEntity(request, ErrorType.VIOLATION_OCCURRED, ex);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ApiErrorDto> handleConstraintViolationException(ConstraintViolationException ex) {
-        return toResponseEntity(ErrorType.VIOLATION_OCCURRED, ex);
+    public ResponseEntity<ApiErrorDto> handleConstraintViolationException(HttpServletRequest request, ConstraintViolationException ex) {
+        return toResponseEntity(request, ErrorType.VIOLATION_OCCURRED, ex);
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<ApiErrorDto> handleEntityNotFoundException(EntityNotFoundException ex) {
-        return toResponseEntity(ErrorType.ENTITY_NOT_FOUND, ex);
+    public ResponseEntity<ApiErrorDto> handleEntityNotFoundException(HttpServletRequest request, EntityNotFoundException ex) {
+        return toResponseEntity(request, ErrorType.ENTITY_NOT_FOUND, ex);
     }
 
-    private static ResponseEntity<ApiErrorDto> toResponseEntity(@NotNull ErrorType type, Exception exception) {
-        return toResponseEntity(type, exception.getClass().getName() + ": " + exception.getMessage());
+    private static ResponseEntity<ApiErrorDto> toResponseEntity(HttpServletRequest request, @NotNull ErrorType type, Exception exception) {
+        return toResponseEntity(request, type, exception.getClass().getName() + ": " + exception.getMessage());
     }
 
-    private static ResponseEntity<ApiErrorDto> toResponseEntity(@NotNull ErrorType type, String message) {
-        loggingExceptionByErrorType(type, message);
+    private static ResponseEntity<ApiErrorDto> toResponseEntity(HttpServletRequest request, @NotNull ErrorType type, String message) {
+        String errorMessage = type.getMessage() + ": " + message + " URL: " + request.getRequestURI();
+        loggingExceptionByErrorType(type, errorMessage);
         return ResponseEntity.status(type.getHttpStatus().value()).body(ApiErrorDto.of(type, message));
     }
 

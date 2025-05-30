@@ -1,4 +1,4 @@
-package kr.co.webee.common.auth.filter;
+package kr.co.webee.presentation.support.filter;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
@@ -6,8 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.co.webee.common.auth.jwt.JwtProvider;
-import kr.co.webee.common.util.jwt.JwtConstants;
-import kr.co.webee.common.util.jwt.JwtUtil;
+import kr.co.webee.common.constant.JwtConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -45,7 +45,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private String resolveAccessToken(String authHeader) {
-        String accessToken = JwtUtil.resolveToken(authHeader);
+        String accessToken = resolveToken(authHeader);
 
         if (jwtProvider.isExpired(accessToken)) {
             throw new ExpiredJwtException(null, null, "");
@@ -60,5 +60,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authToken);
+    }
+
+    private String resolveToken(String authHeader) {
+        if (StringUtils.hasText(authHeader) && authHeader.startsWith(JwtConstants.ACCESS_TOKEN_HEADER_PREFIX)) {
+            return authHeader.substring(JwtConstants.ACCESS_TOKEN_HEADER_PREFIX.length());
+        }
+        return "";
     }
 }

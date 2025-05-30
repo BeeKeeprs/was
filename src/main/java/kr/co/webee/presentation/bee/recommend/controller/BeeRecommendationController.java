@@ -2,7 +2,7 @@ package kr.co.webee.presentation.bee.recommend.controller;
 
 import kr.co.webee.application.bee.recommend.service.BeeRecommendationService;
 import kr.co.webee.infrastructure.config.ai.dto.BeeRecommendationAiResponse;
-import kr.co.webee.presentation.annotation.UserId;
+import kr.co.webee.presentation.support.annotation.UserId;
 import kr.co.webee.presentation.bee.recommend.api.BeeRecommendationApi;
 import kr.co.webee.presentation.bee.recommend.dto.request.BeeRecommendationRequest;
 import kr.co.webee.presentation.bee.recommend.dto.request.UserCropInfoRequest;

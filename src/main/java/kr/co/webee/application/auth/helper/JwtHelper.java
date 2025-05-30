@@ -1,13 +1,10 @@
 package kr.co.webee.application.auth.helper;
 
-import jakarta.servlet.http.HttpServletResponse;
 import kr.co.webee.application.auth.dto.JwtTokenDto;
 import kr.co.webee.application.auth.service.RefreshTokenService;
 import kr.co.webee.common.auth.jwt.JwtProvider;
 import kr.co.webee.common.error.ErrorType;
 import kr.co.webee.common.error.exception.BusinessException;
-import kr.co.webee.common.util.cookie.CookieUtil;
-import kr.co.webee.common.util.jwt.JwtConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -23,14 +20,14 @@ public class JwtHelper {
 
         refreshTokenService.save(userId, refreshToken);
 
-        return JwtTokenDto.of(accessToken,refreshToken);
+        return JwtTokenDto.of(accessToken, refreshToken);
     }
 
     public JwtTokenDto reissueToken(String refreshToken) {
         Long userId = jwtProvider.getUserId(refreshToken);
 
         if (!refreshTokenService.existsByUserId(userId)) {
-            throw new BusinessException(ErrorType.INVALID_ACCESS_TOKEN);
+            throw new BusinessException(ErrorType.INVALID_REFRESH_TOKEN);
         }
         refreshTokenService.delete(userId);
 
@@ -43,9 +40,8 @@ public class JwtHelper {
         return JwtTokenDto.of(newAccessToken, newRefreshToken);
     }
 
-    public void deleteRefreshToken(String refreshToken, HttpServletResponse response) {
+    public void deleteRefreshToken(String refreshToken) {
         Long userId = jwtProvider.getUserId(refreshToken);
-        CookieUtil.deleteCookie(JwtConstants.REFRESH_TOKEN_COOKIE_KEY, response);
         refreshTokenService.delete(userId);
     }
 }

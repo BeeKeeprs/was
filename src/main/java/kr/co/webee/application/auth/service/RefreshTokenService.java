@@ -1,7 +1,6 @@
 package kr.co.webee.application.auth.service;
 
-import kr.co.webee.common.util.jwt.JwtConstants;
-
+import kr.co.webee.common.constant.JwtConstants;
 import kr.co.webee.infrastructure.redis.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,11 +14,11 @@ public class RefreshTokenService {
     private final RedisService redisService;
 
     @Value("${jwt.refresh-expiration}")
-    private long refreshExpiration;
+    private Duration refreshExpiration;
 
     public void save(Long userId, String refreshToken) {
         String key = getRefreshTokenKey(userId);
-        redisService.set(key, refreshToken, Duration.ofSeconds(refreshExpiration));
+        redisService.set(key, refreshToken, refreshExpiration);
     }
 
     public void delete(Long userId) {

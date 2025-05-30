@@ -1,4 +1,4 @@
-package kr.co.webee.common.auth.filter;
+package kr.co.webee.presentation.support.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -10,7 +10,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.co.webee.common.error.ErrorType;
-import kr.co.webee.presentation.response.ApiErrorDto;
+import kr.co.webee.presentation.support.response.ApiErrorDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

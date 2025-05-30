@@ -2,7 +2,7 @@ package kr.co.webee.presentation.product.controller;
 
 import jakarta.validation.Valid;
 import kr.co.webee.application.product.service.ProductReviewService;
-import kr.co.webee.presentation.annotation.UserId;
+import kr.co.webee.presentation.support.annotation.UserId;
 import kr.co.webee.presentation.product.api.ProductReviewApi;
 import kr.co.webee.presentation.product.dto.request.ProductReviewCreateRequest;
 import kr.co.webee.presentation.product.dto.request.ProductReviewUpdateRequest;

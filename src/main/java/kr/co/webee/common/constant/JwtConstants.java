@@ -1,4 +1,4 @@
-package kr.co.webee.common.util.jwt;
+package kr.co.webee.common.constant;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

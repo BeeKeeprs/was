@@ -4,16 +4,17 @@ import jakarta.servlet.http.HttpServletResponse;
 import kr.co.webee.application.auth.dto.JwtTokenDto;
 import kr.co.webee.application.auth.dto.SignInDto;
 import kr.co.webee.application.auth.helper.JwtHelper;
-import kr.co.webee.presentation.auth.dto.request.SignInRequest;
-import kr.co.webee.presentation.auth.dto.request.SignUpRequest;
 import kr.co.webee.application.user.service.UserService;
+import kr.co.webee.common.constant.JwtConstants;
 import kr.co.webee.common.error.ErrorType;
 import kr.co.webee.common.error.exception.BusinessException;
 import kr.co.webee.domain.user.entity.User;
+import kr.co.webee.presentation.auth.dto.request.SignInRequest;
+import kr.co.webee.presentation.auth.dto.request.SignUpRequest;
+import kr.co.webee.presentation.support.util.cookie.CookieUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 
 @Service
 @RequiredArgsConstructor
@@ -53,6 +54,7 @@ public class AuthService {
     }
 
     public void signOut(String refreshToken, HttpServletResponse response) {
-        jwtHelper.deleteRefreshToken(refreshToken, response);
+        jwtHelper.deleteRefreshToken(refreshToken);
+        CookieUtil.deleteCookie(JwtConstants.REFRESH_TOKEN_COOKIE_KEY, response);
     }
 }

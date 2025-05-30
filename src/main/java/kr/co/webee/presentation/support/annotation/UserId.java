@@ -1,4 +1,4 @@
-package kr.co.webee.presentation.annotation;
+package kr.co.webee.presentation.support.annotation;
 
 import io.swagger.v3.oas.annotations.Hidden;
 

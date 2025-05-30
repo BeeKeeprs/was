@@ -1,11 +1,11 @@
-package kr.co.webee.presentation.handler;
+package kr.co.webee.presentation.support.handler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpServletResponse;
-import kr.co.webee.presentation.response.ApiErrorDto;
-import kr.co.webee.presentation.response.ApiResponse;
+import kr.co.webee.presentation.support.response.ApiErrorDto;
+import kr.co.webee.presentation.support.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
@@ -51,7 +51,7 @@ public class ApiResponseHandler implements ResponseBodyAdvice<Object> {
                 String stringRes = objectMapper.writeValueAsString(res);
                 response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
                 return stringRes;
-            } catch (JsonProcessingException err){
+            } catch (JsonProcessingException err) {
                 throw new RuntimeException("Failed to convert BaseResponse to JSON");
             }
         }

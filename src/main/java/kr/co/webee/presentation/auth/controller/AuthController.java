@@ -5,21 +5,20 @@ import jakarta.validation.Valid;
 import kr.co.webee.application.auth.dto.JwtTokenDto;
 import kr.co.webee.application.auth.dto.SignInDto;
 import kr.co.webee.application.auth.service.AuthService;
+import kr.co.webee.common.constant.JwtConstants;
 import kr.co.webee.common.error.ErrorType;
 import kr.co.webee.common.error.exception.BusinessException;
-import kr.co.webee.common.util.cookie.CookieUtil;
-import kr.co.webee.common.util.jwt.JwtConstants;
 import kr.co.webee.presentation.auth.api.AuthApi;
 import kr.co.webee.presentation.auth.dto.request.SignInRequest;
 import kr.co.webee.presentation.auth.dto.request.SignUpRequest;
 import kr.co.webee.presentation.auth.dto.response.SignInResponse;
+import kr.co.webee.presentation.support.util.cookie.CookieUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -44,7 +43,7 @@ public class AuthController implements AuthApi {
     @Override
     @PostMapping("/reissue")
     public String reissueToken(@CookieValue(name = JwtConstants.REFRESH_TOKEN_COOKIE_KEY, required = false) String refreshToken,
-                             HttpServletResponse response) {
+                               HttpServletResponse response) {
         if (refreshToken == null) {
             throw new BusinessException(ErrorType.COOKIE_NOT_FOND);
         }
@@ -56,7 +55,7 @@ public class AuthController implements AuthApi {
     @Override
     @PostMapping("/sign-out")
     public String signOut(@CookieValue(name = JwtConstants.REFRESH_TOKEN_COOKIE_KEY, required = false) String refreshToken,
-                                     HttpServletResponse response) {
+                          HttpServletResponse response) {
         authService.signOut(refreshToken, response);
         return "OK";
     }

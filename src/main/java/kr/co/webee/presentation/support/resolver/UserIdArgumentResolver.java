@@ -1,9 +1,9 @@
-package kr.co.webee.presentation.resolver;
+package kr.co.webee.presentation.support.resolver;
 
 import kr.co.webee.common.auth.security.CustomUserDetails;
 import kr.co.webee.common.error.ErrorType;
 import kr.co.webee.common.error.exception.BusinessException;
-import kr.co.webee.presentation.annotation.UserId;
+import kr.co.webee.presentation.support.annotation.UserId;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

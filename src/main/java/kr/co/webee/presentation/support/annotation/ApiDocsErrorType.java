@@ -1,4 +1,4 @@
-package kr.co.webee.presentation.annotation;
+package kr.co.webee.presentation.support.annotation;
 
 import kr.co.webee.common.error.ErrorType;
 

@@ -1,4 +1,4 @@
-package kr.co.webee.common.util.cookie;
+package kr.co.webee.presentation.support.util.cookie;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseCookie;

@@ -1,4 +1,4 @@
-package kr.co.webee.presentation.response;
+package kr.co.webee.presentation.support.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 

@@ -4,7 +4,7 @@ import kr.co.webee.application.document.VectorDocumentService;
 import kr.co.webee.presentation.document.api.VectorDocumentApi;
 import kr.co.webee.presentation.document.dto.VectorDocumentRequest;
 import kr.co.webee.presentation.document.dto.VectorDocumentResponse;
-import kr.co.webee.presentation.annotation.UserId;
+import kr.co.webee.presentation.support.annotation.UserId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

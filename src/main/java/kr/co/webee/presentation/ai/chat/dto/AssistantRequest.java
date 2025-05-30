@@ -1,7 +1,7 @@
 package kr.co.webee.presentation.ai.chat.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import kr.co.webee.application.ai.AssistantService;
+import kr.co.webee.common.constant.GenerationMode;
 
 @Schema(description = "사용자 입력 요청 객체")
 public record AssistantRequest(
@@ -13,6 +13,6 @@ public record AssistantRequest(
         String conversationId,
 
         @Schema(description = "SIMPLE 모드, RAG 모드 중 선택", example = "RAG", defaultValue = "RAG")
-        AssistantService.GenerationMode mode
+        GenerationMode mode
 ) {
 }

@@ -1,4 +1,4 @@
-package kr.co.webee.infrastructure.config.ai;
+package kr.co.webee.infrastructure.ai;
 
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
@@ -11,6 +11,7 @@ import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.ai.vectorstore.redis.RedisVectorStore;
 import org.springframework.ai.vectorstore.redis.RedisVectorStore.MetadataField;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -21,6 +22,7 @@ import java.net.URI;
 
 @Profile("!test")
 @Configuration
+@EnableConfigurationProperties(PromptProperties.class)
 public class AiConfig {
 
     @Value("${app.ai.max-messages}")

@@ -3,7 +3,7 @@ package kr.co.webee.presentation.bee.recommend.api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import kr.co.webee.infrastructure.config.ai.dto.BeeRecommendationAiResponse;
+import kr.co.webee.presentation.bee.recommend.dto.response.BeeRecommendationAiResponse;
 import kr.co.webee.presentation.support.annotation.UserId;
 import kr.co.webee.presentation.bee.recommend.dto.request.BeeRecommendationRequest;
 import kr.co.webee.presentation.bee.recommend.dto.request.UserCropInfoRequest;

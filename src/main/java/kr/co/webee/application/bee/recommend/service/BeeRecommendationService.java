@@ -1,75 +1,51 @@
 package kr.co.webee.application.bee.recommend.service;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityNotFoundException;
 import kr.co.webee.application.ai.RagSearchOptions;
 import kr.co.webee.domain.bee.recommend.entity.BeeRecommendation;
 import kr.co.webee.domain.bee.recommend.repository.BeeRecommendationRepository;
 import kr.co.webee.domain.profile.crop.entity.UserCrop;
 import kr.co.webee.domain.profile.crop.repository.UserCropRepository;
-import kr.co.webee.infrastructure.config.ai.BeeRecommendationAiExecutor;
-import kr.co.webee.infrastructure.config.ai.dto.BeeRecommendationAiResponse;
+import kr.co.webee.infrastructure.ai.AiPromptExecutor;
+import kr.co.webee.infrastructure.ai.PromptTemplateRegistry;
 import kr.co.webee.presentation.bee.recommend.dto.request.BeeRecommendationRequest;
 import kr.co.webee.presentation.bee.recommend.dto.request.UserCropInfoRequest;
+import kr.co.webee.presentation.bee.recommend.dto.response.BeeRecommendationAiResponse;
 import kr.co.webee.presentation.bee.recommend.dto.response.BeeRecommendationCreateResponse;
 import kr.co.webee.presentation.bee.recommend.dto.response.BeeRecommendationDetailResponse;
 import kr.co.webee.presentation.bee.recommend.dto.response.BeeRecommendationListResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UncheckedIOException;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class BeeRecommendationService {
-    private final BeeRecommendationAiExecutor aiExecutor;
     private final BeeRecommendationRepository beeRecommendationRepository;
     private final UserCropRepository userCropRepository;
 
-    @Value("${app.ai.bee-recommendation-rag-prompt}")
-    private Resource ragPromptResource;
-
-    @Value("${app.ai.bee-recommendation-rag-query}")
-    private Resource ragQueryResource;
-
-    private String ragPrompt;
-
-    private String ragQuery;
-
-    @Value("${app.ai.vector-store.topK}")
-    private int topK;
-
-    @Value("${app.ai.vector-store.similarity-threshold}")
-    private double similarityThreshold;
-
-    @PostConstruct
-    public void init() {
-        try (InputStream promptIs = ragPromptResource.getInputStream();
-             InputStream queryIs = ragQueryResource.getInputStream()) {
-
-            this.ragPrompt = new String(promptIs.readAllBytes(), StandardCharsets.UTF_8);
-            this.ragQuery = new String(queryIs.readAllBytes(), StandardCharsets.UTF_8);
-
-        } catch (IOException e) {
-            throw new UncheckedIOException("Failed to load RAG prompt", e);
-        }
-    }
+    private final AiPromptExecutor aiPromptExecutor;
+    private final PromptTemplateRegistry promptRegistry;
 
     public BeeRecommendationAiResponse recommendBee(UserCropInfoRequest request) {
-        RagSearchOptions searchOptions = new RagSearchOptions(
+        String userInput = request.describe();
+
+        String query = promptRegistry.get("bee-recommendation-query")
+                .replace("{user_crop_info}", userInput);
+
+        RagSearchOptions options = new RagSearchOptions(
                 "type == 'guide' AND category == 'bee' OR category == 'crop'",
-                topK,
-                similarityThreshold
+                5,
+                0.75
         );
 
-        return aiExecutor.recommendBeeWithRag(request.describe(), ragPrompt, ragQuery, searchOptions);
+        return aiPromptExecutor.run(query, builder ->
+                        builder.input(query)
+                                .withRag("bee-recommendation-prompt", options),
+                BeeRecommendationAiResponse.class
+        );
     }
 
     @Transactional

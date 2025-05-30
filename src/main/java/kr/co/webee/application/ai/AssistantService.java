@@ -1,18 +1,15 @@
 package kr.co.webee.application.ai;
 
-import jakarta.annotation.PostConstruct;
-import kr.co.webee.infrastructure.config.ai.AssistantAiExecutor;
+import kr.co.webee.infrastructure.ai.AiPromptExecutor;
 import kr.co.webee.presentation.ai.chat.dto.AssistantResponse;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.ai.document.Document;
+import org.springframework.ai.vectorstore.SearchRequest;
+import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UncheckedIOException;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,12 +17,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AssistantService {
 
-    private final AssistantAiExecutor aiExecutor;
-
-    @Value("${app.ai.assistant-rag-prompt}")
-    private Resource ragPromptResource;
-
-    private String ragPrompt;
+    private final VectorStore vectorStore;
+    private final AiPromptExecutor aiPromptExecutor;
 
     @Value("${app.ai.vector-store.topK}")
     private int topK;
@@ -33,45 +26,34 @@ public class AssistantService {
     @Value("${app.ai.vector-store.similarity-threshold}")
     private double similarityThreshold;
 
-    @PostConstruct
-    public void init() {
-        try (InputStream is = ragPromptResource.getInputStream()) {
-            this.ragPrompt = new String(is.readAllBytes(), StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            throw new UncheckedIOException("Failed to load RAG prompt", e);
-        }
-    }
+    public AssistantResponse answerUserInput(String input, String conversationId) {
+        String convId = StringUtils.isBlank(conversationId) ? UUID.randomUUID().toString() : conversationId;
+        RagSearchOptions ragOptions = new RagSearchOptions(
+                "type != 'faq' AND type != 'guide'",
+                topK,
+                similarityThreshold
+        );
 
-    public AssistantResponse answerUserInput(String input, String conversationId, GenerationMode mode) {
-        if (StringUtils.isBlank(conversationId)) {
-            conversationId = UUID.randomUUID().toString();
-        }
-
-        String result = switch (mode) {
-            case SIMPLE -> aiExecutor.generateSimple(input, conversationId);
-            case RAG -> aiExecutor.generateWithRag(input, conversationId, ragPrompt, getDefaultRagOptions());
-        };
+        String result = aiPromptExecutor.run(input, builder ->
+                builder.input(input)
+                        .withLogger()
+                        .withMemory(convId)
+                        .withRag("assistant-prompt", ragOptions)
+        );
 
         return new AssistantResponse(result, conversationId);
     }
 
     public List<String> getBeeFaqQuestions() {
-        return aiExecutor.getDocuments(
-                "bee faq",
-                new RagSearchOptions(
-                        "type == 'faq' AND category == 'bee'",
-                        topK,
-                        similarityThreshold
-                )
-        );
-    }
+        SearchRequest searchRequest = SearchRequest.builder()
+                .query("bee faq")
+                .topK(topK)
+                .similarityThreshold(similarityThreshold)
+                .filterExpression("type == 'faq' AND category == 'bee'")
+                .build();
 
-    private RagSearchOptions getDefaultRagOptions() {
-        return new RagSearchOptions("type != 'faq'", topK, similarityThreshold);
-    }
-
-    public enum GenerationMode {
-        SIMPLE,
-        RAG
+        List<Document> docs = vectorStore.similaritySearch(searchRequest);
+        if (docs == null || docs.isEmpty()) return List.of();
+        return docs.stream().map(Document::getText).toList();
     }
 }

@@ -1,4 +1,4 @@
-package kr.co.webee.infrastructure.config.ai.dto;
+package kr.co.webee.presentation.bee.recommend.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

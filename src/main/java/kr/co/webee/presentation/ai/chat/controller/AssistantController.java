@@ -21,8 +21,7 @@ public class AssistantController implements AssistantApi {
     public AssistantResponse answerUserInput(@RequestBody @Valid AssistantRequest request) {
         return assistantService.answerUserInput(
                 request.input(),
-                request.conversationId(),
-                request.mode()
+                request.conversationId()
         );
     }
 

@@ -1,4 +1,4 @@
-package kr.co.webee.domain.profile.businesscert.entity;
+package kr.co.webee.domain.profile.business.entity;
 
 import jakarta.persistence.*;
 import kr.co.webee.domain.common.BaseTimeEntity;
@@ -18,7 +18,7 @@ import java.util.Objects;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class BusinessCertificate extends BaseTimeEntity {
+public class Business extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -38,17 +38,23 @@ public class BusinessCertificate extends BaseTimeEntity {
     @Column(nullable = false)
     private Location businessLocation;
 
-    private String imageUrl;
+    @Column(nullable = false)
+    private String phoneNumber;
 
     private String onlineStoreUrl;
+
+    private String kakaoChatUrl;
+
+    private String businessCertImageUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Builder
-    public BusinessCertificate(String registrationNumber, String representativeName, LocalDate commencementDate, String companyName,
-                               Location businessLocation, String imageUrl, User user, String onlineStoreUrl) {
+    public Business(String registrationNumber, String representativeName, LocalDate commencementDate,
+                    String companyName, Location businessLocation, User user, String phoneNumber,
+                    String onlineStoreUrl, String kakaoChatUrl, String businessCertImageUrl) {
         if (!StringUtils.hasText(registrationNumber)) {
             throw new IllegalArgumentException("registrationNumber는 null이거나 빈 문자열이 될 수 없습니다.");
         }
@@ -58,15 +64,20 @@ public class BusinessCertificate extends BaseTimeEntity {
         if (!StringUtils.hasText(companyName)) {
             throw new IllegalArgumentException("companyName은 null이거나 빈 문자열이 될 수 없습니다.");
         }
+        if (!StringUtils.hasText(phoneNumber)) {
+            throw new IllegalArgumentException("phoneNumber는 null이거나 빈 문자열이 될 수 없습니다.");
+        }
 
-        this.registrationNumber=registrationNumber;
-        this.representativeName=representativeName;
-        this.commencementDate= Objects.requireNonNull(commencementDate, "commencementDate는 null이 될 수 없습니다.");
-        this.companyName=companyName;
-        this.businessLocation= Objects.requireNonNull(businessLocation, "businessLocation은 null이 될 수 없습니다.");
-        this.imageUrl=imageUrl;
+        this.registrationNumber = registrationNumber;
+        this.representativeName = representativeName;
+        this.commencementDate = Objects.requireNonNull(commencementDate, "commencementDate는 null이 될 수 없습니다.");
+        this.companyName = companyName;
+        this.businessLocation = Objects.requireNonNull(businessLocation, "businessLocation은 null이 될 수 없습니다.");
+        this.phoneNumber = phoneNumber;
         this.onlineStoreUrl = onlineStoreUrl;
-        this.user=Objects.requireNonNull(user, "user는 null이 될 수 없습니다.");
+        this.kakaoChatUrl = kakaoChatUrl;
+        this.businessCertImageUrl = businessCertImageUrl;
+        this.user = Objects.requireNonNull(user, "user는 null이 될 수 없습니다.");
     }
 
     public String getBusinessAddress() {

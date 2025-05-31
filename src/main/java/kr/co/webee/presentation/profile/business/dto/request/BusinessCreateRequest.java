@@ -31,10 +31,16 @@ public record BusinessCreateRequest(
         @NotNull
         String businessAddress,
 
+        @Schema(description = "전화번호", example = "010-1234-5678")
+        String phoneNumber,
+
         @Schema(description = "온라인 스토어 링크", example = "https://smartstore.naver.com/honeybee", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-        String onlineStoreUrl
+        String onlineStoreUrl,
+
+        @Schema(description = "카카오 채팅 url", example = "https://smartstore.naver.com/honeybee", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+        String kakaoChatUrl
 ) {
-    public Business toEntity(Coordinates coordinates, User user) {
+    public Business toEntity(Coordinates coordinates, User user, String businessCertificateImageUrl) {
         Location businessLocation = Location.builder()
                 .address(businessAddress)
                 .coordinates(coordinates)
@@ -46,8 +52,10 @@ public record BusinessCreateRequest(
                 .commencementDate(commencementDate)
                 .companyName(companyName)
                 .businessLocation(businessLocation)
-                //.imageUrl()
+                .phoneNumber(phoneNumber)
                 .onlineStoreUrl(onlineStoreUrl)
+                .kakaoChatUrl(kakaoChatUrl)
+                .businessCertImageUrl(businessCertificateImageUrl)
                 .user(user)
                 .build();
     }

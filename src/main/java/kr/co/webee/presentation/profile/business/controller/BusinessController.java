@@ -9,7 +9,9 @@ import kr.co.webee.presentation.profile.business.dto.response.BusinessCreateResp
 import kr.co.webee.presentation.profile.business.dto.response.BusinessDetailResponse;
 import kr.co.webee.presentation.profile.business.dto.response.BusinessListResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -20,14 +22,16 @@ public class BusinessController implements BusinessApi {
     private final BusinessService businessService;
 
     @Override
-    @PostMapping()
-    public BusinessCreateResponse createBusiness(@RequestBody @Valid BusinessCreateRequest request,
-                                                            @UserId Long userId) {
-        return businessService.createBusiness(request, userId);
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public BusinessCreateResponse createBusiness(
+            @RequestPart("request") @Valid BusinessCreateRequest request,
+            @RequestPart(value = "businessCertificateImage", required = false) MultipartFile image,
+            @UserId Long userId) {
+        return businessService.createBusiness(request, image, userId);
     }
 
     @Override
-    @GetMapping
+    @GetMapping()
     public List<BusinessListResponse> getBusinessList() {
         return businessService.getBusinessList();
     }

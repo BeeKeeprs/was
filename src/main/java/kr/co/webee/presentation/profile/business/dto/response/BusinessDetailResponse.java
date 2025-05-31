@@ -33,10 +33,17 @@ public record BusinessDetailResponse(
         @Schema(description = "개업 일자", example = "2020-03-15")
         LocalDate commencementDate,
 
-        @Schema(description = "온라인 스토어 링크", example = "https://smartstore.naver.com/honeybee")
-        String onlineStoreUrl
+        @Schema(description = "전화번호", example = "010-1234-5678")
+        String phoneNumber,
 
-        //사업자등록증 이미지(nullable)
+        @Schema(description = "온라인 스토어 링크", example = "https://smartstore.naver.com/honeybee")
+        String onlineStoreUrl,
+
+        @Schema(description = "카카오 채팅 url", example = "https://pf.kakao.com/_abcdef")
+        String kakaoChatUrl,
+
+        @Schema(description = "사업자등록증 이미지 url", example = "https://adbcds.cloudfront.net/business-certificate/이미지.jpeg")
+        String businessCertImageUrl
 ) {
         public static BusinessDetailResponse from(Business business) {
                 return BusinessDetailResponse.builder()
@@ -48,6 +55,10 @@ public record BusinessDetailResponse(
                         .registrationNumber(business.getRegistrationNumber())
                         .representativeName(business.getRepresentativeName())
                         .commencementDate(business.getCommencementDate())
+                        .phoneNumber(business.getPhoneNumber())
+                        .onlineStoreUrl(business.getOnlineStoreUrl())
+                        .kakaoChatUrl(business.getKakaoChatUrl())
+                        .businessCertImageUrl(business.getBusinessCertImageUrl())
                         .build();
         }
 }

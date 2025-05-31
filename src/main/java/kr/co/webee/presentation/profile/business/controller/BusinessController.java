@@ -1,0 +1,40 @@
+package kr.co.webee.presentation.profile.business.controller;
+
+import jakarta.validation.Valid;
+import kr.co.webee.application.profile.business.service.BusinessService;
+import kr.co.webee.presentation.support.annotation.UserId;
+import kr.co.webee.presentation.profile.business.api.BusinessApi;
+import kr.co.webee.presentation.profile.business.dto.request.BusinessCreateRequest;
+import kr.co.webee.presentation.profile.business.dto.response.BusinessCreateResponse;
+import kr.co.webee.presentation.profile.business.dto.response.BusinessDetailResponse;
+import kr.co.webee.presentation.profile.business.dto.response.BusinessListResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/v1/profile/business")
+@RequiredArgsConstructor
+public class BusinessController implements BusinessApi {
+    private final BusinessService businessService;
+
+    @Override
+    @PostMapping()
+    public BusinessCreateResponse createBusiness(@RequestBody @Valid BusinessCreateRequest request,
+                                                            @UserId Long userId) {
+        return businessService.createBusiness(request, userId);
+    }
+
+    @Override
+    @GetMapping
+    public List<BusinessListResponse> getBusinessList() {
+        return businessService.getBusinessList();
+    }
+
+    @Override
+    @GetMapping("/{businessId}")
+    public BusinessDetailResponse getBusinessDetail(@PathVariable Long businessId) {
+        return businessService.getBusinessDetail(businessId);
+    }
+}

@@ -1,8 +1,8 @@
-package kr.co.webee.presentation.profile.businesscert.dto.request;
+package kr.co.webee.presentation.profile.business.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
-import kr.co.webee.domain.profile.businesscert.entity.BusinessCertificate;
+import kr.co.webee.domain.profile.business.entity.Business;
 import kr.co.webee.domain.profile.crop.entity.Coordinates;
 import kr.co.webee.domain.profile.crop.entity.Location;
 import kr.co.webee.domain.user.entity.User;
@@ -10,7 +10,7 @@ import kr.co.webee.domain.user.entity.User;
 import java.time.LocalDate;
 
 @Schema(description = "사업자등록정보 등록 정보 request")
-public record BusinessCertificateCreateRequest(
+public record BusinessCreateRequest(
         @Schema(description = "사업자등록번호", example = "1023456798")
         @NotNull
         String registrationNumber,
@@ -34,13 +34,13 @@ public record BusinessCertificateCreateRequest(
         @Schema(description = "온라인 스토어 링크", example = "https://smartstore.naver.com/honeybee", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
         String onlineStoreUrl
 ) {
-    public BusinessCertificate toEntity(Coordinates coordinates, User user) {
+    public Business toEntity(Coordinates coordinates, User user) {
         Location businessLocation = Location.builder()
                 .address(businessAddress)
                 .coordinates(coordinates)
                 .build();
 
-        return BusinessCertificate.builder()
+        return Business.builder()
                 .registrationNumber(registrationNumber)
                 .representativeName(representativeName)
                 .commencementDate(commencementDate)

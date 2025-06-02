@@ -2,10 +2,12 @@ package kr.co.webee.presentation.product.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import kr.co.webee.domain.bee.type.BeeType;
+import kr.co.webee.domain.product.enums.Origin;
+import kr.co.webee.domain.product.enums.TransactionMethod;
+import kr.co.webee.domain.product.enums.TransactionType;
 
 @Schema(description = "상품 생성 요청")
 public record ProductCreateRequest(
-
         @Schema(description = "상품 이름", example = "국산 꿀벌", requiredMode = Schema.RequiredMode.REQUIRED)
         String name,
 
@@ -15,7 +17,16 @@ public record ProductCreateRequest(
         @Schema(description = "벌 종류", example = "HONEYBEE", requiredMode = Schema.RequiredMode.REQUIRED)
         BeeType beeType,
 
-        @Schema(description = "상품 설명", example = "상세 정보, 관리 방법, 거래 형태(임대/구매), 거래 방법(온/오프라인), 국내/해외 여부", requiredMode = Schema.RequiredMode.REQUIRED)
-        String content
+        @Schema(description = "상품 설명", example = "이 상품은 국내산 꿀벌입니다.", requiredMode = Schema.RequiredMode.REQUIRED)
+        String content,
+
+        @Schema(description = "원산지", example = "국내산", requiredMode = Schema.RequiredMode.REQUIRED)
+        Origin origin,
+
+        @Schema(description = "거래 형태", example = "구매", requiredMode = Schema.RequiredMode.REQUIRED)
+        TransactionType transactionType,
+
+        @Schema(description = "거래 방법", example = "온라인", requiredMode = Schema.RequiredMode.REQUIRED)
+        TransactionMethod transactionMethod
 ) {
 }

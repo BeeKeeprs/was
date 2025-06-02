@@ -30,18 +30,17 @@ public class ProductSaverService {
                 .price(request.price())
                 .beeType(request.beeType())
                 .content(request.content())
+                .origin(request.origin())
+                .transactionType(request.transactionType())
+                .transactionMethod(request.transactionMethod())
                 .seller(seller)
                 .build();
 
         productRepository.save(product);
 
         List<ProductImage> productImages = imageUrls.stream()
-                .map(url -> ProductImage.builder()
-                        .imageUrl(url)
-                        .product(product)
-                        .build())
+                .map(url -> ProductImage.builder().imageUrl(url).product(product).build())
                 .toList();
-
         productImageRepository.saveAll(productImages);
 
         return product.getId();

@@ -34,6 +34,10 @@ spring:
         index: 'app-index'
         prefix: 'app:'
 
+  servlet:
+    multipart:
+      max-file-size: 3MB
+
 logging:
   level:
     org.springframework.ai.chat.client.advisor: DEBUG
@@ -72,3 +76,7 @@ app:
       assistant-prompt: classpath:prompts/assistant-prompt.txt
       bee-recommendation-prompt: classpath:prompts/bee_recommendation_prompt.txt
       bee-recommendation-query: classpath:prompts/bee_recommendation_query.txt
+
+bee:
+  diagnosis:
+    api-url: ${BEE_DIAGNOSIS_API_URL:http://localhost:5001/predict}

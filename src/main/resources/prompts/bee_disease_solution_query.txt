@@ -1,0 +1,12 @@
+Disease affecting the honeybees:
+{disease}
+
+User’s crop information:
+{user_crop_info}
+
+The honeybees are currently affected by the disease mentioned above. Below is a description of the environment where the user's crops are being cultivated.
+Please provide a detailed response that includes the following:
+
+- A situation analysis based on the type of bee disease and the user's crop environment
+- Recommended solutions based on the analysis
+

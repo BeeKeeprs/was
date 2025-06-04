@@ -15,10 +15,7 @@ import kr.co.webee.presentation.profile.business.dto.response.BusinessCreateResp
 import kr.co.webee.presentation.profile.business.dto.response.BusinessDetailResponse;
 import kr.co.webee.presentation.profile.business.dto.response.BusinessListResponse;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -65,6 +62,16 @@ public interface BusinessApi {
             @ApiResponse(responseCode = "200", description = "업체 목록 조회 성공"),
     })
     List<BusinessListResponse> getBusinessList();
+
+    @Operation(
+            summary = "사용자 업체 목록 조회",
+            description = "사용자의 업체 목록을 조회합니다."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "사용자 업체 목록 조회 성공"),
+    })
+    @GetMapping("/me")
+    List<BusinessListResponse> getBusinessListByMe(@UserId Long userId);
 
     @Operation(
             summary = "업체 상세 조회",

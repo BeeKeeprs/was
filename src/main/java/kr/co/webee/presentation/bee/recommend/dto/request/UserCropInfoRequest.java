@@ -7,7 +7,7 @@ import kr.co.webee.domain.profile.crop.type.CultivationType;
 
 import java.time.LocalDate;
 
-@Schema(description = "수정벌 추천 기능, 질병 진단 기능에 활용할 사용자 재배 작물 정보 request")
+@Schema(description = "사용자 재배 작물 정보 request")
 public record UserCropInfoRequest(
         @Schema(description = "작물명", example = "딸기")
         @NotBlank

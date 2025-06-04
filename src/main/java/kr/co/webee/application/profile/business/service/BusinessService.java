@@ -59,6 +59,13 @@ public class BusinessService {
     }
 
     @Transactional(readOnly = true)
+    public List<BusinessListResponse> getBusinessListByMe(Long userId) {
+        return businessRepository.findByUserId(userId).stream()
+                .map(BusinessListResponse::from)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
     public BusinessDetailResponse getBusinessDetail(Long businessId) {
         Business business = businessRepository.findById(businessId)
                 .orElseThrow(() -> new EntityNotFoundException("Business not found"));

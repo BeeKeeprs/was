@@ -8,6 +8,9 @@ import kr.co.webee.domain.product.enums.TransactionType;
 
 @Schema(description = "상품 생성 요청")
 public record ProductCreateRequest(
+        @Schema(description = "업체 ID", example = "42", requiredMode = Schema.RequiredMode.REQUIRED)
+        Long businessId,
+
         @Schema(description = "상품 이름", example = "국산 꿀벌", requiredMode = Schema.RequiredMode.REQUIRED)
         String name,
 

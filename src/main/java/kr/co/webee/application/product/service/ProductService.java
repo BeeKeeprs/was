@@ -43,13 +43,16 @@ public class ProductService {
         });
     }
 
-    public Long createProduct(ProductCreateRequest request, List<MultipartFile> images, Long sellerId) {
-        String prefix = "products/" + sellerId;
+    public Long createProduct(ProductCreateRequest request, List<MultipartFile> images) {
+        String prefix = "products/" + request.businessId();
+
+        System.out.println("images = " + images);
+
         List<String> imageUrls = Optional.ofNullable(images).orElseGet(List::of).stream()
                 .map(image -> fileStorageClient.upload(image, prefix))
                 .toList();
 
-        return productSaverService.save(request, imageUrls, sellerId);
+        return productSaverService.save(request, imageUrls);
     }
 
     @Transactional(readOnly = true)

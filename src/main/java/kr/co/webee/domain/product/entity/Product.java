@@ -6,6 +6,7 @@ import kr.co.webee.domain.common.BaseTimeEntity;
 import kr.co.webee.domain.product.enums.Origin;
 import kr.co.webee.domain.product.enums.TransactionMethod;
 import kr.co.webee.domain.product.enums.TransactionType;
+import kr.co.webee.domain.profile.business.entity.Business;
 import kr.co.webee.domain.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -49,12 +50,12 @@ public class Product extends BaseTimeEntity {
     private TransactionMethod transactionMethod;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seller_id", nullable = false)
-    private User seller;
+    @JoinColumn(name = "business_id", nullable = false)
+    private Business business;
 
     @Builder
     public Product(String name, Integer price, BeeType beeType, String content,
-                   Origin origin, TransactionType transactionType, TransactionMethod transactionMethod, User seller) {
+                   Origin origin, TransactionType transactionType, TransactionMethod transactionMethod, Business business) {
         if (!StringUtils.hasText(name)) {
             throw new IllegalArgumentException("name은 null이거나 빈 문자열이 될 수 없습니다.");
         }
@@ -69,7 +70,7 @@ public class Product extends BaseTimeEntity {
         this.origin = Objects.requireNonNull(origin, "origin은 null이 될 수 없습니다.");
         this.transactionType = Objects.requireNonNull(transactionType, "transactionType은 null이 될 수 없습니다.");
         this.transactionMethod = Objects.requireNonNull(transactionMethod, "transactionMethod는 null이 될 수 없습니다.");
-        this.seller = Objects.requireNonNull(seller, "seller는 null이 될 수 없습니다.");
+        this.business = Objects.requireNonNull(business, "business는 null이 될 수 없습니다.");
     }
 
     public void update(String name, Integer price, BeeType beeType, String content,

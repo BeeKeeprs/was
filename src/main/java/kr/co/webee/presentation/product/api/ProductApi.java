@@ -57,8 +57,7 @@ public interface ProductApi {
                             schema = @Schema(type = "string", format = "binary")
                     )
             )
-            @RequestPart(value = "images", required = false) List<MultipartFile> images,
-            Long userId
+            @RequestPart(value = "images", required = false) List<MultipartFile> images
     );
 
     @Operation(

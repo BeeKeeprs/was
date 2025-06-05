@@ -37,8 +37,8 @@ public record ProductResponse(
         @Schema(description = "거래 방법", example = "온라인")
         TransactionMethod transactionMethod,
 
-        @Schema(description = "판매자 ID", example = "42")
-        Long sellerId,
+        @Schema(description = "업체 ID", example = "42")
+        Long businessId,
 
         @ArraySchema(schema = @Schema(description = "상품 이미지 URL", example = "https://cataas.com/cat?width=600"))
         List<String> imageUrls
@@ -54,7 +54,7 @@ public record ProductResponse(
                 product.getOrigin(),
                 product.getTransactionType(),
                 product.getTransactionMethod(),
-                product.getSeller().getId(),
+                product.getBusiness().getId(),
                 imageUrls
         );
     }

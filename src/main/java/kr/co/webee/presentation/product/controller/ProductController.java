@@ -39,10 +39,9 @@ public class ProductController implements ProductApi {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Long createProduct(
             @RequestPart("request") @Valid ProductCreateRequest request,
-            @RequestPart(value = "images", required = false) List<MultipartFile> images,
-            @UserId Long userId
+            @RequestPart(value = "images", required = false) List<MultipartFile> images
     ) {
-        return productService.createProduct(request, images, userId);
+        return productService.createProduct(request, images);
     }
 
     @GetMapping("/{productId}")

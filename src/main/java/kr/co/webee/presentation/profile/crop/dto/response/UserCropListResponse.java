@@ -5,6 +5,8 @@ import kr.co.webee.domain.profile.crop.entity.UserCrop;
 import kr.co.webee.domain.profile.crop.type.CultivationType;
 import lombok.Builder;
 
+import java.time.LocalDate;
+
 @Builder
 @Schema(description = "사용자 재배 작물 정보 목록")
 public record UserCropListResponse(
@@ -24,7 +26,10 @@ public record UserCropListResponse(
         String cultivationAddress,
 
         @Schema(description = "재배 면적", example = "1320")
-        Integer cultivationArea
+        Integer cultivationArea,
+
+        @Schema(description = "파종(정식)일", example = "2025-05-02")
+        LocalDate plantingDate
 ) {
     public static UserCropListResponse from(UserCrop userCrop) {
         return UserCropListResponse.builder()
@@ -34,6 +39,7 @@ public record UserCropListResponse(
                 .cultivationType(userCrop.getCultivationType())
                 .cultivationAddress(userCrop.getCultivationAddress())
                 .cultivationArea(userCrop.getCultivationArea())
+                .plantingDate(userCrop.getPlantingDate())
                 .build();
     }
 }

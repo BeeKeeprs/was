@@ -10,10 +10,5 @@ import java.util.List;
 
 @Repository
 public interface BeeRecommendationRepository extends JpaRepository<BeeRecommendation, Long> {
-    @Query("""
-            SELECT br FROM BeeRecommendation br
-            JOIN FETCH br.userCrop uc
-            WHERE uc.user.id = :userId
-            """)
     List<BeeRecommendation> findByUserId(@Param("userId") Long userId);
 }

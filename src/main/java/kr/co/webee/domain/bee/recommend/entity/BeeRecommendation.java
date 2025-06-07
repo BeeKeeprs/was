@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import kr.co.webee.domain.bee.type.BeeType;
 import kr.co.webee.domain.common.BaseTimeEntity;
 import kr.co.webee.domain.profile.crop.entity.UserCrop;
+import kr.co.webee.domain.profile.crop.type.CultivationType;
+import kr.co.webee.domain.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,6 +22,16 @@ public class BeeRecommendation extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
+    private String cropName;
+
+    @Column(nullable = false)
+    private String cultivationAddress;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private CultivationType cultivationType;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -41,12 +53,19 @@ public class BeeRecommendation extends BaseTimeEntity {
     private String usageTip;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_crop_id", nullable = false)
-    private UserCrop userCrop;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Builder
-    public BeeRecommendation(BeeType beeType, String characteristics, LocalDate inputStartDate,
-                             LocalDate inputEndDate, String caution, String usageTip, UserCrop userCrop) {
+    public BeeRecommendation(String cropName, String cultivationAddress, CultivationType cultivationType,
+                             BeeType beeType, String characteristics, LocalDate inputStartDate,
+                             LocalDate inputEndDate, String caution, String usageTip, User user) {
+        if (!StringUtils.hasText(cropName)) {
+            throw new IllegalArgumentException("cropName은 null이거나 빈 문자열이 될 수 없습니다.");
+        }
+        if (!StringUtils.hasText(cultivationAddress)) {
+            throw new IllegalArgumentException("cultivationAddress은 null이거나 빈 문자열이 될 수 없습니다.");
+        }
         if (!StringUtils.hasText(characteristics)) {
             throw new IllegalArgumentException("characteristics은 null이거나 빈 문자열이 될 수 없습니다.");
         }
@@ -57,12 +76,15 @@ public class BeeRecommendation extends BaseTimeEntity {
             throw new IllegalArgumentException("usageTip은 null이거나 빈 문자열이 될 수 없습니다.");
         }
 
+        this.cropName=cropName;
+        this.cultivationAddress=cultivationAddress;
+        this.cultivationType = Objects.requireNonNull(cultivationType, "cultivationType은 null이 될 수 없습니다.");
         this.beeType = Objects.requireNonNull(beeType, "beeType은 null이 될 수 없습니다.");
         this.characteristics = characteristics;
         this.inputStartDate=Objects.requireNonNull(inputStartDate, "inputStartDate는 null이 될 수 없습니다.");
         this.inputEndDate=Objects.requireNonNull(inputEndDate, "inputEndDate는 null이 될 수 없습니다.");
         this.caution=caution;
         this.usageTip=usageTip;
-        this.userCrop = Objects.requireNonNull(userCrop, "userCrop은 null이 될 수 없습니다.");
+        this.user = Objects.requireNonNull(user, "user는 null이 될 수 없습니다.");
     }
 }

@@ -6,6 +6,8 @@ import kr.co.webee.domain.bee.recommend.entity.BeeRecommendation;
 import kr.co.webee.domain.bee.recommend.repository.BeeRecommendationRepository;
 import kr.co.webee.domain.profile.crop.entity.UserCrop;
 import kr.co.webee.domain.profile.crop.repository.UserCropRepository;
+import kr.co.webee.domain.user.entity.User;
+import kr.co.webee.domain.user.repository.UserRepository;
 import kr.co.webee.infrastructure.ai.AiPromptExecutor;
 import kr.co.webee.infrastructure.ai.PromptTemplateRegistry;
 import kr.co.webee.presentation.bee.recommend.dto.request.BeeRecommendationRequest;
@@ -24,8 +26,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BeeRecommendationService {
     private final BeeRecommendationRepository beeRecommendationRepository;
-    private final UserCropRepository userCropRepository;
-
+    private final UserRepository userRepository;
     private final AiPromptExecutor aiPromptExecutor;
     private final PromptTemplateRegistry promptRegistry;
 
@@ -49,11 +50,10 @@ public class BeeRecommendationService {
     }
 
     @Transactional
-    public BeeRecommendationCreateResponse createBeeRecommendation(BeeRecommendationRequest request) {
-        UserCrop userCrop = userCropRepository.findById(request.userCropId())
-                .orElseThrow(() -> new EntityNotFoundException("User Crop not found"));
-
-        BeeRecommendation beeRecommendation = request.toEntity(userCrop);
+    public BeeRecommendationCreateResponse createBeeRecommendation(BeeRecommendationRequest request, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        BeeRecommendation beeRecommendation = request.toEntity(user);
         beeRecommendationRepository.save(beeRecommendation);
         return BeeRecommendationCreateResponse.of(beeRecommendation.getId());
     }

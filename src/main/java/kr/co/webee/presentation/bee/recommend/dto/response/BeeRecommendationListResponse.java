@@ -43,9 +43,9 @@ public record BeeRecommendationListResponse(
                 .beeType(beeRecommendation.getBeeType())
                 .inputStartDate(beeRecommendation.getInputStartDate())
                 .inputEndDate(beeRecommendation.getInputEndDate())
-                .cropName(beeRecommendation.getUserCrop().getName())
-                .cultivationAddress(beeRecommendation.getUserCrop().getCultivationAddress())
-                .cultivationType(beeRecommendation.getUserCrop().getCultivationType())
+                .cropName(beeRecommendation.getCropName())
+                .cultivationAddress(beeRecommendation.getCultivationAddress())
+                .cultivationType(beeRecommendation.getCultivationType())
                 .createdAt(LocalDate.from(beeRecommendation.getCreatedAt()))
                 .build();
     }

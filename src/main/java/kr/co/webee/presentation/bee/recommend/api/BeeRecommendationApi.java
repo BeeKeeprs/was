@@ -30,7 +30,7 @@ public interface BeeRecommendationApi {
     )
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "404", description = "사용자 재배 작물 없음")
-    BeeRecommendationCreateResponse createBeeRecommendation(@RequestBody BeeRecommendationRequest request);
+    BeeRecommendationCreateResponse createBeeRecommendation(@RequestBody BeeRecommendationRequest request, @UserId Long userId);
 
     @Operation(
             summary = "수정벌 추천 내역 목록 조회",

@@ -28,8 +28,8 @@ public class BeeRecommendationController implements BeeRecommendationApi {
 
     @Override
     @PostMapping("")
-    public BeeRecommendationCreateResponse createBeeRecommendation(@RequestBody BeeRecommendationRequest request) {
-        return beeRecommendationService.createBeeRecommendation(request);
+    public BeeRecommendationCreateResponse createBeeRecommendation(@RequestBody BeeRecommendationRequest request, @UserId Long userId) {
+        return beeRecommendationService.createBeeRecommendation(request, userId);
     }
 
     @Override

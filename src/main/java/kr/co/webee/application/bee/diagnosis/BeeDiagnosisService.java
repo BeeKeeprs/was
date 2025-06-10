@@ -72,4 +72,10 @@ public class BeeDiagnosisService {
                 .toList();
     }
 
+    public BeeDiagnosisDetailResponse getBeeDiagnosisDetail(Long beeDiagnosisId) {
+        BeeDiagnosis beeDiagnosis = beeDiagnosisRepository.findById(beeDiagnosisId)
+                .orElseThrow(() -> new EntityNotFoundException("Bee diagnosis not found"));
+
+        return BeeDiagnosisDetailResponse.from(beeDiagnosis);
+    }
 }

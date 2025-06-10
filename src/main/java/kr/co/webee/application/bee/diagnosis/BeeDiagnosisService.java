@@ -10,15 +10,14 @@ import kr.co.webee.infrastructure.ai.AiPromptExecutor;
 import kr.co.webee.infrastructure.ai.PromptTemplateRegistry;
 import kr.co.webee.infrastructure.bee.diagnosis.client.BeeDiseaseDetectClient;
 import kr.co.webee.infrastructure.storage.FileStorageClient;
-import kr.co.webee.presentation.bee.diagnosis.dto.BeeDiagnosisRequest;
-import kr.co.webee.presentation.bee.diagnosis.dto.BeeDiseaseAiSolutionResponse;
-import kr.co.webee.presentation.bee.diagnosis.dto.BeeDiseaseAndUserCropInfoRequest;
+import kr.co.webee.presentation.bee.diagnosis.dto.*;
 import kr.co.webee.infrastructure.bee.diagnosis.dto.BeeDiseaseDetectResultResponse;
-import kr.co.webee.presentation.bee.diagnosis.dto.BeeDiagnosisResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -65,4 +64,12 @@ public class BeeDiagnosisService {
         beeDiagnosisRepository.save(beeDiagnosis);
         return BeeDiagnosisSaveResponse.of(beeDiagnosis.getId());
     }
+
+    @Transactional(readOnly = true)
+    public List<BeeDiagnosisListResponse> getBeeDiagnosisList(Long userId) {
+        return beeDiagnosisRepository.findByUserId(userId).stream()
+                .map((BeeDiagnosisListResponse::from))
+                .toList();
+    }
+
 }

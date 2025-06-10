@@ -6,6 +6,7 @@ import kr.co.webee.presentation.bee.diagnosis.dto.*;
 import kr.co.webee.presentation.bee.diagnosis.api.BeeDiagnosisApi;
 import kr.co.webee.presentation.support.annotation.UserId;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,7 +31,7 @@ public class BeeDiagnosisController implements BeeDiagnosisApi {
     }
 
     @Override
-    @PostMapping("/save")
+    @PostMapping(value = "/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public BeeDiagnosisSaveResponse saveBeeDiagnosis(@RequestPart("request") BeeDiagnosisRequest request,
                                                      @RequestPart(value = "beeImage", required = true) MultipartFile image,
                                                      @UserId Long userId) {
@@ -41,5 +42,11 @@ public class BeeDiagnosisController implements BeeDiagnosisApi {
     @GetMapping("")
     public List<BeeDiagnosisListResponse> getBeeDiagnosisList(@UserId Long userId) {
         return beeDiagnosisService.getBeeDiagnosisList(userId);
+    }
+
+    @Override
+    @GetMapping("/{beeDiagnosisId}")
+    public BeeDiagnosisDetailResponse getBeeDiagnosisDetail(@PathVariable Long beeDiagnosisId) {
+        return beeDiagnosisService.getBeeDiagnosisDetail(beeDiagnosisId);
     }
 }

@@ -9,6 +9,9 @@ import java.time.LocalDate;
 
 @Builder
 public record BeeDiagnosisListResponse(
+        @Schema(description = "꿀벌 질병 진단 ID", example = "1")
+        Long beeDiagnosisId,
+
         @Schema(description = "사업자등록증 이미지 url", example = "https://webee.net//bee-diagnosis1/성충 날개불구바이러스감염증.jpeg")
         String imageUrl,
 
@@ -27,6 +30,7 @@ public record BeeDiagnosisListResponse(
 ) {
         public static BeeDiagnosisListResponse from(BeeDiagnosis beeDiagnosis) {
                 return BeeDiagnosisListResponse.builder()
+                        .beeDiagnosisId(beeDiagnosis.getId())
                         .imageUrl(beeDiagnosis.getImageUrl())
                         .diseaseType(beeDiagnosis.getDiseaseType())
                         .situationAnalysis(beeDiagnosis.getSituationAnalysis())

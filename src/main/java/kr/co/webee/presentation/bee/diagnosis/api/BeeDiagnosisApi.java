@@ -10,12 +10,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.webee.application.bee.diagnosis.BeeDiagnosisSaveResponse;
 import kr.co.webee.presentation.bee.diagnosis.dto.*;
+import kr.co.webee.presentation.product.dto.response.ProductResponse;
 import kr.co.webee.presentation.support.annotation.UserId;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -51,14 +49,14 @@ public interface BeeDiagnosisApi {
 
 
     @Operation(
-            summary = "꿀벌 이미지 질병 진단 결과 저장 API",
+            summary = "꿀벌 이미지 질병 진단 결과 저장",
             description = "multipart/form-data로 꿀벌 이미지와 질병 진단 결과를 함께 전송합니다."
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "꿀벌 이미지 질병 진단 결과 저장 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 요청 형식")
     })
-    @PostMapping(value = "/save",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     BeeDiagnosisSaveResponse saveBeeDiagnosis(
             @Parameter(
                     description = "꿀벌 질병 진단 결과 JSON",
@@ -96,4 +94,20 @@ public interface BeeDiagnosisApi {
     List<BeeDiagnosisListResponse> getBeeDiagnosisList(
             @Parameter(hidden = true)
             @UserId Long userId);
+
+
+    @Operation(
+            summary = "꿀벌 질병 진단 결과 상세 조회",
+            description = "꿀벌 질병 진단 결과를 상세 조회합니다."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "조회 성공",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = BeeDiagnosisDetailResponse.class)
+                    )
+            ),
+            @ApiResponse(responseCode = "404", description = "꿀벌 질병 진단 결과 없음")
+    })
+    BeeDiagnosisDetailResponse getBeeDiagnosisDetail(@PathVariable Long beeDiagnosisId);
 }

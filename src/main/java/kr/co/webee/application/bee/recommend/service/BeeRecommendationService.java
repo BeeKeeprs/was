@@ -4,8 +4,6 @@ import jakarta.persistence.EntityNotFoundException;
 import kr.co.webee.application.ai.RagSearchOptions;
 import kr.co.webee.domain.bee.recommend.entity.BeeRecommendation;
 import kr.co.webee.domain.bee.recommend.repository.BeeRecommendationRepository;
-import kr.co.webee.domain.profile.crop.entity.UserCrop;
-import kr.co.webee.domain.profile.crop.repository.UserCropRepository;
 import kr.co.webee.domain.user.entity.User;
 import kr.co.webee.domain.user.repository.UserRepository;
 import kr.co.webee.infrastructure.ai.AiPromptExecutor;

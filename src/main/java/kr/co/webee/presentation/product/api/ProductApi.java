@@ -28,7 +28,7 @@ public interface ProductApi {
     @Operation(summary = "전체 상품 조회 (페이징)", description = "전체 상품 목록을 페이지 단위로 조회합니다.")
     @GetMapping
     ResponseEntity<?> getAllProducts(
-            Pageable pageable, BeeType beeType
+            Pageable pageable, BeeType beeType, Long businessId
     );
 
     @Operation(

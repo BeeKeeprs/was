@@ -30,8 +30,15 @@ public class ProductService {
     private final ProductSaverService productSaverService;
 
     @Transactional(readOnly = true)
-    public Slice<ProductResponse> getAllProducts(Pageable pageable, BeeType beeType) {
-        Slice<Product> products = beeType == null ? productRepository.findAll(pageable) : productRepository.findByBeeType(beeType, pageable);
+    public Slice<ProductResponse> getAllProducts(Pageable pageable, BeeType beeType, Long businessId) {
+        Slice<Product> products=productRepository.findAll(pageable);
+
+        if(beeType!=null){
+            products=productRepository.findByBeeType(beeType, pageable);
+        }
+        else if(businessId!=null){
+            products=productRepository.findByBusinessId(businessId, pageable);
+        }
 
         return products.map(product -> {
             List<String> imageUrls = productImageRepository.findAllByProductId(product.getId())

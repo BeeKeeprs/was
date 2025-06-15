@@ -30,7 +30,7 @@ public class PromptTemplateRegistry {
                         e -> read(e.getValue())
                 ));
 
-        log.info("Prompt templates loaded: {}", promptMap.keySet());
+        log.info("Prompt temxplates loaded: {}", promptMap.keySet());
     }
 
     private String read(String location) {

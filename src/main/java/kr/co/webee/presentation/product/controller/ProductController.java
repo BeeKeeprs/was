@@ -30,9 +30,10 @@ public class ProductController implements ProductApi {
     @GetMapping
     public ResponseEntity<Slice<ProductResponse>> getAllProducts(
             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
-            @RequestParam(value = "bee", required = false) BeeType beeType
+            @RequestParam(value = "bee", required = false) BeeType beeType,
+            @RequestParam(value = "businessId", required = false) Long businessId
     ) {
-        Slice<ProductResponse> result = productService.getAllProducts(pageable, beeType);
+        Slice<ProductResponse> result = productService.getAllProducts(pageable, beeType, businessId);
         return ResponseEntity.ok(result);
     }
 

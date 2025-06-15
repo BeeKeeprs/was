@@ -9,4 +9,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
     Slice<Product> findByBeeType(BeeType beeType, Pageable pageable);
+    Slice<Product> findByBusinessId(Long businessId, Pageable pageable);
 }

@@ -1,12 +1,11 @@
-package kr.co.webee.presentation.bee.recommend.dto.request;
+package kr.co.webee.presentation.bee.recommendation.dto.request;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import kr.co.webee.domain.bee.recommend.entity.BeeRecommendation;
+import kr.co.webee.domain.bee.recommendation.entity.BeeRecommendation;
 import kr.co.webee.domain.bee.type.BeeType;
-import kr.co.webee.domain.profile.crop.entity.UserCrop;
 import kr.co.webee.domain.profile.crop.type.CultivationType;
 import kr.co.webee.domain.user.entity.User;
 

@@ -1,4 +1,4 @@
-package kr.co.webee.presentation.bee.recommend.dto.request;
+package kr.co.webee.presentation.bee.recommendation.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;

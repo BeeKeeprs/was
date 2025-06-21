@@ -1,14 +1,14 @@
-package kr.co.webee.presentation.bee.recommend.controller;
+package kr.co.webee.presentation.bee.recommendation.controller;
 
-import kr.co.webee.application.bee.recommend.service.BeeRecommendationService;
-import kr.co.webee.presentation.bee.recommend.dto.response.BeeRecommendationAiResponse;
+import kr.co.webee.application.bee.recommendation.service.BeeRecommendationService;
+import kr.co.webee.presentation.bee.recommendation.dto.response.BeeRecommendationAiResponse;
 import kr.co.webee.presentation.support.annotation.UserId;
-import kr.co.webee.presentation.bee.recommend.api.BeeRecommendationApi;
-import kr.co.webee.presentation.bee.recommend.dto.request.BeeRecommendationRequest;
-import kr.co.webee.presentation.bee.recommend.dto.request.UserCropInfoRequest;
-import kr.co.webee.presentation.bee.recommend.dto.response.BeeRecommendationCreateResponse;
-import kr.co.webee.presentation.bee.recommend.dto.response.BeeRecommendationDetailResponse;
-import kr.co.webee.presentation.bee.recommend.dto.response.BeeRecommendationListResponse;
+import kr.co.webee.presentation.bee.recommendation.api.BeeRecommendationApi;
+import kr.co.webee.presentation.bee.recommendation.dto.request.BeeRecommendationRequest;
+import kr.co.webee.presentation.bee.recommendation.dto.request.UserCropInfoRequest;
+import kr.co.webee.presentation.bee.recommendation.dto.response.BeeRecommendationCreateResponse;
+import kr.co.webee.presentation.bee.recommendation.dto.response.BeeRecommendationDetailResponse;
+import kr.co.webee.presentation.bee.recommendation.dto.response.BeeRecommendationListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

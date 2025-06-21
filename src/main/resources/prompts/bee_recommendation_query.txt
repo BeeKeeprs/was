@@ -4,7 +4,7 @@ User's crop cultivation information:
 Based on the crops the user is cultivating, recommend the most suitable pollinator bee to assist with pollination.
 Please provide a detailed answer including the following information:
 
-- Recommended pollinator bee (choose one from: 꿀벌, 호박벌, 서양뒤영벌, 머리뿔가위벌)
+- Recommended pollinator bee (Choose one or more from: 꿀벌, 뒤영벌, 머리뿔가위벌)
 - Key characteristics of the selected pollinator
 - Optimal pollinator introduction start date for the user's crop
 - Optimal pollinator introduction end date for the user's crop

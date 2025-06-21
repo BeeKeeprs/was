@@ -1,9 +1,8 @@
-package kr.co.webee.domain.bee.recommend.entity;
+package kr.co.webee.domain.bee.recommendation.entity;
 
 import jakarta.persistence.*;
 import kr.co.webee.domain.bee.type.BeeType;
 import kr.co.webee.domain.common.BaseTimeEntity;
-import kr.co.webee.domain.profile.crop.entity.UserCrop;
 import kr.co.webee.domain.profile.crop.type.CultivationType;
 import kr.co.webee.domain.user.entity.User;
 import lombok.AccessLevel;

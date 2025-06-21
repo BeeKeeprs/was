@@ -1,15 +1,15 @@
-package kr.co.webee.presentation.bee.recommend.api;
+package kr.co.webee.presentation.bee.recommendation.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import kr.co.webee.presentation.bee.recommend.dto.response.BeeRecommendationAiResponse;
+import kr.co.webee.presentation.bee.recommendation.dto.response.BeeRecommendationAiResponse;
 import kr.co.webee.presentation.support.annotation.UserId;
-import kr.co.webee.presentation.bee.recommend.dto.request.BeeRecommendationRequest;
-import kr.co.webee.presentation.bee.recommend.dto.request.UserCropInfoRequest;
-import kr.co.webee.presentation.bee.recommend.dto.response.BeeRecommendationCreateResponse;
-import kr.co.webee.presentation.bee.recommend.dto.response.BeeRecommendationDetailResponse;
-import kr.co.webee.presentation.bee.recommend.dto.response.BeeRecommendationListResponse;
+import kr.co.webee.presentation.bee.recommendation.dto.request.BeeRecommendationRequest;
+import kr.co.webee.presentation.bee.recommendation.dto.request.UserCropInfoRequest;
+import kr.co.webee.presentation.bee.recommendation.dto.response.BeeRecommendationCreateResponse;
+import kr.co.webee.presentation.bee.recommendation.dto.response.BeeRecommendationDetailResponse;
+import kr.co.webee.presentation.bee.recommendation.dto.response.BeeRecommendationListResponse;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 

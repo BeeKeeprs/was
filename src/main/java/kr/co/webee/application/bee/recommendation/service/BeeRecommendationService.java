@@ -6,8 +6,13 @@ import kr.co.webee.domain.bee.recommendation.entity.BeeRecommendation;
 import kr.co.webee.domain.bee.recommendation.repository.BeeRecommendationRepository;
 import kr.co.webee.domain.user.entity.User;
 import kr.co.webee.domain.user.repository.UserRepository;
+import kr.co.webee.infrastructure.ai.AdvisorBuilder;
 import kr.co.webee.infrastructure.ai.AiPromptExecutor;
 import kr.co.webee.infrastructure.ai.PromptTemplateRegistry;
+import kr.co.webee.infrastructure.bee.recommendation.nongsaro.client.NongsaroCropPollinationClient;
+import kr.co.webee.infrastructure.bee.recommendation.nongsaro.dto.NongsaroCropPollinationDetailResponse;
+import kr.co.webee.infrastructure.bee.recommendation.nongsaro.param.dto.NongsaroCropPollinationParamDto;
+import kr.co.webee.infrastructure.bee.recommendation.nongsaro.param.service.NongsaroCropPollinationSearchService;
 import kr.co.webee.presentation.bee.recommendation.dto.request.BeeRecommendationRequest;
 import kr.co.webee.presentation.bee.recommendation.dto.request.UserCropInfoRequest;
 import kr.co.webee.presentation.bee.recommendation.dto.response.BeeRecommendationAiResponse;
@@ -15,11 +20,14 @@ import kr.co.webee.presentation.bee.recommendation.dto.response.BeeRecommendatio
 import kr.co.webee.presentation.bee.recommendation.dto.response.BeeRecommendationDetailResponse;
 import kr.co.webee.presentation.bee.recommendation.dto.response.BeeRecommendationListResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BeeRecommendationService {
@@ -27,21 +35,42 @@ public class BeeRecommendationService {
     private final UserRepository userRepository;
     private final AiPromptExecutor aiPromptExecutor;
     private final PromptTemplateRegistry promptRegistry;
+    private final NongsaroCropPollinationClient cropPollinationClient;
+    private final NongsaroCropPollinationSearchService cropPollinationSearchService;
 
     public BeeRecommendationAiResponse recommendBee(UserCropInfoRequest request) {
-        String userInput = request.describe();
+        Optional<NongsaroCropPollinationParamDto> optionalRequestParam = cropPollinationSearchService.searchRequestParamBy(request.name(), request.variety());
 
+        String userInput = request.describe();
         String query = promptRegistry.get("bee-recommendation-query")
                 .replace("{user_crop_info}", userInput);
 
+        if (optionalRequestParam.isPresent()) {
+            NongsaroCropPollinationParamDto requestParam = optionalRequestParam.get();
+            NongsaroCropPollinationDetailResponse cropPollinationDetail = cropPollinationClient.getCropPollinationDetail(requestParam);
+
+            StringBuilder context = new StringBuilder(cropPollinationDetail.content());
+            cropPollinationDetail.beeTypes()
+                    .forEach(beeType -> context.append(beeType.description()).append(", "));
+
+            String prompt = promptRegistry.get("bee-recommendation-prompt")
+                    .replace("{query}", query)
+                    .replace("{question_answer_context}", context);
+
+            return aiPromptExecutor.run(prompt, AdvisorBuilder.Builder::withLogger,
+                    BeeRecommendationAiResponse.class
+            );
+        }
+
         RagSearchOptions options = new RagSearchOptions(
-                "type == 'guide' AND category == 'bee' OR category == 'crop'",
+                "type == 'fact' AND (category == 'crop' OR category == 'bee')",
                 5,
                 0.75
         );
 
         return aiPromptExecutor.run(query, builder ->
                         builder.input(query)
+                                .withLogger()
                                 .withRag("bee-recommendation-prompt", options),
                 BeeRecommendationAiResponse.class
         );

@@ -43,7 +43,7 @@ public class BusinessController implements BusinessApi {
     }
 
     @Override
-    @GetMapping("/{businessId}")
+    @GetMapping("/{businessId:[0-9]+}")
     public BusinessDetailResponse getBusinessDetail(@PathVariable Long businessId) {
         return businessService.getBusinessDetail(businessId);
     }

@@ -47,10 +47,4 @@ public class BusinessController implements BusinessApi {
     public BusinessDetailResponse getBusinessDetail(@PathVariable Long businessId) {
         return businessService.getBusinessDetail(businessId);
     }
-
-    @Override
-    @GetMapping("/test")
-    public Long test(@UserId Long userId) {
-        return userId;
-    }
 }

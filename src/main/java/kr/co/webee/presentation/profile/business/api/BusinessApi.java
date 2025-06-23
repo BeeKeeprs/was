@@ -82,4 +82,15 @@ public interface BusinessApi {
             @ApiResponse(responseCode = "404", description = "해당 업체 없음")
     })
     BusinessDetailResponse getBusinessDetail(@PathVariable Long businessId);
+
+    @Operation(
+            summary = "테스트",
+            description = "테스트"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "테스트"),
+    })
+    @GetMapping("/test")
+    Long test(@Parameter(hidden = true) @UserId Long userId);
+
 }

@@ -36,8 +36,8 @@ public class BusinessController implements BusinessApi {
         return businessService.getBusinessList();
     }
 
-    @GetMapping("/me")
     @Override
+    @GetMapping("/me")
     public List<BusinessListResponse> getBusinessListByMe(@UserId Long userId) {
         return businessService.getBusinessListByMe(userId);
     }
@@ -46,5 +46,11 @@ public class BusinessController implements BusinessApi {
     @GetMapping("/{businessId:[0-9]+}")
     public BusinessDetailResponse getBusinessDetail(@PathVariable Long businessId) {
         return businessService.getBusinessDetail(businessId);
+    }
+
+    @Override
+    @GetMapping("/test")
+    public Long test(@UserId Long userId) {
+        return userId;
     }
 }

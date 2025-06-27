@@ -2,24 +2,30 @@ package kr.co.webee.infrastructure.bee.recommendation.nongsaro.param.io;
 
 import kr.co.webee.infrastructure.bee.recommendation.nongsaro.param.model.NongsaroCropPollinationParam;
 import kr.co.webee.infrastructure.bee.recommendation.nongsaro.param.model.NongsaroCropPollinationParamList;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class NongsaroFileReader {
-    private static final String CSV_PATH = "src/main/resources/nongsaro-crop-pollination-request-parameter-list.csv";
+    @Value("${bee.recommendation.crop-pollination-info.nongsaro-request-parameter-list}")
+    private Resource nongsaroFileResource;
 
     public NongsaroCropPollinationParamList getNongsaroCropPollinationParamList() {
-        try {
-            List<String> lines = Files.readAllLines(Paths.get(CSV_PATH));
+        try (InputStream inputStream = nongsaroFileResource.getInputStream();
+             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+
             List<NongsaroCropPollinationParam> requestInfos = new ArrayList<>();
 
-            for (String line : lines) {
+            String line;
+            while ((line = reader.readLine()) != null) {
                 String[] values = line.split(",");
 
                 String crop = values[0];
@@ -30,11 +36,11 @@ public class NongsaroFileReader {
                 NongsaroCropPollinationParam entry = NongsaroCropPollinationParam.of(crop, variety, menuId, cntntsNo);
                 requestInfos.add(entry);
             }
+
             return NongsaroCropPollinationParamList.of(requestInfos);
 
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             throw new RuntimeException("Failed to read file.", ex);
         }
     }
 }
-

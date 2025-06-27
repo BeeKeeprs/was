@@ -8,7 +8,7 @@ import java.util.List;
 @Schema(description = "수정벌 추천 ai 응답")
 public record BeeRecommendationAiResponse(
         @Schema(description = "수정벌 종류", example = "뒤영벌")
-        List<String> beeType,
+        String beeType,
 
         @Schema(
                 description = "수정벌 특징",

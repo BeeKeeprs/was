@@ -25,7 +25,7 @@ public record BeeRecommendationRequest(
         @NotNull
         CultivationType cultivationType,
 
-        @Schema(description = "수정벌 종류", example = "EUROPEAN_BUMBLEBEE")
+        @Schema(description = "수정벌 종류", example = "BUMBLEBEE")
         @NotBlank
         BeeType beeType,
 

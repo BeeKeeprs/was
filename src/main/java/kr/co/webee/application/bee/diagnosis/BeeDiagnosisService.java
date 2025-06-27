@@ -47,6 +47,7 @@ public class BeeDiagnosisService {
 
         return aiPromptExecutor.run(query, builder ->
                         builder.input(query)
+                                .withLogger()
                                 .withRag("bee-disease-solution-prompt", options),
                 BeeDiseaseAiSolutionResponse.class
         );

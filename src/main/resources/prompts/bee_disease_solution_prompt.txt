@@ -5,6 +5,9 @@ Answer the following question briefly and directly.
 Use the provided context only if it clearly helps answer the question.
 Ignore the context if it is irrelevant or only loosely related.
 
+The response should be a JSON object with two keys: "situationAnalysis" and "solutions". Each key should have a list of 3 to 5 short sentences as its value.
+Please respond in Korean.
+
 {query}
 
 ---------------------

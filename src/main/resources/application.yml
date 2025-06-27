@@ -83,3 +83,7 @@ app:
 bee:
   diagnosis:
     api-url: ${BEE_DIAGNOSIS_API_URL:http://localhost:5001/predict}
+
+  recommendation:
+    crop-pollination-info:
+      nongsaro-request-parameter-list: classpath:nongsaro-crop-pollination-request-parameter-list.csv

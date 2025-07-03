@@ -15,7 +15,7 @@ import java.util.List;
 
 @Component
 public class NongsaroFileReader {
-    @Value("${bee.recommendation.crop-pollination-info.nongsaro-request-parameter-list}")
+    @Value("${bee.recommendation.nongsaro.request-parameter-list}")
     private Resource nongsaroFileResource;
 
     public NongsaroCropPollinationParamList getNongsaroCropPollinationParamList() {

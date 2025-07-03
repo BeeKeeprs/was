@@ -79,11 +79,9 @@ app:
       bee-disease-solution-query: classpath:prompts/bee_disease_solution_query.txt
       bee-disease-solution-prompt: classpath:prompts/bee_disease_solution_prompt.txt
 
-
 bee:
   diagnosis:
     api-url: ${BEE_DIAGNOSIS_API_URL:http://localhost:5001/predict}
-
   recommendation:
-    crop-pollination-info:
-      nongsaro-request-parameter-list: classpath:nongsaro-crop-pollination-request-parameter-list.csv
+    nongsaro:
+      request-parameter-list: classpath:nongsaro-crop-pollination-request-parameter-list.csv

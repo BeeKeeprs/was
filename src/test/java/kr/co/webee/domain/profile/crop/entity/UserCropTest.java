@@ -17,41 +17,10 @@ class UserCropTest {
     @Test
     void updateCultivationLocation(){
         //given
-        User user = User.builder()
-                .username("exampleUsername")
-                .password("examplePassword")
-                .name("exampleName")
-                .build();
-
-        Coordinates coordinates = Coordinates.builder()
-                .longitude(12.34)
-                .latitude(45.67)
-                .build();
-
-        Location location=Location.builder()
-                .address("충청남도 논산시 연무읍 봉동리")
-                .coordinates(coordinates)
-                .build();
-
-        UserCrop userCrop = UserCrop.builder()
-                .name("딸기")
-                .variety("설향")
-                .cultivationType(CultivationType.CONTROLLED)
-                .cultivationLocation(location)
-                .cultivationArea(1980)
-                .plantingDate(LocalDate.of(2025, 3, 25))
-                .user(user)
-                .build();
-
-        Coordinates modifiedCoordinates = Coordinates.builder()
-                .longitude(987.98)
-                .latitude(123.12)
-                .build();
-
-        Location modifiedLocation=Location.builder()
-                .address("경상북도 경산시 대학로280")
-                .coordinates(modifiedCoordinates)
-                .build();
+        User user = createUser();
+        Location location = createLocation(12.34, 45.67, "충청남도 논산시 연무읍 봉동리");
+        UserCrop userCrop = createUserCrop(location, user);
+        Location modifiedLocation = createLocation(987.98, 123.12, "경상북도 경산시 대학로280");
 
         //when
         userCrop.updateCultivationLocation(modifiedLocation);
@@ -60,9 +29,53 @@ class UserCropTest {
         assertThat(userCrop.getCultivationAddress()).isEqualTo(modifiedLocation.getAddress());
         assertThat(userCrop.getCultivationLocation().getCoordinates()).isEqualTo(modifiedLocation.getCoordinates());
     }
-}
 
-/*
-* String name, String variety, CultivationType cultivationType,
-                    Location cultivationLocation, Integer cultivationArea, LocalDate plantingDate, User user
-* */
+    @DisplayName("주어진 주소가 사용자 작물의 재배 주소와 같은지 확인한다.")
+    @Test
+    void isSameCultivationAddress(){
+        //given
+        User user = createUser();
+        Location location = createLocation(12.34, 45.67, "충청남도 논산시 연무읍 봉동리");
+        UserCrop userCrop = createUserCrop(location, user);
+
+        String address="충청남도 논산시 연무읍 봉동리";
+
+        //when
+        boolean result = userCrop.isSameCultivationAddress(address);
+
+        //then
+        assertThat(result).isTrue();
+    }
+
+    private static Location createLocation(double longitude, double latitude, String address) {
+        Coordinates coordinates = Coordinates.builder()
+                .longitude(longitude)
+                .latitude(latitude)
+                .build();
+
+        return Location.builder()
+                .address(address)
+                .coordinates(coordinates)
+                .build();
+    }
+
+    private static UserCrop createUserCrop(Location location, User user) {
+        return UserCrop.builder()
+                .name("딸기")
+                .variety("설향")
+                .cultivationType(CultivationType.CONTROLLED)
+                .cultivationLocation(location)
+                .cultivationArea(1980)
+                .plantingDate(LocalDate.of(2025, 3, 25))
+                .user(user)
+                .build();
+    }
+
+    private static User createUser() {
+        return User.builder()
+                .username("exampleUsername")
+                .password("examplePassword")
+                .name("exampleName")
+                .build();
+    }
+}

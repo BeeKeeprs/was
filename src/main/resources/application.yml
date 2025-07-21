@@ -85,3 +85,6 @@ bee:
   recommendation:
     nongsaro:
       request-parameter-list: classpath:nongsaro-crop-pollination-request-parameter-list.csv
+
+business-certificate-validation:
+  api-key: ${BUSINESS_CERTIFICATE_API_KEY:}

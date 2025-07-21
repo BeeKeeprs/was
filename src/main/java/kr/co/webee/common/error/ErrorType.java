@@ -46,7 +46,11 @@ public enum ErrorType {
     FILE_UPLOAD_FAILED(BAD_GATEWAY, ERROR, "FILE_001", "파일 업로드에 실패했습니다"),
 
     // BeeErrorType
-    BEE_DISEASE_DETECT_FAILED(BAD_GATEWAY, ERROR, "BEE_001", "꿀벌 질병 탐지에 실패했습니다.");
+    BEE_DISEASE_DETECT_FAILED(BAD_GATEWAY, ERROR, "BEE_001", "꿀벌 질병 탐지에 실패했습니다."),
+
+    //BusinessErrorType
+    BUSINESS_CERTIFICATE_AUTHENTICATION_FAILED(BAD_GATEWAY, ERROR,"BUSINESS_CERTIFICATE_001","사업자등록정보 진위확인에 실패했습니다."),
+    ;
 
     private final HttpStatus httpStatus;
     private final Level logLevel;

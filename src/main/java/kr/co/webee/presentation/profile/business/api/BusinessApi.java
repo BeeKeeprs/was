@@ -28,7 +28,10 @@ public interface BusinessApi {
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "업체 등록 성공"),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청 형식")
+            @ApiResponse(responseCode = "400", description = "잘못된 요청 형식"),
+            @ApiResponse(responseCode = "502", description = "사업자등록정보 진위 확인 실패")
+
+
     })
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     BusinessCreateResponse createBusiness(

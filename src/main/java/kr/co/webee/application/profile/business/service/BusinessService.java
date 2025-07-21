@@ -1,11 +1,15 @@
 package kr.co.webee.application.profile.business.service;
 
 import jakarta.persistence.EntityNotFoundException;
+import kr.co.webee.common.error.ErrorType;
+import kr.co.webee.common.error.exception.BusinessException;
 import kr.co.webee.domain.profile.business.entity.Business;
 import kr.co.webee.domain.profile.business.repository.BusinessRepository;
 import kr.co.webee.domain.profile.crop.entity.Coordinates;
 import kr.co.webee.domain.user.entity.User;
 import kr.co.webee.domain.user.repository.UserRepository;
+import kr.co.webee.infrastructure.businesscert.client.BusinessCertificateValidationClient;
+import kr.co.webee.infrastructure.businesscert.dto.BusinessCertificateInfoRequest;
 import kr.co.webee.infrastructure.geocoding.client.GeocodingClient;
 import kr.co.webee.infrastructure.storage.FileStorageClient;
 import kr.co.webee.presentation.profile.business.dto.request.BusinessCreateRequest;
@@ -27,13 +31,17 @@ public class BusinessService {
     private final UserRepository userRepository;
     private final GeocodingClient geocodingClient;
     private final FileStorageClient fileStorageClient;
+    private final BusinessCertificateValidationClient businessCertificateValidationClient;
 
     @Transactional
     public BusinessCreateResponse createBusiness(BusinessCreateRequest request, MultipartFile file, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-        //open api 사업자등록증 인증 기능 추후 구현
+        boolean isValidBusinessCertificate = businessCertificateValidationClient.validateBusinessCertificate(BusinessCertificateInfoRequest.from(request));
+        if(!isValidBusinessCertificate){
+            throw new BusinessException(ErrorType.BUSINESS_CERTIFICATE_AUTHENTICATION_FAILED);
+        }
 
         String businessCertificateImageUrl = null;
         if (file != null) {

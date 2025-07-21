@@ -8,6 +8,8 @@ Answer the following question briefly and directly.
 Use the provided context only if it clearly helps answer the question.
 Ignore the context if it is irrelevant or only loosely related.
 
+Please respond in Korean. Don't use English words.
+
 {query}
 
 ---------------------

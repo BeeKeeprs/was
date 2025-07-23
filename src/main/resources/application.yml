@@ -73,11 +73,11 @@ app:
       similarity-threshold: 0.75
 
     prompts:
-      assistant-prompt: classpath:prompts/assistant-prompt.txt
-      bee-recommendation-prompt: classpath:prompts/bee_recommendation_prompt.txt
-      bee-recommendation-query: classpath:prompts/bee_recommendation_query.txt
-      bee-disease-solution-query: classpath:prompts/bee_disease_solution_query.txt
-      bee-disease-solution-prompt: classpath:prompts/bee_disease_solution_prompt.txt
+      assistant-prompt: classpath:prompts/assistant/assistant-prompt.txt
+      bee-recommendation-prompt: classpath:prompts/recommendation/bee_recommendation_prompt.txt
+      bee-recommendation-query: classpath:prompts/recommendation/bee_recommendation_query.txt
+      bee-disease-solution-query: classpath:prompts/disease/bee_disease_solution_query.txt
+      bee-disease-solution-prompt: classpath:prompts/disease/bee_disease_solution_prompt.txt
 
 bee:
   diagnosis:

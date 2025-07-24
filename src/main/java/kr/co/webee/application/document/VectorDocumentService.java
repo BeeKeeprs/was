@@ -1,5 +1,6 @@
 package kr.co.webee.application.document;
 
+import kr.co.webee.common.document.util.DocumentFormatter;
 import kr.co.webee.presentation.document.dto.VectorDocumentRequest;
 import kr.co.webee.presentation.document.dto.VectorDocumentResponse;
 import lombok.RequiredArgsConstructor;
@@ -63,6 +64,11 @@ public class VectorDocumentService {
         return Stream.ofNullable(docs)
                 .flatMap(List::stream)
                 .map(this::toResponse).toList();
+    }
+
+    public String searchWithFormat(String query, String category, String type, int topK) {
+        List<VectorDocumentResponse> contexts = search(query, category, type, topK);
+        return DocumentFormatter.formatVectorDocs(query, contexts);
     }
 
     public void deleteByExactMatch(String content) {

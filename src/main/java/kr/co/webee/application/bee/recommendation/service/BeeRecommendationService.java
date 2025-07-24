@@ -1,9 +1,11 @@
 package kr.co.webee.application.bee.recommendation.service;
 
 import jakarta.persistence.EntityNotFoundException;
-import kr.co.webee.application.ai.RagSearchOptions;
+import kr.co.webee.application.document.VectorDocumentService;
+import kr.co.webee.common.document.util.DocumentFormatter;
 import kr.co.webee.domain.bee.recommendation.entity.BeeRecommendation;
 import kr.co.webee.domain.bee.recommendation.repository.BeeRecommendationRepository;
+import kr.co.webee.domain.bee.type.BeeType;
 import kr.co.webee.domain.user.entity.User;
 import kr.co.webee.domain.user.repository.UserRepository;
 import kr.co.webee.infrastructure.ai.AdvisorBuilder;
@@ -24,12 +26,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static kr.co.webee.domain.bee.type.BeeType.values;
+
 @Slf4j
-@Service
 @RequiredArgsConstructor
+@Service
 public class BeeRecommendationService {
     private final BeeRecommendationRepository beeRecommendationRepository;
     private final UserRepository userRepository;
@@ -37,6 +42,7 @@ public class BeeRecommendationService {
     private final PromptTemplateRegistry promptRegistry;
     private final NongsaroCropPollinationClient cropPollinationClient;
     private final NongsaroCropPollinationSearchService cropPollinationSearchService;
+    private final VectorDocumentService vectorDocumentService;
 
     public BeeRecommendationAiResponse recommendBee(UserCropInfoRequest request) {
         Optional<NongsaroCropPollinationParamDto> optionalRequestParam = cropPollinationSearchService.searchRequestParamBy(request.name(), request.variety());
@@ -47,31 +53,43 @@ public class BeeRecommendationService {
 
         if (optionalRequestParam.isPresent()) {
             NongsaroCropPollinationParamDto requestParam = optionalRequestParam.get();
-            NongsaroCropPollinationDetailResponse cropPollinationDetail = cropPollinationClient.getCropPollinationDetail(requestParam);
-
-            StringBuilder context = new StringBuilder(cropPollinationDetail.content());
-            cropPollinationDetail.beeTypes()
-                    .forEach(beeType -> context.append(beeType.description()).append(", "));
-
-            String prompt = promptRegistry.get("bee-recommendation-prompt")
-                    .replace("{query}", query)
-                    .replace("{question_answer_context}", context);
-
-            return aiPromptExecutor.run(prompt, AdvisorBuilder.Builder::withLogger,
-                    BeeRecommendationAiResponse.class
-            );
+            return getBeeRecommendationByNongsaro(requestParam, query);
         }
 
-        RagSearchOptions options = new RagSearchOptions(
-                "type == 'fact' AND (category == 'crop' OR category == 'bee')",
-                5,
-                0.75
+        return getBeeRecommendationByDocument(request, userInput);
+    }
+
+    private BeeRecommendationAiResponse getBeeRecommendationByNongsaro(NongsaroCropPollinationParamDto requestParam, String query) {
+        NongsaroCropPollinationDetailResponse cropPollinationDetail = cropPollinationClient.getCropPollinationDetail(requestParam);
+
+        StringBuilder context = new StringBuilder(cropPollinationDetail.content());
+        cropPollinationDetail.beeTypes()
+                .forEach(beeType -> context.append(beeType.description()).append(", "));
+
+        String prompt = promptRegistry.get("bee-recommendation-prompt")
+                .replace("{query}", query)
+                .replace("{question_answer_context}", context);
+
+        return aiPromptExecutor.run(prompt, AdvisorBuilder.Builder::withLogger,
+                BeeRecommendationAiResponse.class
+        );
+    }
+
+    private BeeRecommendationAiResponse getBeeRecommendationByDocument(UserCropInfoRequest request, String userInput) {
+        String beeCandidatesContext = DocumentFormatter.formatString(
+                "",
+                Arrays.stream(values())
+                        .map(bee -> vectorDocumentService.searchWithFormat(bee.getName(), "bee", null, 5))
+                        .toList()
         );
 
-        return aiPromptExecutor.run(query, builder ->
-                        builder.input(query)
-                                .withLogger()
-                                .withRag("bee-recommendation-prompt", options),
+        String cropContext = vectorDocumentService.searchWithFormat(request.name(), "crop", null, 5);
+
+        String prompt = promptRegistry.get("bee-recommendation-prompt-kor")
+                .replace("{query}", userInput)
+                .replace("{question_answer_context}", beeCandidatesContext + "\n" + cropContext);
+
+        return aiPromptExecutor.run(prompt, AdvisorBuilder.Builder::withLogger,
                 BeeRecommendationAiResponse.class
         );
     }

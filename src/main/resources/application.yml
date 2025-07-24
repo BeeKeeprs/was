@@ -75,6 +75,7 @@ app:
     prompts:
       assistant-prompt: classpath:prompts/assistant/assistant-prompt.txt
       bee-recommendation-prompt: classpath:prompts/recommendation/bee_recommendation_prompt.txt
+      bee-recommendation-prompt-kor: classpath:prompts/recommendation/bee_recommendation_prompt_kor.txt
       bee-recommendation-query: classpath:prompts/recommendation/bee_recommendation_query.txt
       bee-disease-solution-query: classpath:prompts/disease/bee_disease_solution_query.txt
       bee-disease-solution-prompt: classpath:prompts/disease/bee_disease_solution_prompt.txt

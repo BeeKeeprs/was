@@ -23,7 +23,7 @@ public record ProductReviewResponse(
                 review.getId(),
                 review.getContent(),
                 review.getProduct().getId(),
-                new WriterInfo(review.getUser().getId(), review.getUser().getUsername())
+                new WriterInfo(review.getUser().getId(), review.getUser().getName())
         );
     }
 
@@ -32,7 +32,7 @@ public record ProductReviewResponse(
             @Schema(description = "작성자 ID", example = "42")
             Long id,
 
-            @Schema(description = "작성자 닉네임", example = "bee_master")
-            String nickname
+            @Schema(description = "작성자 이름", example = "홍길동")
+            String name
     ) {}
 }

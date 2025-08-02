@@ -40,7 +40,7 @@ public class BeeDiagnosisService {
                 .replace("{user_crop_info}", request.describeUserCropInfo());
 
         RagSearchOptions options = new RagSearchOptions(
-                "type == 'fact' AND category == 'bee' AND category == 'disease'",
+                "type == 'fact' AND (category == 'disease' OR category == 'crop')",
                 5,
                 0.75
         );

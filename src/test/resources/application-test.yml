@@ -1,0 +1,68 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    open-in-view: false
+
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY:open-api-test-key}
+      chat:
+        options:
+          model: gpt-4o-mini
+          temperature: 0.7
+          maxCompletionTokens: 1024
+
+logging:
+  level:
+    org.springframework: DEBUG
+
+jwt:
+  secret: jwt-secret-test-test-test-test-test-key
+  access-expiration: PT1H
+  refresh-expiration: PT1H
+  issuer: test-issuer
+
+kakao:
+  api-key: kakao-api-test-key
+
+was:
+  api: ${WAS_API:http://localhost:8080}
+  cors-allow-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:8080}
+
+cloud:
+  aws:
+    credentials:
+      access-key: test
+      secret-key: test
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: test-bucket
+      cdn-url: http://test-cdn
+
+app:
+  ai:
+    max-messages: 5
+    vector-store:
+      topK: 5
+      similarity-threshold: 0.75
+
+    prompts:
+      assistant-prompt: classpath:prompts/assistant/assistant-prompt.txt
+      bee-recommendation-prompt: classpath:prompts/recommendation/bee_recommendation_prompt.txt
+      bee-recommendation-prompt-kor: classpath:prompts/recommendation/bee_recommendation_prompt_kor.txt
+      bee-recommendation-query: classpath:prompts/recommendation/bee_recommendation_query.txt
+      bee-disease-solution-query: classpath:prompts/disease/bee_disease_solution_query.txt
+      bee-disease-solution-prompt: classpath:prompts/disease/bee_disease_solution_prompt.txt
+
+bee:
+  diagnosis:
+    api-url: ${BEE_DIAGNOSIS_API_URL:http://localhost:5001/predict}
+  recommendation:
+    nongsaro:
+      request-parameter-list: classpath:nongsaro-crop-pollination-request-parameter-list.csv
+
+business-certificate-validation:
+  api-key: business-certificate-api-test-key

@@ -5,6 +5,7 @@ import kr.co.webee.config.TestAiConfig;
 import kr.co.webee.config.TestcontainersConfig;
 import org.springframework.ai.model.openai.autoconfigure.OpenAiAudioSpeechAutoConfiguration;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -18,6 +19,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @ActiveProfiles("test")
 @Testcontainers
+@SpringBootTest
 @ImportAutoConfiguration(exclude = {
         OpenAiAudioSpeechAutoConfiguration.class,
 })

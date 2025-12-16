@@ -1,5 +1,6 @@
 package kr.co.webee.config;
 
+import kr.co.webee.infrastructure.ai.PromptProperties;
 import org.mockito.Mockito;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
@@ -12,6 +13,8 @@ import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.Ordered;
+
+import java.util.Map;
 
 @TestConfiguration
 public class TestAiConfig {
@@ -47,5 +50,10 @@ public class TestAiConfig {
     @Bean
     ChatModel chatModel() {
         return Mockito.mock(ChatModel.class);
+    }
+
+    @Bean
+    PromptProperties promptProperties() {
+        return new PromptProperties(Map.of());
     }
 }

@@ -79,6 +79,7 @@ app:
       bee-recommendation-query: classpath:prompts/recommendation/bee_recommendation_query.txt
       bee-disease-solution-query: classpath:prompts/disease/bee_disease_solution_query.txt
       bee-disease-solution-prompt: classpath:prompts/disease/bee_disease_solution_prompt.txt
+      harvest-prediction-prompt: classpath:prompts/report/harvest_prediction_prompt.txt
 
 bee:
   diagnosis:

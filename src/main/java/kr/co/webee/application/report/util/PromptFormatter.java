@@ -16,6 +16,10 @@ public class PromptFormatter {
             appendGreenhouseSetup(sb, request.greenhouseSetup());
         }
 
+        if (request.environmentData() != null) {
+            appendEnvironmentData(sb, request.environmentData());
+        }
+
         return sb.toString();
     }
 
@@ -31,42 +35,22 @@ public class PromptFormatter {
     }
 
     private static void appendGreenhouseSetup(StringBuilder sb, HarvestPrediction.GreenhouseSetup setup) {
-        HarvestPrediction.GreenhouseInfo g = setup.greenhouseInfo();
-        HarvestPrediction.BeeUsageInfo b = setup.beeUsageInfo();
-        HarvestPrediction.RevenueInfo r = setup.revenueInfo();
+        sb.append("하우스 시설 정보:\n");
+        sb.append("- 하우스 수: ").append(setup.houseCount()).append("동\n");
+        sb.append("- 동당 면적: ").append(setup.areaPerHousePyeong()).append("평\n");
+        sb.append("- 사용 벌: ").append(setup.beeType()).append("\n");
+        sb.append("- 동당 벌 사용량: ").append(setup.boxesPerHouse()).append("박스\n");
+        sb.append("- 벌 교체 주기: ").append(setup.replacementCycleWeeks()).append("주\n");
+        sb.append("- 연 생산량: ").append(setup.annualYieldKg()).append("kg\n\n");
+    }
 
-        sb.append("하우스 정보:\n");
-        sb.append("- 하우스 수: ").append(g.houseCount()).append("동\n");
-        sb.append("- 동당 면적: ").append(g.areaPerHousePyeong()).append("평\n");
-        sb.append("- 사용 벌: ").append(b.beeType()).append("\n");
-        sb.append("- 동당 벌 사용량: ").append(b.boxesPerHouse()).append("박스\n");
-        sb.append("- 벌 교체 주기: ").append(b.replacementCycleWeeks()).append("주\n\n");
-
-        sb.append("수익 정보:\n");
-        appendRevenue(sb, "월간", r.monthly());
-        appendRevenue(sb, "연간", r.yearly());
-
-        if (setup.smartFarmInfo() != null) {
-            appendSmartFarmInfo(sb, setup.smartFarmInfo());
+    private static void appendEnvironmentData(StringBuilder sb, HarvestPrediction.EnvironmentData data) {
+        sb.append("환경 데이터:\n");
+        if (data.temperature() != null) {
+            sb.append("- 온도: ").append(data.temperature()).append("°C\n");
         }
-    }
-
-    private static void appendRevenue(StringBuilder sb, String label, HarvestPrediction.Revenue revenue) {
-        sb.append("- ").append(label).append(" 수익: ")
-                .append(revenue.amountManWon()).append("만원 / ")
-                .append(revenue.yieldKg()).append("kg\n");
-    }
-
-    private static void appendSmartFarmInfo(StringBuilder sb, HarvestPrediction.SmartFarmInfo info) {
-        sb.append("\n스마트팜 관리:\n");
-        sb.append("- 스마트팜 관리 여부: ")
-                .append(info.isSmartFarmManaged() ? "예" : "아니오").append("\n");
-        sb.append("- 온습도 관리 여부: ")
-                .append(info.isTempHumidityManaged() ? "예" : "아니오").append("\n");
-
-        if (info.isTempHumidityManaged()) {
-            sb.append("- 평균 온도: ").append(info.avgTemperature()).append("도\n");
-            sb.append("- 평균 습도: ").append(info.avgHumidity()).append("%\n");
+        if (data.humidity() != null) {
+            sb.append("- 습도: ").append(data.humidity()).append("%\n");
         }
     }
 }

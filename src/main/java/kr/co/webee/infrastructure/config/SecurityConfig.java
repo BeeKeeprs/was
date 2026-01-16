@@ -33,6 +33,7 @@ public class SecurityConfig {
             "/api/v1/auth/**", "/api/v1/assistants/**", "/api/v1/bee/recommendations/ai",
             "/api/v1/bee/diagnosis",
             "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**",
+            "/api/v1/reports/harvest-prediction"
     };
 
     private static final String[] READ_ONLY_ENDPOINTS = {

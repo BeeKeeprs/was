@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import kr.co.webee.common.constant.JwtConstants;
+import kr.co.webee.presentation.auth.dto.request.PreorderPhoneRequest;
 import kr.co.webee.presentation.auth.dto.request.SignInRequest;
 import kr.co.webee.presentation.auth.dto.request.SignUpRequest;
 import kr.co.webee.common.error.ErrorType;
@@ -31,4 +32,7 @@ public interface AuthApi {
     @Operation(summary = "로그아웃", description = "사용자의 인증 정보를 삭제하는 API")
     String signOut(@CookieValue(name = JwtConstants.REFRESH_TOKEN_COOKIE_KEY, required = false) String refreshToken,
                  HttpServletResponse response);
+
+    @Operation(summary = "사전예약용 전화번호 등록", description = "사전예약용 전화번호를 등록하는 API")
+    void savePreorderPhoneNumber(@RequestBody @Valid PreorderPhoneRequest request);
 }

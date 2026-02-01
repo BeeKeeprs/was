@@ -9,6 +9,7 @@ import kr.co.webee.common.constant.JwtConstants;
 import kr.co.webee.common.error.ErrorType;
 import kr.co.webee.common.error.exception.BusinessException;
 import kr.co.webee.presentation.auth.api.AuthApi;
+import kr.co.webee.presentation.auth.dto.request.PreorderPhoneRequest;
 import kr.co.webee.presentation.auth.dto.request.SignInRequest;
 import kr.co.webee.presentation.auth.dto.request.SignUpRequest;
 import kr.co.webee.presentation.auth.dto.response.SignInResponse;
@@ -58,6 +59,12 @@ public class AuthController implements AuthApi {
                           HttpServletResponse response) {
         authService.signOut(refreshToken, response);
         return "OK";
+    }
+
+    @Override
+    @PostMapping("/preoder/phone")
+    public void savePreorderPhoneNumber(@RequestBody @Valid PreorderPhoneRequest request) {
+        authService.savePreorderPhoneNumber(request);
     }
 
     private void createTokenResponse(JwtTokenDto jwtTokenDto, HttpServletResponse response) {

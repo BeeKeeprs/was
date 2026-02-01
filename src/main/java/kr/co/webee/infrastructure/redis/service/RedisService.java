@@ -27,8 +27,8 @@ public class RedisService {
         return Boolean.TRUE.equals(redisTemplate.hasKey(key));
     }
 
-    public void set(String key, Object value) {
-        redisTemplate.opsForSet().add(key, value);
+    public Long set(String key, Object value) {
+        return redisTemplate.opsForSet().add(key, value);
     }
 
     public boolean isMemberOfSet(String key, Object value) {

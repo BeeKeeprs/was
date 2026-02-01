@@ -9,10 +9,12 @@ import kr.co.webee.common.constant.JwtConstants;
 import kr.co.webee.common.error.ErrorType;
 import kr.co.webee.common.error.exception.BusinessException;
 import kr.co.webee.presentation.auth.api.AuthApi;
-import kr.co.webee.presentation.auth.dto.request.PreorderPhoneRequest;
+import kr.co.webee.presentation.auth.dto.request.PreOrderPhoneRequest;
 import kr.co.webee.presentation.auth.dto.request.SignInRequest;
 import kr.co.webee.presentation.auth.dto.request.SignUpRequest;
+import kr.co.webee.presentation.auth.dto.response.PreOrderCheckResponse;
 import kr.co.webee.presentation.auth.dto.response.SignInResponse;
+import kr.co.webee.presentation.support.annotation.UserId;
 import kr.co.webee.presentation.support.util.cookie.CookieUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -62,9 +64,15 @@ public class AuthController implements AuthApi {
     }
 
     @Override
-    @PostMapping("/preoder/phone")
-    public void savePreorderPhoneNumber(@RequestBody @Valid PreorderPhoneRequest request) {
-        authService.savePreorderPhoneNumber(request);
+    @PostMapping("/pre-order/phone")
+    public void savePreOrderPhoneNumber(@RequestBody @Valid PreOrderPhoneRequest request) {
+        authService.savePreOrderPhoneNumber(request);
+    }
+
+    @Override
+    @GetMapping("/pre-order/check")
+    public PreOrderCheckResponse checkPreOrder(@UserId Long userId) {
+        return authService.checkPreOrder(userId);
     }
 
     private void createTokenResponse(JwtTokenDto jwtTokenDto, HttpServletResponse response) {

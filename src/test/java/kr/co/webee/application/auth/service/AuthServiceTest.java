@@ -6,6 +6,7 @@ import kr.co.webee.application.auth.helper.JwtHelper;
 import kr.co.webee.common.auth.jwt.JwtProvider;
 import kr.co.webee.common.error.ErrorType;
 import kr.co.webee.common.error.exception.BusinessException;
+import kr.co.webee.domain.user.repository.UserRepository;
 import kr.co.webee.presentation.auth.dto.request.SignInRequest;
 import kr.co.webee.presentation.auth.dto.request.SignUpRequest;
 import kr.co.webee.application.user.service.UserService;
@@ -32,9 +33,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
     @Mock
-    private UserService userService;
-
-    @Mock
     private JwtHelper jwtHelper;
 
     @Mock
@@ -45,6 +43,9 @@ class AuthServiceTest {
 
     @Mock
     private RefreshTokenService refreshTokenService;
+
+    @Mock
+    private UserRepository userRepository;
 
     @InjectMocks
     private AuthService authService;
@@ -75,14 +76,14 @@ class AuthServiceTest {
             //given
             String encodedPassword = "encodedPassword";
 
-            when(userService.existsByUsername(request.username())).thenReturn(false);
+            when(userRepository.existsByUsername(request.username())).thenReturn(false);
             when(passwordEncoder.encode("password")).thenReturn(encodedPassword);
 
             //when
             authService.signup(request);
 
             //then
-            verify(userService).save(userCaptor.capture());
+            verify(userRepository).save(userCaptor.capture());
 
             assertEquals(request.username(), userCaptor.getValue().getUsername());
             assertEquals(userCaptor.getValue().getName(), request.name());
@@ -94,7 +95,7 @@ class AuthServiceTest {
             //given
             String encodedPassword = "encodedPassword";
 
-            when(userService.existsByUsername(request.username())).thenReturn(true);
+            when(userRepository.existsByUsername(request.username())).thenReturn(true);
 
             //when
             BusinessException exception = assertThrows(BusinessException.class, () -> authService.signup(request));
@@ -116,7 +117,7 @@ class AuthServiceTest {
         @DisplayName("성공")
         void signInSuccess() {
             //given
-            when(userService.readByUsername(request.username())).thenReturn(Optional.of(user));
+            when(userRepository.findByUsername(request.username())).thenReturn(Optional.of(user));
             when(passwordEncoder.matches("password", user.getPassword())).thenReturn(true);
             when(jwtHelper.createToken(any(), any())).thenReturn(jwtTokenDto);
 
@@ -135,7 +136,7 @@ class AuthServiceTest {
         @DisplayName("실패 - 아이디가 존재하지 않는 경우")
         void signInFailNotFoundUsername() {
             //given
-            when(userService.readByUsername(request.username())).thenReturn(Optional.empty());
+            when(userRepository.findByUsername(request.username())).thenReturn(Optional.empty());
 
             //when
             BusinessException exception = assertThrows(BusinessException.class, () -> authService.signIn(request));
@@ -148,7 +149,7 @@ class AuthServiceTest {
         @DisplayName("실패 - 비밀번호가 일치하지 않는 경우")
         void signInFailPasswordMismatch() {
             //given
-            when(userService.readByUsername(request.username())).thenReturn(Optional.of(user));
+            when(userRepository.findByUsername(request.username())).thenReturn(Optional.of(user));
             when(passwordEncoder.matches(request.password(), user.getPassword())).thenReturn(false);
 
             //when

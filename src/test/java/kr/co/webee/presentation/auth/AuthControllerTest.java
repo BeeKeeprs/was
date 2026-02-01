@@ -51,6 +51,7 @@ class AuthControllerTest {
                     .username("username")
                     .password("password")
                     .name("name")
+                    .phoneNumber("01012345678")
                     .build();
 
             //when

@@ -7,7 +7,7 @@ import lombok.Builder;
 
 @Builder
 @Schema(description = "사전예약용 전화번호 등록 request")
-public record PreorderPhoneRequest(
+public record PreOrderPhoneRequest(
         @Pattern(
                 regexp = "^010\\d{8}$",
                 message = "전화번호 형식이 올바르지 않습니다."

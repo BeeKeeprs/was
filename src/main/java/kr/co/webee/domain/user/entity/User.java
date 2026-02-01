@@ -29,11 +29,13 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false)
     private String name;
 
+    private String phoneNumber;
+
     @ColumnDefault("false")
     private boolean businessRegistered;
 
     @Builder
-    public User(String username, String password, String name, boolean businessRegistered) {
+    public User(String username, String password, String name, String phoneNumber, boolean businessRegistered) {
         if (!StringUtils.hasText(username)) {
             throw new IllegalArgumentException("username은 null이거나 빈 문자열이 될 수 없습니다.");
         }
@@ -43,10 +45,14 @@ public class User extends BaseTimeEntity {
         if (!StringUtils.hasText(name)) {
             throw new IllegalArgumentException("name은 null이거나 빈 문자열이 될 수 없습니다.");
         }
+        if (!StringUtils.hasText(phoneNumber)) {
+            throw new IllegalArgumentException("phoneNumber은 null이거나 빈 문자열이 될 수 없습니다.");
+        }
 
         this.username = username;
         this.password = password;
         this.name = name;
+        this.phoneNumber=phoneNumber;
         this.businessRegistered=businessRegistered;
     }
 

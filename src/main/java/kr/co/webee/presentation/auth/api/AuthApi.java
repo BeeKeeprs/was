@@ -5,12 +5,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import kr.co.webee.common.constant.JwtConstants;
-import kr.co.webee.presentation.auth.dto.request.PreorderPhoneRequest;
+import kr.co.webee.presentation.auth.dto.request.PreOrderPhoneRequest;
 import kr.co.webee.presentation.auth.dto.request.SignInRequest;
 import kr.co.webee.presentation.auth.dto.request.SignUpRequest;
 import kr.co.webee.common.error.ErrorType;
+import kr.co.webee.presentation.auth.dto.response.PreOrderCheckResponse;
 import kr.co.webee.presentation.support.annotation.ApiDocsErrorType;
 import kr.co.webee.presentation.auth.dto.response.SignInResponse;
+import kr.co.webee.presentation.support.annotation.UserId;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -34,5 +36,9 @@ public interface AuthApi {
                  HttpServletResponse response);
 
     @Operation(summary = "사전예약용 전화번호 등록", description = "사전예약용 전화번호를 등록하는 API")
-    void savePreorderPhoneNumber(@RequestBody @Valid PreorderPhoneRequest request);
+    void savePreOrderPhoneNumber(@RequestBody @Valid PreOrderPhoneRequest request);
+
+    @Operation(summary = "사전예약 여부 확인", description = "사전예약 여부를 확인하는 API")
+    PreOrderCheckResponse checkPreOrder(@UserId Long userId);
 }
+

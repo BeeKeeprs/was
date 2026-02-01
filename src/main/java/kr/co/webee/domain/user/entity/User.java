@@ -45,9 +45,6 @@ public class User extends BaseTimeEntity {
         if (!StringUtils.hasText(name)) {
             throw new IllegalArgumentException("name은 null이거나 빈 문자열이 될 수 없습니다.");
         }
-        if (!StringUtils.hasText(phoneNumber)) {
-            throw new IllegalArgumentException("phoneNumber은 null이거나 빈 문자열이 될 수 없습니다.");
-        }
 
         this.username = username;
         this.password = password;

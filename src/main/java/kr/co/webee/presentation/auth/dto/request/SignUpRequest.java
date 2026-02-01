@@ -18,7 +18,11 @@ public record SignUpRequest(
 
         @Schema(description = "이름", example = "exampleName")
         @NotBlank()
-        String name
+        String name,
+
+        @Schema(description = "전화번호", example = "01012345678")
+        @NotBlank()
+        String phoneNumber
 ) {
     public User toEntity(String encodedPassword) {
         return User
@@ -26,6 +30,7 @@ public record SignUpRequest(
                 .username(username)
                 .password(encodedPassword)
                 .name(name)
+                .phoneNumber(phoneNumber)
                 .build();
     }
 }

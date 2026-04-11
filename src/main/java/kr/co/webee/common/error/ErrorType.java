@@ -25,7 +25,6 @@ public enum ErrorType {
     MALFORMED_ACCESS_TOKEN(UNAUTHORIZED, DEBUG, "AUTH_004", "잘못된 형식의 토큰입니다"),
     TAMPERED_ACCESS_TOKEN(UNAUTHORIZED, DEBUG, "AUTH_005", "변조된 토큰입니다"),
     UNSUPPORTED_JWT_TOKEN(UNAUTHORIZED, DEBUG, "AUTH_006", "지원하지 않는 JWT 토큰입니다"),
-    UNSUPPORTED_SOCIAL_TYPE(UNAUTHORIZED, DEBUG, "AUTH_007", "지원하지 않는 소셜 타입입니다"),
     UNKNOWN_TOKEN_ERROR(UNAUTHORIZED, DEBUG, "AUTH_008", "알 수 없는 JWT 토큰 에러입니다."),
     INVALID_CREDENTIALS(UNAUTHORIZED, DEBUG, "AUTH_009", "해당 사용자의 정보가 없거나 일치하지 않아 처리할 수 없습니다"),
     INVALID_REFRESH_TOKEN(UNAUTHORIZED, DEBUG, "AUTH_010", "유효하지 않은 리프레시 토큰입니다"),
@@ -33,8 +32,9 @@ public enum ErrorType {
     ALREADY_EXIST_PHONE_NUMBER(CONFLICT, DEBUG, "AUTH_011", "이미 존재하는 전화번호 입니다"),
 
     // OauthErrorType
-    SOCIAL_MEMBER_NOT_FOUND(NOT_FOUND, DEBUG, "OAUTH_001", "찾을 수 없는 소셜 회원입니다"),
-    EMAIL_NOT_FOUND_IN_ID_TOKEN(BAD_REQUEST, DEBUG, "OAUTH_002", "ID 토큰 필드에 이메일이 없습니다"),
+    UNSUPPORTED_SOCIAL_PLATFORM(BAD_REQUEST, DEBUG, "OAUTH_001", "지원하지 않는 소셜 로그인 플랫폼입니다."),
+    OAUTH_TOKEN_REQUEST_FAILED(UNAUTHORIZED, DEBUG, "OAUTH_002", "소셜 서버로부터 액세스 토큰을 가져오는데 실패했습니다."),
+    OAUTH_USER_INFO_REQUEST_FAILED(UNAUTHORIZED, DEBUG, "OAUTH_003", "소셜 사용자 정보를 가져오는데 실패했습니다."),
 
     // DatabaseErrorType
     ENTITY_NOT_FOUND(NOT_FOUND, DEBUG, "DB_001", "해당 엔티티를 찾을 수 없습니다"),

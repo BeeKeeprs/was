@@ -19,6 +19,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -34,7 +35,8 @@ public class SecurityConfig {
             "/api/v1/bee/diagnosis",
             "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**",
             "/api/v1/reports/harvest-prediction",
-            "/api/v1/auth/preorder/phone"
+            "/api/v1/auth/preorder/phone",
+            "/api/v1/oauth/sign-in/**",
     };
 
     private static final String[] READ_ONLY_ENDPOINTS = {
@@ -42,7 +44,7 @@ public class SecurityConfig {
     };
 
     @Value("${was.cors-allow-origins}")
-    private List<String> corsOrigins;
+    private String corsAllowOrigins;
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final JwtExceptionFilter jwtExceptionFilter;
@@ -79,7 +81,11 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(corsOrigins);
+        List<String> origins = Arrays.stream(corsAllowOrigins.split(","))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .toList();
+        configuration.setAllowedOrigins(origins);
         configuration.setAllowedMethods(List.of(GET.name(), POST.name(), PUT.name(), PATCH.name(), DELETE.name(), OPTIONS.name()));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setMaxAge(3600L); // Cache preflight

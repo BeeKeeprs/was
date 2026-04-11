@@ -23,7 +23,6 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false)
     private String username;
 
-    @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
@@ -39,9 +38,6 @@ public class User extends BaseTimeEntity {
         if (!StringUtils.hasText(username)) {
             throw new IllegalArgumentException("username은 null이거나 빈 문자열이 될 수 없습니다.");
         }
-        if (!StringUtils.hasText(password)) {
-            throw new IllegalArgumentException("password는 null이거나 빈 문자열이 될 수 없습니다.");
-        }
         if (!StringUtils.hasText(name)) {
             throw new IllegalArgumentException("name은 null이거나 빈 문자열이 될 수 없습니다.");
         }
@@ -51,6 +47,13 @@ public class User extends BaseTimeEntity {
         this.name = name;
         this.phoneNumber=phoneNumber;
         this.businessRegistered=businessRegistered;
+    }
+
+    public void updateName(String name) {
+        if (!StringUtils.hasText(name)) {
+            throw new IllegalArgumentException("name은 null이거나 빈 문자열이 될 수 없습니다.");
+        }
+        this.name = name;
     }
 
     public boolean isSameId(Long userId) {

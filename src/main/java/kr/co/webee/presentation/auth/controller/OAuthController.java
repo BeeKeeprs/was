@@ -14,18 +14,38 @@ import kr.co.webee.presentation.auth.dto.response.OAuthSignInResponse;
 import kr.co.webee.presentation.support.util.cookie.CookieUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/oauth")
 public class OAuthController implements OAuthApi {
     private final OAuthService oAuthService;
+    private static final String MOBILE_OAUTH_BASE = "webee://oauth";
+
+    @GetMapping("/callback/{platform}")
+    public ResponseEntity<Void> redirectToMobileApp(
+            @PathVariable OAuthPlatform platform,
+            @RequestParam(required = false) String code
+    ) {
+        URI location = UriComponentsBuilder
+                .fromUriString(MOBILE_OAUTH_BASE)
+                .queryParam("code", code)
+                .queryParam("platform", platform.name())
+                .encode(StandardCharsets.UTF_8)
+                .build().toUri();
+
+        return ResponseEntity.status(HttpStatus.FOUND).location(location).build();
+    }
 
     @Override
     @GetMapping("/sign-in/{platform}")

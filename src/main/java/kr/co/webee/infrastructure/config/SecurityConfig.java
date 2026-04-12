@@ -36,11 +36,12 @@ public class SecurityConfig {
             "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**",
             "/api/v1/reports/harvest-prediction",
             "/api/v1/auth/preorder/phone",
-            "/api/v1/oauth/sign-in/**",
+            "/api/v1/oauth/sign-in/**"
     };
 
     private static final String[] READ_ONLY_ENDPOINTS = {
-            "/api/v1/products/**", "/api/v1/users/**", "/api/v1/profile/business/**"
+            "/api/v1/products/**", "/api/v1/users/**", "/api/v1/profile/business/**",
+            "/api/v1/oauth/callback/**"
     };
 
     @Value("${was.cors-allow-origins}")

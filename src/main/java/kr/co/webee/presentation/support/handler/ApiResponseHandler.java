@@ -36,6 +36,9 @@ public class ApiResponseHandler implements ResponseBodyAdvice<Object> {
 
         HttpStatus resolve = HttpStatus.resolve(servletResponse.getStatus());
         if (resolve == null || !resolve.is2xxSuccessful()) {
+            if (resolve != null && resolve.is3xxRedirection()) {
+                return body;
+            }
             if (body instanceof ApiErrorDto error) {
                 return ApiResponse.fail(error);
             }

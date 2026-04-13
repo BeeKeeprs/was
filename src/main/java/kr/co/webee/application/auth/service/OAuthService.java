@@ -54,7 +54,7 @@ public class OAuthService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BusinessException(ErrorType.ENTITY_NOT_FOUND));
 
-        user.updateName(request.name());
+        user.updatePhoneNumber(request.phoneNumber());
     }
 
     private OAuthSignInDto buildSignInResponse(User user, boolean isNewUser) {

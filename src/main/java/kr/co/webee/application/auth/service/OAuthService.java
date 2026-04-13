@@ -67,7 +67,7 @@ public class OAuthService {
 
         User user = User.builder()
                 .username(username)
-                .name(username)
+                .name(userInfo.name())
                 .build();
 
         OAuth oAuth = OAuth.builder()

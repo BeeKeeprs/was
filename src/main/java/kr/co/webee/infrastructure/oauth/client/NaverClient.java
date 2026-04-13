@@ -53,7 +53,9 @@ public class NaverClient implements OAuthClient{
                     .body(JsonNode.class);
 
             String platformId = root.path("response").get("id").asText();
-            return OAuthUserInfoDto.of(platformId);
+            String nickname = root.path("response").get("nickname").asText();
+
+            return OAuthUserInfoDto.of(platformId, nickname);
         } catch (Exception e) {
             log.error("네이버 소셜 사용자 정보를 가져오는데 실패했습니다. {}", e.getMessage());
             throw new BusinessException(ErrorType.OAUTH_USER_INFO_REQUEST_FAILED);

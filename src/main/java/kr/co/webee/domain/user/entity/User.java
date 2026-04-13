@@ -56,6 +56,13 @@ public class User extends BaseTimeEntity {
         this.name = name;
     }
 
+    public void updatePhoneNumber(String phoneNumber) {
+        if (!StringUtils.hasText(phoneNumber)) {
+            throw new IllegalArgumentException("phoneNumber은 null이거나 빈 문자열이 될 수 없습니다.");
+        }
+        this.phoneNumber = phoneNumber;
+    }
+
     public boolean isSameId(Long userId) {
         return Objects.equals(this.id, userId);
     }

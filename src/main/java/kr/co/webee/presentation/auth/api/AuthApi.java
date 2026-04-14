@@ -8,6 +8,7 @@ import kr.co.webee.common.constant.JwtConstants;
 import kr.co.webee.presentation.auth.dto.request.PreOrderPhoneRequest;
 import kr.co.webee.presentation.auth.dto.request.SignInRequest;
 import kr.co.webee.presentation.auth.dto.request.SignUpRequest;
+import kr.co.webee.presentation.auth.dto.request.SmsVerificationSendRequest;
 import kr.co.webee.common.error.ErrorType;
 import kr.co.webee.presentation.auth.dto.response.PreOrderCheckResponse;
 import kr.co.webee.presentation.support.annotation.ApiDocsErrorType;
@@ -34,6 +35,10 @@ public interface AuthApi {
     @Operation(summary = "로그아웃", description = "사용자의 인증 정보를 삭제하는 API")
     String signOut(@CookieValue(name = JwtConstants.REFRESH_TOKEN_COOKIE_KEY, required = false) String refreshToken,
                  HttpServletResponse response);
+
+    @Operation(summary = "SMS 인증번호 발송", description = "휴대전화 인증번호를 발송하는 API")
+    @ApiDocsErrorType(value = {ErrorType.SMS_SEND_FAILED})
+    String sendSmsVerificationCode(@RequestBody @Valid SmsVerificationSendRequest request);
 
     @Operation(summary = "사전예약용 전화번호 등록", description = "사전예약용 전화번호를 등록하는 API")
     void savePreOrderPhoneNumber(@RequestBody @Valid PreOrderPhoneRequest request);

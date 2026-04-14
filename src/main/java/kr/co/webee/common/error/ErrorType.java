@@ -31,6 +31,8 @@ public enum ErrorType {
     ACCESS_DENIED(FORBIDDEN, DEBUG, "COMMON_002", "접근 권한이 없습니다"),
     ALREADY_EXIST_PHONE_NUMBER(CONFLICT, DEBUG, "AUTH_011", "이미 존재하는 전화번호 입니다"),
     SMS_SEND_FAILED(BAD_GATEWAY, ERROR, "AUTH_012", "SMS 전송에 실패했습니다"),
+    SMS_AUTH_CODE_EXPIRED(BAD_REQUEST, DEBUG, "AUTH_013", "인증번호가 만료되었거나 존재하지 않습니다"),
+    SMS_AUTH_CODE_MISMATCH(BAD_REQUEST, DEBUG, "AUTH_014", "인증번호가 일치하지 않습니다"),
 
     // OauthErrorType
     UNSUPPORTED_SOCIAL_PLATFORM(BAD_REQUEST, DEBUG, "OAUTH_001", "지원하지 않는 소셜 로그인 플랫폼입니다."),

@@ -9,12 +9,10 @@ import kr.co.webee.common.constant.JwtConstants;
 import kr.co.webee.common.error.ErrorType;
 import kr.co.webee.common.error.exception.BusinessException;
 import kr.co.webee.presentation.auth.api.AuthApi;
-import kr.co.webee.presentation.auth.dto.request.PreOrderPhoneRequest;
-import kr.co.webee.presentation.auth.dto.request.SignInRequest;
-import kr.co.webee.presentation.auth.dto.request.SignUpRequest;
-import kr.co.webee.presentation.auth.dto.request.SmsVerificationSendRequest;
+import kr.co.webee.presentation.auth.dto.request.*;
 import kr.co.webee.presentation.auth.dto.response.PreOrderCheckResponse;
 import kr.co.webee.presentation.auth.dto.response.SignInResponse;
+import kr.co.webee.presentation.auth.dto.response.SmsVerificationVerifyResponse;
 import kr.co.webee.presentation.support.annotation.UserId;
 import kr.co.webee.presentation.support.util.cookie.CookieUtil;
 import lombok.RequiredArgsConstructor;
@@ -75,9 +73,8 @@ public class AuthController implements AuthApi {
     }
 
     @PostMapping("/phone/verify")
-    public String verifySmsVerificationCode() {
-        authService.verifySmsVerificationCode();
-        return "OK";
+    public SmsVerificationVerifyResponse verifySmsVerificationCode(@RequestBody @Valid SmsVerificationVerifyRequest request) {
+        return authService.verifySmsVerificationCode(request);
     }
 
     @Override

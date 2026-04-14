@@ -8,6 +8,6 @@ public class BusinessException extends BaseException {
     }
 
     public BusinessException(ErrorType type) {
-        this(type, type.getMessage());
+        super(type, "No message");
     }
 }

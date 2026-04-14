@@ -5,12 +5,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import kr.co.webee.common.constant.JwtConstants;
-import kr.co.webee.presentation.auth.dto.request.PreOrderPhoneRequest;
-import kr.co.webee.presentation.auth.dto.request.SignInRequest;
-import kr.co.webee.presentation.auth.dto.request.SignUpRequest;
-import kr.co.webee.presentation.auth.dto.request.SmsVerificationSendRequest;
+import kr.co.webee.presentation.auth.dto.request.*;
 import kr.co.webee.common.error.ErrorType;
 import kr.co.webee.presentation.auth.dto.response.PreOrderCheckResponse;
+import kr.co.webee.presentation.auth.dto.response.SmsVerificationVerifyResponse;
 import kr.co.webee.presentation.support.annotation.ApiDocsErrorType;
 import kr.co.webee.presentation.auth.dto.response.SignInResponse;
 import kr.co.webee.presentation.support.annotation.UserId;
@@ -39,6 +37,13 @@ public interface AuthApi {
     @Operation(summary = "SMS 인증번호 발송", description = "휴대전화 인증번호를 발송하는 API")
     @ApiDocsErrorType(value = {ErrorType.SMS_SEND_FAILED})
     String sendSmsVerificationCode(@RequestBody @Valid SmsVerificationSendRequest request);
+
+    @Operation(summary = "SMS 인증번호 검증", description = "휴대전화로 받은 인증번호를 검증하는 API")
+    @ApiDocsErrorType(value = {
+            ErrorType.SMS_AUTH_CODE_EXPIRED,
+            ErrorType.SMS_AUTH_CODE_MISMATCH
+    })
+    SmsVerificationVerifyResponse verifySmsVerificationCode(@RequestBody @Valid SmsVerificationVerifyRequest request);
 
     @Operation(summary = "사전예약용 전화번호 등록", description = "사전예약용 전화번호를 등록하는 API")
     void savePreOrderPhoneNumber(@RequestBody @Valid PreOrderPhoneRequest request);

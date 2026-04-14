@@ -13,11 +13,9 @@ import kr.co.webee.domain.user.repository.UserRepository;
 import kr.co.webee.infrastructure.redis.service.RedisService;
 import kr.co.webee.infrastructure.sms.client.SmsClient;
 import kr.co.webee.infrastructure.sms.util.SmsUtil;
-import kr.co.webee.presentation.auth.dto.request.PreOrderPhoneRequest;
-import kr.co.webee.presentation.auth.dto.request.SignInRequest;
-import kr.co.webee.presentation.auth.dto.request.SignUpRequest;
-import kr.co.webee.presentation.auth.dto.request.SmsVerificationSendRequest;
+import kr.co.webee.presentation.auth.dto.request.*;
 import kr.co.webee.presentation.auth.dto.response.PreOrderCheckResponse;
+import kr.co.webee.presentation.auth.dto.response.SmsVerificationVerifyResponse;
 import kr.co.webee.presentation.support.util.cookie.CookieUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -70,9 +68,25 @@ public class AuthService {
         String authCode = SmsUtil.generateAuthCode();
         String message = SmsUtil.makeAuthMessage(authCode);
 
+        redisService.set(SMS_AUTH_REDIS_KEY + request.phoneNumber(), authCode, Duration.ofMinutes(3));
         smsClient.sendMessage(request.phoneNumber(), message);
+    }
 
-        redisService.set(SMS_AUTH_REDIS_KEY + request.phoneNumber(), authCode,  Duration.ofMinutes(3));
+    public SmsVerificationVerifyResponse verifySmsVerificationCode(SmsVerificationVerifyRequest request) {
+        String key = SMS_AUTH_REDIS_KEY + request.phoneNumber();
+        String savedAuthCode = (String) redisService.get(key);
+
+        if (savedAuthCode == null) {
+            throw new BusinessException(ErrorType.SMS_AUTH_CODE_EXPIRED);
+        }
+
+        if (!savedAuthCode.equals(request.authCode())) {
+            throw new BusinessException(ErrorType.SMS_AUTH_CODE_MISMATCH);
+        }
+
+        redisService.delete(key);
+
+        return SmsVerificationVerifyResponse.of(true);
     }
 
     public JwtTokenDto reissueToken(String refreshToken) {

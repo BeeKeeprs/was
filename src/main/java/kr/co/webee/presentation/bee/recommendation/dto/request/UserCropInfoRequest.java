@@ -29,12 +29,12 @@ public record UserCropInfoRequest(
         @NotNull
         Integer cultivationArea,
 
-        @Schema(description = "정식(또는 파종)일", example = "2024-02-25")
+        @Schema(description = "정식일", example = "2024-02-25")
         @NotNull
         LocalDate plantingDate
 ) {
     public String describe() {
-        return String.format("작물명: %s, 품종: %s, 재배 방식: %s, 재배 지역: %s, 재배 면적: %s, 정식(또는 파종)일: %s",
+        return String.format("작물명: %s, 품종: %s, 재배 방식: %s, 재배 지역: %s, 재배 면적: %s, 정식일: %s",
                 this.name, this.variety, this.cultivationType.getDescription(), this.cultivationAddress, this.cultivationArea, this.plantingDate.toString());
     }
 }

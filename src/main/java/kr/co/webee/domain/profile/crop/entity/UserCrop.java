@@ -40,13 +40,20 @@ public class UserCrop extends BaseTimeEntity {
     @Column(nullable = false)
     private LocalDate plantingDate;
 
+    @Column
+    private LocalDate harvestStartDate;
+
+    @Column
+    private LocalDate harvestEndDate;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Builder
     public UserCrop(String name, String variety, CultivationType cultivationType,
-                    Location cultivationLocation, Integer cultivationArea, LocalDate plantingDate, User user) {
+                    Location cultivationLocation, Integer cultivationArea, LocalDate plantingDate,
+                    LocalDate harvestStartDate, LocalDate harvestEndDate, User user) {
         if (!StringUtils.hasText(name)) {
             throw new IllegalArgumentException("name은 null이거나 빈 문자열이 될 수 없습니다.");
         }
@@ -57,11 +64,17 @@ public class UserCrop extends BaseTimeEntity {
         this.cultivationLocation =Objects.requireNonNull(cultivationLocation,"cultivationLocation은 null이 될 수 없습니다.");
         this.cultivationArea = Objects.requireNonNull(cultivationArea, "cultivationArea는 null이 될 수 없습니다.");
         this.plantingDate = Objects.requireNonNull(plantingDate, "plantingDate는 null이 될 수 없습니다.");
+        this.harvestStartDate = Objects.requireNonNull(harvestStartDate, "harvestStartDate는 null이 될 수 없습니다.");
+        this.harvestEndDate  = Objects.requireNonNull(harvestEndDate, "harvestEndDate는 null이 될 수 없습니다.");
+        if (harvestStartDate.isAfter(harvestEndDate)) {
+            throw new IllegalArgumentException("harvestStartDate는 harvestEndDate보다 늦을 수 없습니다.");
+        }
         this.user = Objects.requireNonNull(user, "user는 null이 될 수 없습니다.");
     }
 
     public void update(String name, String variety, CultivationType cultivationType,
-                       Integer cultivationArea, LocalDate plantingDate) {
+                       Integer cultivationArea, LocalDate plantingDate,
+                       LocalDate harvestStartDate, LocalDate harvestEndDate) {
         if (!StringUtils.hasText(name)) {
             throw new IllegalArgumentException("name은 null이거나 빈 문자열이 될 수 없습니다.");
         }
@@ -71,6 +84,11 @@ public class UserCrop extends BaseTimeEntity {
         this.cultivationType = Objects.requireNonNull(cultivationType, "cultivationType은 null이 될 수 없습니다.");
         this.cultivationArea = Objects.requireNonNull(cultivationArea, "cultivationArea는 null이 될 수 없습니다.");
         this.plantingDate = Objects.requireNonNull(plantingDate, "plantingDate는 null이 될 수 없습니다.");
+        this.harvestStartDate = Objects.requireNonNull(harvestStartDate, "harvestStartDate는 null이 될 수 없습니다.");
+        this.harvestEndDate  = Objects.requireNonNull(harvestEndDate, "harvestEndDate는 null이 될 수 없습니다.");
+        if (harvestStartDate.isAfter(harvestEndDate)) {
+            throw new IllegalArgumentException("harvestStartDate는 harvestEndDate보다 늦을 수 없습니다.");
+        }
     }
 
     public void updateCultivationLocation(Location cultivationLocation) {

@@ -24,22 +24,37 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    // web
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.12.6'
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.12.6'
+
+    // validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // database
     runtimeOnly 'com.mysql:mysql-connector-j'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation("org.apache.commons:commons-pool2:2.12.1")
+
+    // lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.security:spring-security-test'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
+    // env
     implementation("me.paulschwarz:spring-dotenv:4.0.0")
+
+    // swagger
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6")
     implementation("io.swagger.core.v3:swagger-annotations:2.2.30")
-
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
     // Spring AI
     implementation platform("org.springframework.ai:spring-ai-bom:1.0.0")
@@ -50,26 +65,27 @@ dependencies {
         exclude group: 'org.json', module: 'json'
     }
 
-    implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
-    implementation 'io.jsonwebtoken:jjwt-impl:0.12.6'
-    implementation 'io.jsonwebtoken:jjwt-jackson:0.12.6'
-
-    implementation("org.apache.commons:commons-pool2:2.12.1")
-
+    // HTML Parsing
     implementation group: 'org.jsoup', name: 'jsoup', version: '1.20.1'
 
-    // AWS SDK
+    // AWS S3, CDN
     implementation("software.amazon.awssdk:s3:2.31.41")
     implementation("software.amazon.awssdk:cloudfront:2.31.41")
 
-    // testcontainers
+    // SMS
+    implementation 'com.solapi:sdk:1.0.3'
+
+    // test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // test containers
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
     testImplementation("com.redis.testcontainers:testcontainers-redis:1.6.4")
-
-    testImplementation("org.testcontainers:junit-jupiter:1.20.1")
     testImplementation("org.testcontainers:mysql:1.20.1")
-    testImplementation("org.testcontainers:junit-jupiter:1.20.1")
     testImplementation("org.testcontainers:localstack:1.20.1")
+    testImplementation("org.testcontainers:junit-jupiter:1.20.1")
 }
 
 tasks.named('test') {

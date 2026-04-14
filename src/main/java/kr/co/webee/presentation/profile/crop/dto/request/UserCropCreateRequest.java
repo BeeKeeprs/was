@@ -34,9 +34,17 @@ public record UserCropCreateRequest(
         @NotNull
         Integer cultivationArea,
 
-        @Schema(description = "정식(또는 파종)일", example = "2024-02-25")
+        @Schema(description = "정식일", example = "2024-02-25")
         @NotNull
-        LocalDate plantingDate
+        LocalDate plantingDate,
+
+        @Schema(description = "수확 시작일", example = "2024-05-10")
+        @NotNull
+        LocalDate harvestStartDate,
+
+        @Schema(description = "수확 마감일", example = "2024-06-05")
+        @NotNull
+        LocalDate harvestEndDate
 ) {
     public UserCrop toEntity(Coordinates coordinates, User user) {
         Location cultivationLocation = Location.builder()
@@ -51,6 +59,8 @@ public record UserCropCreateRequest(
                 .cultivationLocation(cultivationLocation)
                 .cultivationArea(cultivationArea)
                 .plantingDate(plantingDate)
+                .harvestStartDate(harvestStartDate)
+                .harvestEndDate(harvestEndDate)
                 .user(user)
                 .build();
     }

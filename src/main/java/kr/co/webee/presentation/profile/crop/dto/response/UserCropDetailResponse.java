@@ -28,8 +28,14 @@ public record UserCropDetailResponse(
         @Schema(description = "재배 면적", example = "1320")
         Integer cultivationArea,
 
-        @Schema(description = "정식(또는 파종)일", example = "2024-02-25")
-        LocalDate plantingDate
+        @Schema(description = "정식일", example = "2024-02-25")
+        LocalDate plantingDate,
+
+        @Schema(description = "수확 시작일", example = "2024-05-10")
+        LocalDate harvestStartDate,
+
+        @Schema(description = "수확 마감일", example = "2024-06-05")
+        LocalDate harvestEndDate
 ) {
     public static UserCropDetailResponse from(UserCrop userCrop) {
         return UserCropDetailResponse.builder()
@@ -40,6 +46,8 @@ public record UserCropDetailResponse(
                 .cultivationAddress(userCrop.getCultivationAddress())
                 .cultivationArea(userCrop.getCultivationArea())
                 .plantingDate(userCrop.getPlantingDate())
+                .harvestStartDate(userCrop.getHarvestStartDate())
+                .harvestEndDate(userCrop.getHarvestEndDate())
                 .build();
     }
 }

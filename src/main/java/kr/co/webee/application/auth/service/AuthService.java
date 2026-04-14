@@ -11,14 +11,19 @@ import kr.co.webee.common.error.exception.BusinessException;
 import kr.co.webee.domain.user.entity.User;
 import kr.co.webee.domain.user.repository.UserRepository;
 import kr.co.webee.infrastructure.redis.service.RedisService;
+import kr.co.webee.infrastructure.sms.client.SmsClient;
+import kr.co.webee.infrastructure.sms.util.SmsUtil;
 import kr.co.webee.presentation.auth.dto.request.PreOrderPhoneRequest;
 import kr.co.webee.presentation.auth.dto.request.SignInRequest;
 import kr.co.webee.presentation.auth.dto.request.SignUpRequest;
+import kr.co.webee.presentation.auth.dto.request.SmsVerificationSendRequest;
 import kr.co.webee.presentation.auth.dto.response.PreOrderCheckResponse;
 import kr.co.webee.presentation.support.util.cookie.CookieUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.Duration;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +32,9 @@ public class AuthService {
     private final JwtHelper jwtHelper;
     private final PasswordEncoder passwordEncoder;
     private final RedisService redisService;
+    private final SmsClient smsClient;
     private final static String PRE_ORDER_PHONE_NUMBER_REDIS_KEY = "pre-order:phones";
+    private final static String SMS_AUTH_REDIS_KEY = "sms:auth:";
 
     public void signup(SignUpRequest request) {
         if (userRepository.existsByUsername(request.username())) {
@@ -57,6 +64,15 @@ public class AuthService {
 
         JwtTokenDto token = jwtHelper.createToken(user.getId(), user.getUsername());
         return SignInDto.of(user.getName(), token);
+    }
+
+    public void sendSmsVerificationCode(SmsVerificationSendRequest request) {
+        String authCode = SmsUtil.generateAuthCode();
+        String message = SmsUtil.makeAuthMessage(authCode);
+
+        smsClient.sendMessage(request.phoneNumber(), message);
+
+        redisService.set(SMS_AUTH_REDIS_KEY + request.phoneNumber(), authCode,  Duration.ofMinutes(3));
     }
 
     public JwtTokenDto reissueToken(String refreshToken) {

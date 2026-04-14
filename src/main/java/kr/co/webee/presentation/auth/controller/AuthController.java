@@ -12,6 +12,7 @@ import kr.co.webee.presentation.auth.api.AuthApi;
 import kr.co.webee.presentation.auth.dto.request.PreOrderPhoneRequest;
 import kr.co.webee.presentation.auth.dto.request.SignInRequest;
 import kr.co.webee.presentation.auth.dto.request.SignUpRequest;
+import kr.co.webee.presentation.auth.dto.request.SmsVerificationSendRequest;
 import kr.co.webee.presentation.auth.dto.response.PreOrderCheckResponse;
 import kr.co.webee.presentation.auth.dto.response.SignInResponse;
 import kr.co.webee.presentation.support.annotation.UserId;
@@ -37,7 +38,10 @@ public class AuthController implements AuthApi {
 
     @Override
     @PostMapping("/sign-in")
-    public SignInResponse signIn(@RequestBody @Valid SignInRequest request, HttpServletResponse response) {
+    public SignInResponse signIn(
+            @RequestBody @Valid SignInRequest request,
+            HttpServletResponse response
+    ) {
         SignInDto signInDto = authService.signIn(request);
         createTokenResponse(signInDto.jwtTokenDto(), response);
         return SignInResponse.of(signInDto.name());
@@ -60,6 +64,19 @@ public class AuthController implements AuthApi {
     public String signOut(@CookieValue(name = JwtConstants.REFRESH_TOKEN_COOKIE_KEY, required = false) String refreshToken,
                           HttpServletResponse response) {
         authService.signOut(refreshToken, response);
+        return "OK";
+    }
+
+    @Override
+    @PostMapping("/phone/send")
+    public String sendSmsVerificationCode(@RequestBody @Valid SmsVerificationSendRequest request) {
+        authService.sendSmsVerificationCode(request);
+        return "OK";
+    }
+
+    @PostMapping("/phone/verify")
+    public String verifySmsVerificationCode() {
+        authService.verifySmsVerificationCode();
         return "OK";
     }
 

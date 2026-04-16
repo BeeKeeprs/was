@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@Tag(name = "InterestMarket", description = "사용자 관심 시장 API")
+@Tag(name = "Interest Market", description = "사용자 관심 시장 API")
 public interface InterestMarketApi {
 
     @Operation(

@@ -46,6 +46,10 @@ public enum ErrorType {
     // UserErrorType
     ALREADY_EXIST_USERNAME(CONFLICT, WARN, "USER_001", "이미 존재하는 아이디입니다"),
 
+    // MarketErrorType
+    INTEREST_MARKET_ALREADY_EXISTS(CONFLICT, DEBUG, "MARKET_001", "이미 등록된 관심 시장입니다"),
+    INTEREST_MARKET_NOT_FOUND(NOT_FOUND, DEBUG, "MARKET_002", "등록된 관심 시장을 찾을 수 없습니다"),
+
     // FileErrorType
     FILE_UPLOAD_FAILED(BAD_GATEWAY, ERROR, "FILE_001", "파일 업로드에 실패했습니다"),
 

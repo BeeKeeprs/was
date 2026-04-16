@@ -1,5 +1,6 @@
 package kr.co.webee.presentation.market.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import kr.co.webee.domain.market.entity.InterestMarket;
@@ -32,10 +33,12 @@ public record InterestMarketRegisterRequest(
                 .build();
     }
 
+    @JsonIgnore
     public boolean isMarketOnly() {
         return (cropMajorCode == null) && (cropMidName == null) && (cropMinorName == null);
     }
 
+    @JsonIgnore
     public boolean isMarketWithCrop() {
         return (cropMajorCode != null) && (cropMidName != null) && (cropMinorName != null);
     }

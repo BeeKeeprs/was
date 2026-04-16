@@ -1,6 +1,6 @@
-package kr.co.webee.domain.market.repository;
+package kr.co.webee.domain.interestmarket.repository;
 
-import kr.co.webee.domain.market.entity.InterestMarket;
+import kr.co.webee.domain.interestmarket.entity.InterestMarket;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

@@ -1,9 +1,9 @@
-package kr.co.webee.presentation.market.dto.request;
+package kr.co.webee.presentation.interestmarket.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
-import kr.co.webee.domain.market.entity.InterestMarket;
+import kr.co.webee.domain.interestmarket.entity.InterestMarket;
 import kr.co.webee.domain.user.entity.User;
 import lombok.Builder;
 

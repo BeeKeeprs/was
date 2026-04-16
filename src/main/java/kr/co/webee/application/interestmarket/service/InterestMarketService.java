@@ -1,14 +1,14 @@
-package kr.co.webee.application.market.service;
+package kr.co.webee.application.interestmarket.service;
 
 import kr.co.webee.common.error.ErrorType;
 import kr.co.webee.common.error.exception.BusinessException;
-import kr.co.webee.domain.market.entity.InterestMarket;
-import kr.co.webee.domain.market.repository.InterestMarketRepository;
+import kr.co.webee.domain.interestmarket.entity.InterestMarket;
+import kr.co.webee.domain.interestmarket.repository.InterestMarketRepository;
 import kr.co.webee.domain.user.entity.User;
 import kr.co.webee.domain.user.repository.UserRepository;
-import kr.co.webee.presentation.market.dto.request.InterestMarketRegisterRequest;
-import kr.co.webee.presentation.market.dto.response.InterestMarketRegisterResponse;
-import kr.co.webee.presentation.market.dto.response.InterestMarketResponse;
+import kr.co.webee.presentation.interestmarket.dto.request.InterestMarketRegisterRequest;
+import kr.co.webee.presentation.interestmarket.dto.response.InterestMarketRegisterResponse;
+import kr.co.webee.presentation.interestmarket.dto.response.InterestMarketResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

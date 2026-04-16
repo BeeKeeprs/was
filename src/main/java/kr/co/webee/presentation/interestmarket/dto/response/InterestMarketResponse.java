@@ -1,7 +1,7 @@
-package kr.co.webee.presentation.market.dto.response;
+package kr.co.webee.presentation.interestmarket.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import kr.co.webee.domain.market.entity.InterestMarket;
+import kr.co.webee.domain.interestmarket.entity.InterestMarket;
 import lombok.Builder;
 
 @Builder

@@ -1,11 +1,11 @@
-package kr.co.webee.presentation.market.controller;
+package kr.co.webee.presentation.interestmarket.controller;
 
 import jakarta.validation.Valid;
-import kr.co.webee.application.market.service.InterestMarketService;
-import kr.co.webee.presentation.market.api.InterestMarketApi;
-import kr.co.webee.presentation.market.dto.request.InterestMarketRegisterRequest;
-import kr.co.webee.presentation.market.dto.response.InterestMarketRegisterResponse;
-import kr.co.webee.presentation.market.dto.response.InterestMarketResponse;
+import kr.co.webee.application.interestmarket.service.InterestMarketService;
+import kr.co.webee.presentation.interestmarket.api.InterestMarketApi;
+import kr.co.webee.presentation.interestmarket.dto.request.InterestMarketRegisterRequest;
+import kr.co.webee.presentation.interestmarket.dto.response.InterestMarketRegisterResponse;
+import kr.co.webee.presentation.interestmarket.dto.response.InterestMarketResponse;
 import kr.co.webee.presentation.support.annotation.UserId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

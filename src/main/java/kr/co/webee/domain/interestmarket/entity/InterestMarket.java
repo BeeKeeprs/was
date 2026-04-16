@@ -1,4 +1,4 @@
-package kr.co.webee.domain.market.entity;
+package kr.co.webee.domain.interestmarket.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

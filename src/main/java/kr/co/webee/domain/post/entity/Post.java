@@ -57,4 +57,23 @@ public class Post extends BaseTimeEntity {
         this.likeCount = 0;
         this.commentCount = 0;
     }
+
+    public void update(String title, String content) {
+        if (!StringUtils.hasText(title)) {
+            throw new IllegalArgumentException("title은 null이거나 빈 문자열이 될 수 없습니다.");
+        }
+        if (!StringUtils.hasText(content)) {
+            throw new IllegalArgumentException("content는 null이거나 빈 문자열이 될 수 없습니다.");
+        }
+        this.title = title;
+        this.content = content;
+    }
+
+    public boolean isWrittenBy(Long userId) {
+        return user.isSameId(userId);
+    }
+
+    public boolean isNotWrittenBy(Long userId) {
+        return !isWrittenBy(userId);
+    }
 }

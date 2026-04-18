@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kr.co.webee.presentation.post.dto.request.PostCreateRequest;
+import kr.co.webee.presentation.post.dto.request.PostUpdateRequest;
 import kr.co.webee.presentation.post.dto.response.PostCreateResponse;
 import kr.co.webee.presentation.post.dto.response.PostDetailResponse;
 import kr.co.webee.presentation.post.dto.response.PostListResponse;
@@ -38,7 +39,7 @@ public interface PostApi {
             @ApiResponse(responseCode = "200", description = "게시글 조회 성공"),
             @ApiResponse(responseCode = "404", description = "게시글 없음"),
     })
-    PostDetailResponse getPost(
+    PostDetailResponse getPostDetail(
             @Parameter(description = "게시글 ID", example = "1", required = true)
             @PathVariable Long postId
     );
@@ -53,6 +54,26 @@ public interface PostApi {
     PostCreateResponse createPost(
             @Parameter(description = "등록할 게시글", required = true)
             @RequestBody @Valid PostCreateRequest request,
+
+            @Parameter(hidden = true)
+            @UserId Long userId
+    );
+
+    @Operation(
+            summary = "게시글 수정",
+            description = "본인이 작성한 게시글의 제목·내용을 수정합니다."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "게시글 수정 성공"),
+            @ApiResponse(responseCode = "403", description = "작성자가 아님"),
+            @ApiResponse(responseCode = "404", description = "게시글 없음"),
+    })
+    void updatePost(
+            @Parameter(description = "게시글 ID", example = "1", required = true)
+            @PathVariable Long postId,
+
+            @Parameter(description = "수정할 내용", required = true)
+            @RequestBody @Valid PostUpdateRequest request,
 
             @Parameter(hidden = true)
             @UserId Long userId

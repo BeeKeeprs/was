@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import kr.co.webee.application.post.service.PostService;
 import kr.co.webee.presentation.post.api.PostApi;
 import kr.co.webee.presentation.post.dto.request.PostCreateRequest;
+import kr.co.webee.presentation.post.dto.request.PostUpdateRequest;
 import kr.co.webee.presentation.post.dto.response.PostCreateResponse;
 import kr.co.webee.presentation.post.dto.response.PostDetailResponse;
 import kr.co.webee.presentation.post.dto.response.PostListResponse;
@@ -29,13 +30,23 @@ public class PostController implements PostApi {
 
     @Override
     @GetMapping("/{postId}")
-    public PostDetailResponse getPost(@PathVariable Long postId) {
-        return postService.getPost(postId);
+    public PostDetailResponse getPostDetail(@PathVariable Long postId) {
+        return postService.getPostDetail(postId);
     }
 
     @Override
     @PostMapping("")
     public PostCreateResponse createPost(@RequestBody @Valid PostCreateRequest request, @UserId Long userId) {
         return postService.createPost(request, userId);
+    }
+
+    @Override
+    @PutMapping("/{postId}")
+    public void updatePost(
+            @PathVariable Long postId,
+            @RequestBody @Valid PostUpdateRequest request,
+            @UserId Long userId
+    ) {
+        postService.updatePost(postId, request, userId);
     }
 }

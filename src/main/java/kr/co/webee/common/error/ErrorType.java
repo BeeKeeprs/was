@@ -56,6 +56,10 @@ public enum ErrorType {
     // BeeErrorType
     BEE_DISEASE_DETECT_FAILED(BAD_GATEWAY, ERROR, "BEE_001", "꿀벌 질병 탐지에 실패했습니다."),
 
+    // PostErrorType
+    POST_NOT_FOUND(NOT_FOUND, DEBUG, "POST_001", "게시글을 찾을 수 없습니다"),
+    POST_ACCESS_DENIED(FORBIDDEN, DEBUG, "POST_002", "해당 게시글에 대한 권한이 없습니다"),
+
     //BusinessErrorType
     BUSINESS_CERTIFICATE_AUTHENTICATION_FAILED(BAD_GATEWAY, ERROR,"BUSINESS_CERTIFICATE_001","사업자등록정보 진위확인에 실패했습니다."),
     ;

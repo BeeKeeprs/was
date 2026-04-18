@@ -7,7 +7,7 @@ import lombok.Builder;
 import java.time.LocalDateTime;
 
 @Builder
-@Schema(description = "게시글 상세")
+@Schema(description = "게시글 상세 response")
 public record PostDetailResponse(
         @Schema(description = "게시글 ID", example = "1")
         Long postId,

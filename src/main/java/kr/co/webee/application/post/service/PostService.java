@@ -59,4 +59,16 @@ public class PostService {
 
         post.update(request.title(), request.content());
     }
+
+    @Transactional
+    public void deletePost(Long postId, Long userId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new BusinessException(ErrorType.POST_NOT_FOUND));
+
+        if (post.isNotWrittenBy(userId)) {
+            throw new BusinessException(ErrorType.POST_ACCESS_DENIED);
+        }
+
+        postRepository.delete(post);
+    }
 }

@@ -42,7 +42,8 @@ public class SecurityConfig {
 
     private static final String[] READ_ONLY_ENDPOINTS = {
             "/api/v1/products/**", "/api/v1/users/**", "/api/v1/profile/business/**",
-            "/api/v1/oauth/callback/**"
+            "/api/v1/oauth/callback/**",
+            "/api/v1/posts/**",
     };
 
     @Value("${was.cors-allow-origins}")

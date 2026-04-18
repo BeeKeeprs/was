@@ -37,6 +37,12 @@ public class Post extends BaseTimeEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Column(name = "like_count", nullable = false)
+    private int likeCount;
+
+    @Column(name = "comment_count", nullable = false)
+    private int commentCount;
+
     @Builder
     private Post(String title, String content, User user) {
         if (!StringUtils.hasText(title)) {
@@ -48,5 +54,7 @@ public class Post extends BaseTimeEntity {
         this.title = title;
         this.content = content;
         this.user = Objects.requireNonNull(user, "user는 null이 될 수 없습니다.");
+        this.likeCount = 0;
+        this.commentCount = 0;
     }
 }

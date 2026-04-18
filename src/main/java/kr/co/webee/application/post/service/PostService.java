@@ -7,7 +7,10 @@ import kr.co.webee.domain.user.entity.User;
 import kr.co.webee.domain.user.repository.UserRepository;
 import kr.co.webee.presentation.post.dto.request.PostCreateRequest;
 import kr.co.webee.presentation.post.dto.response.PostCreateResponse;
+import kr.co.webee.presentation.post.dto.response.PostListResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+
+    @Transactional(readOnly = true)
+    public Slice<PostListResponse> getAllPosts(Pageable pageable) {
+        return postRepository.findAll(pageable)
+                .map(PostListResponse::from);
+    }
 
     @Transactional
     public PostCreateResponse createPost(PostCreateRequest request, Long userId) {

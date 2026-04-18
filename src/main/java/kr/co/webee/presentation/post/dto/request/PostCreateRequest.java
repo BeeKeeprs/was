@@ -7,7 +7,7 @@ import kr.co.webee.domain.user.entity.User;
 import lombok.Builder;
 
 @Builder
-@Schema(description = "게시글 등록 요청")
+@Schema(description = "게시글 등록 request")
 public record PostCreateRequest(
         @Schema(description = "제목", example = "제목입니다")
         @NotBlank

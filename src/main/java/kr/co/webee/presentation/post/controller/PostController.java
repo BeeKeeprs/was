@@ -5,6 +5,7 @@ import kr.co.webee.application.post.service.PostService;
 import kr.co.webee.presentation.post.api.PostApi;
 import kr.co.webee.presentation.post.dto.request.PostCreateRequest;
 import kr.co.webee.presentation.post.dto.response.PostCreateResponse;
+import kr.co.webee.presentation.post.dto.response.PostDetailResponse;
 import kr.co.webee.presentation.post.dto.response.PostListResponse;
 import kr.co.webee.presentation.support.annotation.UserId;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,12 @@ public class PostController implements PostApi {
     @GetMapping("")
     public Slice<PostListResponse> getAllPosts(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         return postService.getAllPosts(pageable);
+    }
+
+    @Override
+    @GetMapping("/{postId}")
+    public PostDetailResponse getPost(@PathVariable Long postId) {
+        return postService.getPost(postId);
     }
 
     @Override

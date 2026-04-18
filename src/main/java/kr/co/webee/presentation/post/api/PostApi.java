@@ -8,10 +8,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kr.co.webee.presentation.post.dto.request.PostCreateRequest;
 import kr.co.webee.presentation.post.dto.response.PostCreateResponse;
+import kr.co.webee.presentation.post.dto.response.PostDetailResponse;
 import kr.co.webee.presentation.post.dto.response.PostListResponse;
 import kr.co.webee.presentation.support.annotation.UserId;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Tag(name = "Post", description = "게시글 API")
@@ -26,6 +28,19 @@ public interface PostApi {
     Slice<PostListResponse> getAllPosts(
             @Parameter(description = "페이지 정보 (page, size, sort 등 쿼리 파라미터)")
             Pageable pageable
+    );
+
+    @Operation(
+            summary = "게시글 단건 조회",
+            description = "게시글 ID에 해당하는 게시글 상세를 조회합니다."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "게시글 조회 성공"),
+            @ApiResponse(responseCode = "404", description = "게시글 없음"),
+    })
+    PostDetailResponse getPost(
+            @Parameter(description = "게시글 ID", example = "1", required = true)
+            @PathVariable Long postId
     );
 
     @Operation(

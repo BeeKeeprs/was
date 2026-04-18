@@ -49,4 +49,10 @@ public class PostController implements PostApi {
     ) {
         postService.updatePost(postId, request, userId);
     }
+
+    @Override
+    @DeleteMapping("/{postId}")
+    public void deletePost(@PathVariable Long postId, @UserId Long userId) {
+        postService.deletePost(postId, userId);
+    }
 }

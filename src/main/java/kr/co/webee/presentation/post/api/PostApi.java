@@ -78,4 +78,21 @@ public interface PostApi {
             @Parameter(hidden = true)
             @UserId Long userId
     );
+
+    @Operation(
+            summary = "게시글 삭제",
+            description = "본인이 작성한 게시글을 삭제합니다."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "게시글 삭제 성공"),
+            @ApiResponse(responseCode = "403", description = "작성자가 아님"),
+            @ApiResponse(responseCode = "404", description = "게시글 없음"),
+    })
+    void deletePost(
+            @Parameter(description = "게시글 ID", example = "1", required = true)
+            @PathVariable Long postId,
+
+            @Parameter(hidden = true)
+            @UserId Long userId
+    );
 }

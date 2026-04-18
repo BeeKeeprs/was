@@ -7,6 +7,7 @@ import kr.co.webee.domain.user.entity.User;
 import kr.co.webee.domain.user.repository.UserRepository;
 import kr.co.webee.presentation.post.dto.request.PostCreateRequest;
 import kr.co.webee.presentation.post.dto.response.PostCreateResponse;
+import kr.co.webee.presentation.post.dto.response.PostDetailResponse;
 import kr.co.webee.presentation.post.dto.response.PostListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +25,14 @@ public class PostService {
     public Slice<PostListResponse> getAllPosts(Pageable pageable) {
         return postRepository.findAll(pageable)
                 .map(PostListResponse::from);
+    }
+
+    @Transactional(readOnly = true)
+    public PostDetailResponse getPost(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("Post not found"));
+
+        return PostDetailResponse.from(post);
     }
 
     @Transactional

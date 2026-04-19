@@ -59,6 +59,8 @@ public enum ErrorType {
     // PostErrorType
     POST_NOT_FOUND(NOT_FOUND, DEBUG, "POST_001", "게시글을 찾을 수 없습니다"),
     POST_ACCESS_DENIED(FORBIDDEN, DEBUG, "POST_002", "해당 게시글에 대한 권한이 없습니다"),
+    POST_COMMENT_NOT_FOUND(NOT_FOUND, DEBUG, "POST_003", "댓글을 찾을 수 없습니다"),
+    POST_COMMENT_ACCESS_DENIED(FORBIDDEN, DEBUG, "POST_004", "해당 댓글에 대한 권한이 없습니다"),
 
     //BusinessErrorType
     BUSINESS_CERTIFICATE_AUTHENTICATION_FAILED(BAD_GATEWAY, ERROR,"BUSINESS_CERTIFICATE_001","사업자등록정보 진위확인에 실패했습니다."),

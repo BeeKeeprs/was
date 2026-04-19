@@ -47,4 +47,19 @@ public class PostComment extends BaseTimeEntity {
         this.post = Objects.requireNonNull(post, "post는 null이 될 수 없습니다.");
         this.user = Objects.requireNonNull(user, "user는 null이 될 수 없습니다.");
     }
+
+    public void updateContent(String content) {
+        if (!StringUtils.hasText(content)) {
+            throw new IllegalArgumentException("content는 null이거나 빈 문자열이 될 수 없습니다.");
+        }
+        this.content = content;
+    }
+
+    public boolean isWrittenBy(Long userId) {
+        return user.isSameId(userId);
+    }
+
+    public boolean isNotWrittenBy(Long userId) {
+        return !isWrittenBy(userId);
+    }
 }

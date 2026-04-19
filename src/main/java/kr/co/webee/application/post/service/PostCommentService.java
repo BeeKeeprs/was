@@ -61,4 +61,16 @@ public class PostCommentService {
 
         postComment.updateContent(request.content());
     }
+
+    @Transactional
+    public void deleteComment(Long postId, Long commentId, Long userId) {
+        PostComment postComment = postCommentRepository.findById(commentId)
+                .orElseThrow(() -> new BusinessException(ErrorType.POST_COMMENT_NOT_FOUND));
+
+        if (postComment.isNotWrittenBy(userId)) {
+            throw new BusinessException(ErrorType.POST_COMMENT_ACCESS_DENIED);
+        }
+
+        postCommentRepository.delete(postComment);
+    }
 }

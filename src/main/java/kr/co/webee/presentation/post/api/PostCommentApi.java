@@ -108,4 +108,26 @@ public interface PostCommentApi {
             @Parameter(hidden = true)
             @UserId Long userId
     );
+
+    @Operation(
+            summary = "댓글 삭제",
+            description = "특정 게시글에 달린 본인 댓글을 삭제합니다."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "댓글 삭제 성공"),
+    })
+    @ApiDocsErrorType({
+            ErrorType.POST_COMMENT_NOT_FOUND,
+            ErrorType.POST_COMMENT_ACCESS_DENIED,
+    })
+    void deleteComment(
+            @Parameter(description = "게시글 ID", example = "1", required = true)
+            @PathVariable Long postId,
+
+            @Parameter(description = "댓글 ID", example = "1", required = true)
+            @PathVariable Long commentId,
+
+            @Parameter(hidden = true)
+            @UserId Long userId
+    );
 }

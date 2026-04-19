@@ -9,6 +9,7 @@ import kr.co.webee.presentation.post.dto.response.PostCommentCreateResponse;
 import kr.co.webee.presentation.post.dto.response.PostCommentListResponse;
 import kr.co.webee.presentation.support.annotation.UserId;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,5 +51,15 @@ public class PostCommentController implements PostCommentApi {
             @UserId Long userId
     ) {
         postCommentService.updateComment(postId, commentId, request, userId);
+    }
+
+    @Override
+    @DeleteMapping("/{postId}/comments/{commentId}")
+    public void deleteComment(
+            @PathVariable Long postId,
+            @PathVariable Long commentId,
+            @UserId Long userId
+    ) {
+        postCommentService.deleteComment(postId, commentId, userId);
     }
 }

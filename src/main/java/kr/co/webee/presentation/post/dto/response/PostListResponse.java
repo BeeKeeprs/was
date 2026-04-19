@@ -24,16 +24,16 @@ public record PostListResponse(
         @Schema(description = "댓글 수", example = "5")
         int commentCount,
 
-        @Schema(description = "작성일시", example = "2026-04-13T12:00:00")
+        @Schema(description = "작성 일시", example = "2026-04-13T12:00:00")
         LocalDateTime createdAt
 ) {
-    public static PostListResponse from(Post post) {
+    public static PostListResponse from(Post post, int commentCount) {
         return PostListResponse.builder()
                 .postId(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .likeCount(post.getLikeCount())
-                .commentCount(post.getCommentCount())
+                .commentCount(commentCount)
                 .createdAt(post.getCreatedAt())
                 .build();
     }

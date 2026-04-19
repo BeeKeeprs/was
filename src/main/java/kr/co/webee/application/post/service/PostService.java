@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import kr.co.webee.common.error.ErrorType;
 import kr.co.webee.common.error.exception.BusinessException;
 import kr.co.webee.domain.post.entity.Post;
+import kr.co.webee.domain.post.repository.CommentRepository;
 import kr.co.webee.domain.post.repository.PostRepository;
 import kr.co.webee.domain.user.entity.User;
 import kr.co.webee.domain.user.repository.UserRepository;
@@ -18,16 +19,22 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 @Service
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
     public Slice<PostListResponse> getAllPosts(Pageable pageable) {
-        return postRepository.findAll(pageable)
-                .map(PostListResponse::from);
+        Slice<Post> posts = postRepository.findAll(pageable);
+
+        return posts.map(post -> PostListResponse.from(
+                post,
+                commentRepository.countByPostId(post.getId())
+        ));
     }
 
     @Transactional(readOnly = true)

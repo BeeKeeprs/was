@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kr.co.webee.common.error.ErrorType;
 import kr.co.webee.presentation.post.dto.request.PostCommentCreateRequest;
+import kr.co.webee.presentation.post.dto.request.PostCommentUpdateRequest;
 import kr.co.webee.presentation.post.dto.response.PostCommentCreateResponse;
 import kr.co.webee.presentation.post.dto.response.PostCommentListResponse;
 import kr.co.webee.presentation.support.annotation.ApiDocsErrorType;
@@ -62,8 +63,47 @@ public interface PostCommentApi {
             @Parameter(description = "게시글 ID", example = "1", required = true)
             @PathVariable Long postId,
 
-            @Parameter(description = "등록할 댓글", required = true)
+            @Parameter(
+                    description = "등록할 댓글",
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = PostCommentCreateRequest.class)
+                    )
+            )
             @RequestBody @Valid PostCommentCreateRequest request,
+
+            @Parameter(hidden = true)
+            @UserId Long userId
+    );
+
+    @Operation(
+            summary = "댓글 수정",
+            description = "특정 게시글에 달린 본인 댓글의 내용을 수정합니다."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "댓글 수정 성공"),
+    })
+    @ApiDocsErrorType({
+            ErrorType.POST_COMMENT_NOT_FOUND,
+            ErrorType.POST_COMMENT_ACCESS_DENIED,
+    })
+    void updateComment(
+            @Parameter(description = "게시글 ID", example = "1", required = true)
+            @PathVariable Long postId,
+
+            @Parameter(description = "댓글 ID", example = "1", required = true)
+            @PathVariable Long commentId,
+
+            @Parameter(
+                    description = "수정할 내용",
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = PostCommentUpdateRequest.class)
+                    )
+            )
+            @RequestBody @Valid PostCommentUpdateRequest request,
 
             @Parameter(hidden = true)
             @UserId Long userId

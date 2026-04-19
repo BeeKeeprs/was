@@ -10,6 +10,7 @@ import kr.co.webee.domain.post.repository.PostRepository;
 import kr.co.webee.domain.user.entity.User;
 import kr.co.webee.domain.user.repository.UserRepository;
 import kr.co.webee.presentation.post.dto.request.PostCommentCreateRequest;
+import kr.co.webee.presentation.post.dto.request.PostCommentUpdateRequest;
 import kr.co.webee.presentation.post.dto.response.PostCommentCreateResponse;
 import kr.co.webee.presentation.post.dto.response.PostCommentListResponse;
 import lombok.RequiredArgsConstructor;
@@ -47,5 +48,17 @@ public class PostCommentService {
         PostComment postComment = postCommentRepository.save(request.toEntity(post, user));
 
         return PostCommentCreateResponse.of(postComment.getId());
+    }
+
+    @Transactional
+    public void updateComment(Long postId, Long commentId, PostCommentUpdateRequest request, Long userId) {
+        PostComment postComment = postCommentRepository.findById(commentId)
+                .orElseThrow(() -> new BusinessException(ErrorType.POST_COMMENT_NOT_FOUND));
+
+        if (postComment.isNotWrittenBy(userId)) {
+            throw new BusinessException(ErrorType.POST_COMMENT_ACCESS_DENIED);
+        }
+
+        postComment.updateContent(request.content());
     }
 }

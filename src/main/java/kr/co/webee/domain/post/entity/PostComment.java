@@ -21,7 +21,7 @@ import java.util.Objects;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class Comment extends BaseTimeEntity {
+public class PostComment extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -38,7 +38,7 @@ public class Comment extends BaseTimeEntity {
     private User user;
 
     @Builder
-    private Comment(String content, Post post, User user) {
+    private PostComment(String content, Post post, User user) {
         if (!StringUtils.hasText(content)) {
             throw new IllegalArgumentException("content는 null이거나 빈 문자열이 될 수 없습니다.");
         }

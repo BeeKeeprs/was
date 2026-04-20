@@ -24,12 +24,12 @@ public record PostDetailResponse(
         @Schema(description = "작성일시", example = "2026-04-13T12:00:00")
         LocalDateTime createdAt
 ) {
-    public static PostDetailResponse from(Post post) {
+    public static PostDetailResponse from(Post post, int likeCount) {
         return PostDetailResponse.builder()
                 .postId(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
-                .likeCount(post.getLikeCount())
+                .likeCount(likeCount)
                 .createdAt(post.getCreatedAt())
                 .build();
     }

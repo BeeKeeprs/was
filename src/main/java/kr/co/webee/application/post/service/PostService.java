@@ -5,6 +5,7 @@ import kr.co.webee.common.error.ErrorType;
 import kr.co.webee.common.error.exception.BusinessException;
 import kr.co.webee.domain.post.entity.Post;
 import kr.co.webee.domain.post.repository.PostCommentRepository;
+import kr.co.webee.domain.post.repository.PostLikeRepository;
 import kr.co.webee.domain.post.repository.PostRepository;
 import kr.co.webee.domain.user.entity.User;
 import kr.co.webee.domain.user.repository.UserRepository;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostService {
     private final PostRepository postRepository;
     private final PostCommentRepository postCommentRepository;
+    private final PostLikeRepository postLikeRepository;
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
@@ -33,6 +35,7 @@ public class PostService {
 
         return posts.map(post -> PostListResponse.from(
                 post,
+                postLikeRepository.countByPostId(post.getId()),
                 postCommentRepository.countByPostId(post.getId())
         ));
     }
@@ -42,7 +45,10 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new BusinessException(ErrorType.POST_NOT_FOUND));
 
-        return PostDetailResponse.from(post);
+        return PostDetailResponse.from(
+                post,
+                postLikeRepository.countByPostId(postId)
+        );
     }
 
     @Transactional

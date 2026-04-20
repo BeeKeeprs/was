@@ -5,12 +5,14 @@ import kr.co.webee.application.document.VectorDocumentService;
 import kr.co.webee.common.document.util.DocumentFormatter;
 import kr.co.webee.domain.bee.recommendation.entity.BeeRecommendation;
 import kr.co.webee.domain.bee.recommendation.repository.BeeRecommendationRepository;
-import kr.co.webee.domain.bee.type.BeeType;
 import kr.co.webee.domain.user.entity.User;
 import kr.co.webee.domain.user.repository.UserRepository;
 import kr.co.webee.infrastructure.ai.AdvisorBuilder;
 import kr.co.webee.infrastructure.ai.AiPromptExecutor;
 import kr.co.webee.infrastructure.ai.PromptTemplateRegistry;
+import kr.co.webee.infrastructure.bee.recommendation.guide.PollinatorGuideRegistry;
+import kr.co.webee.infrastructure.bee.recommendation.guide.dto.PollinatorGuideCropCategoryDto;
+import kr.co.webee.infrastructure.bee.recommendation.guide.dto.PollinatorGuideDto;
 import kr.co.webee.infrastructure.bee.recommendation.nongsaro.client.NongsaroCropPollinationClient;
 import kr.co.webee.infrastructure.bee.recommendation.nongsaro.dto.NongsaroCropPollinationDetailResponse;
 import kr.co.webee.infrastructure.bee.recommendation.nongsaro.param.dto.NongsaroCropPollinationParamDto;
@@ -43,6 +45,7 @@ public class BeeRecommendationService {
     private final NongsaroCropPollinationClient cropPollinationClient;
     private final NongsaroCropPollinationSearchService cropPollinationSearchService;
     private final VectorDocumentService vectorDocumentService;
+    private final PollinatorGuideRegistry pollinatorGuideRegistry;
 
     public BeeRecommendationAiResponse recommendBee(UserCropInfoRequest request) {
         Optional<NongsaroCropPollinationParamDto> optionalRequestParam = cropPollinationSearchService.searchRequestParamBy(request.name(), request.variety());
@@ -116,5 +119,10 @@ public class BeeRecommendationService {
                 .orElseThrow(() -> new EntityNotFoundException("Bee Recommendation not found"));
 
         return BeeRecommendationDetailResponse.from(beeRecommendation);
+    }
+
+    @Transactional(readOnly = true)
+    public List<PollinatorGuideCropCategoryDto> getCropCategories() {
+        return pollinatorGuideRegistry.getCropCategories();
     }
 }

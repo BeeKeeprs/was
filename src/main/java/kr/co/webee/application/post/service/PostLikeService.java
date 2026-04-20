@@ -9,6 +9,7 @@ import kr.co.webee.domain.post.repository.PostLikeRepository;
 import kr.co.webee.domain.post.repository.PostRepository;
 import kr.co.webee.domain.user.entity.User;
 import kr.co.webee.domain.user.repository.UserRepository;
+import kr.co.webee.presentation.post.dto.response.PostLikeStatusResponse;
 import kr.co.webee.presentation.post.dto.response.PostLikeToggleResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -52,5 +53,15 @@ public class PostLikeService {
                             postLikeRepository.countByPostId(postId)
                     );
                 });
+    }
+
+    @Transactional(readOnly = true)
+    public PostLikeStatusResponse getMyLikeStatus(Long postId, Long userId) {
+        if (!postRepository.existsById(postId)) {
+            throw new BusinessException(ErrorType.POST_NOT_FOUND);
+        }
+        return PostLikeStatusResponse.of(
+                postLikeRepository.existsByPostIdAndUserId(postId, userId)
+        );
     }
 }

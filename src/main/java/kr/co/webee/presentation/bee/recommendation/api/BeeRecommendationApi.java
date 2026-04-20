@@ -1,8 +1,13 @@
 package kr.co.webee.presentation.bee.recommendation.api;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import kr.co.webee.infrastructure.bee.recommendation.guide.dto.PollinatorGuideCropCategoryDto;
 import kr.co.webee.presentation.bee.recommendation.dto.response.BeeRecommendationAiResponse;
 import kr.co.webee.presentation.support.annotation.UserId;
 import kr.co.webee.presentation.bee.recommendation.dto.request.BeeRecommendationRequest;
@@ -10,6 +15,8 @@ import kr.co.webee.presentation.bee.recommendation.dto.request.UserCropInfoReque
 import kr.co.webee.presentation.bee.recommendation.dto.response.BeeRecommendationCreateResponse;
 import kr.co.webee.presentation.bee.recommendation.dto.response.BeeRecommendationDetailResponse;
 import kr.co.webee.presentation.bee.recommendation.dto.response.BeeRecommendationListResponse;
+import kr.co.webee.infrastructure.bee.recommendation.guide.dto.PollinatorGuideDto;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -46,4 +53,21 @@ public interface BeeRecommendationApi {
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "404", description = "수정벌 추천 내역 없음")
     BeeRecommendationDetailResponse getBeeRecommendationDetail(@PathVariable Long beeRecommendId);
+
+    @Operation(
+            summary = "수정벌 추천 작물 카테고리·작물명 목록 조회"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "카테고리별 작물명 목록 조회 성공",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            array = @ArraySchema(
+                                    schema = @Schema(implementation = PollinatorGuideCropCategoryDto.class)
+                            )
+                    )
+            )
+    })
+    List<PollinatorGuideCropCategoryDto> getCropCategories();
 }

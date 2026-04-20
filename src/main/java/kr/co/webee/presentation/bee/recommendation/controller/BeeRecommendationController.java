@@ -1,6 +1,7 @@
 package kr.co.webee.presentation.bee.recommendation.controller;
 
 import kr.co.webee.application.bee.recommendation.service.BeeRecommendationService;
+import kr.co.webee.infrastructure.bee.recommendation.guide.dto.PollinatorGuideCropCategoryDto;
 import kr.co.webee.presentation.bee.recommendation.dto.response.BeeRecommendationAiResponse;
 import kr.co.webee.presentation.support.annotation.UserId;
 import kr.co.webee.presentation.bee.recommendation.api.BeeRecommendationApi;
@@ -9,6 +10,7 @@ import kr.co.webee.presentation.bee.recommendation.dto.request.UserCropInfoReque
 import kr.co.webee.presentation.bee.recommendation.dto.response.BeeRecommendationCreateResponse;
 import kr.co.webee.presentation.bee.recommendation.dto.response.BeeRecommendationDetailResponse;
 import kr.co.webee.presentation.bee.recommendation.dto.response.BeeRecommendationListResponse;
+import kr.co.webee.infrastructure.bee.recommendation.guide.dto.PollinatorGuideDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,5 +44,11 @@ public class BeeRecommendationController implements BeeRecommendationApi {
     @GetMapping("/{beeRecommendId}")
     public BeeRecommendationDetailResponse getBeeRecommendationDetail(@PathVariable Long beeRecommendId) {
         return beeRecommendationService.getBeeRecommendationDetail(beeRecommendId);
+    }
+
+    @Override
+    @GetMapping("/crops")
+    public List<PollinatorGuideCropCategoryDto> getCropCategories() {
+        return beeRecommendationService.getCropCategories();
     }
 }

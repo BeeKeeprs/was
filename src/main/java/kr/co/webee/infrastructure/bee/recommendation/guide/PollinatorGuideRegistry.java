@@ -49,4 +49,10 @@ public class PollinatorGuideRegistry {
                 ))
                 .toList();
     }
+
+    public Optional<Crop> findGuide(String category, String cropName) {
+        return pollinatorGuide.crops().stream()
+                .filter(c -> category.equals(c.category()) && cropName.equals(c.name()))
+                .findFirst();
+    }
 }

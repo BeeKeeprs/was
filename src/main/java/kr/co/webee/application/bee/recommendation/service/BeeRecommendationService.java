@@ -12,7 +12,7 @@ import kr.co.webee.infrastructure.ai.AiPromptExecutor;
 import kr.co.webee.infrastructure.ai.PromptTemplateRegistry;
 import kr.co.webee.infrastructure.bee.recommendation.guide.PollinatorGuideRegistry;
 import kr.co.webee.infrastructure.bee.recommendation.guide.dto.PollinatorGuideCropCategoryDto;
-import kr.co.webee.infrastructure.bee.recommendation.guide.dto.PollinatorGuideDto;
+import kr.co.webee.infrastructure.bee.recommendation.guide.dto.PollinatorGuideDto.Crop;
 import kr.co.webee.infrastructure.bee.recommendation.nongsaro.client.NongsaroCropPollinationClient;
 import kr.co.webee.infrastructure.bee.recommendation.nongsaro.dto.NongsaroCropPollinationDetailResponse;
 import kr.co.webee.infrastructure.bee.recommendation.nongsaro.param.dto.NongsaroCropPollinationParamDto;
@@ -121,8 +121,12 @@ public class BeeRecommendationService {
         return BeeRecommendationDetailResponse.from(beeRecommendation);
     }
 
-    @Transactional(readOnly = true)
     public List<PollinatorGuideCropCategoryDto> getCropCategories() {
         return pollinatorGuideRegistry.getCropCategories();
+    }
+
+    public Crop getPollinatorGuideCrop(String category, String crop) {
+        return pollinatorGuideRegistry.findGuide(category, crop)
+                .orElseThrow(() -> new IllegalArgumentException("해당 카테고리 및 작물에 대한 가이드가 없습니다. category=" + category + ", crop=" + crop));
     }
 }

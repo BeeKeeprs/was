@@ -51,4 +51,10 @@ public class BeeRecommendationController implements BeeRecommendationApi {
     public List<PollinatorGuideCropCategoryDto> getCropCategories() {
         return beeRecommendationService.getCropCategories();
     }
+
+    @Override
+    @GetMapping("/crops/guide")
+    public PollinatorGuideDto.Crop getPollinatorGuideCrop(@RequestParam String category, @RequestParam String crop) {
+        return beeRecommendationService.getPollinatorGuideCrop(category, crop);
+    }
 }

@@ -11,7 +11,7 @@ public record PollinatorGuideCropCategoryDto(
         @Schema(description = "작물 대분류", example = "과수")
         String category,
 
-        @Schema(description = "해당 카테고리에 속하는 작물 표시명 목록(순서는 가이드 내 등장 순)", example = "[\"시설복숭아\", \"복숭아\", \"사과\"]")
+        @Schema(description = "해당 카테고리에 속하는 작물 표시명 목록", example = "[\"시설복숭아\", \"복숭아\", \"사과\"]")
         List<String> crops
 ) {
     public static PollinatorGuideCropCategoryDto of(String category, List<String> crops) {

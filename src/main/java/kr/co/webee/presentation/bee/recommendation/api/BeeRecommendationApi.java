@@ -1,6 +1,7 @@
 package kr.co.webee.presentation.bee.recommendation.api;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -19,6 +20,7 @@ import kr.co.webee.infrastructure.bee.recommendation.guide.dto.PollinatorGuideDt
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -70,4 +72,26 @@ public interface BeeRecommendationApi {
             )
     })
     List<PollinatorGuideCropCategoryDto> getCropCategories();
+
+    @Operation(
+            summary = "카테고리·작물별 화분매개(수정벌) 가이드 상세 조회"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "조회 성공",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = PollinatorGuideDto.Crop.class)
+                    )
+            ),
+            @ApiResponse(responseCode = "400", description = "category 또는 name 누락"),
+            @ApiResponse(responseCode = "404", description = "해당 category 및 name에 해당하는 정보 없음")
+    })
+    PollinatorGuideDto.Crop getPollinatorGuideCrop(
+            @Parameter(description = "작물 대분류", example = "과수", required = true)
+            @RequestParam String category,
+            @Parameter(description = "작물명", example = "복숭아", required = true)
+            @RequestParam String name
+    );
 }

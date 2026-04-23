@@ -12,6 +12,9 @@ public record PostDetailResponse(
         @Schema(description = "게시글 ID", example = "1")
         Long postId,
 
+        @Schema(description = "작성자 닉네임", example = "홍길동")
+        String writer,
+
         @Schema(description = "제목", example = "제목")
         String title,
 
@@ -27,6 +30,7 @@ public record PostDetailResponse(
     public static PostDetailResponse from(Post post, int likeCount) {
         return PostDetailResponse.builder()
                 .postId(post.getId())
+                .writer(post.getUser().getName())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .likeCount(likeCount)

@@ -33,6 +33,8 @@ public class User extends BaseTimeEntity {
     @ColumnDefault("false")
     private boolean businessRegistered;
 
+    private String profileImageUrl;
+
     @Builder
     public User(String username, String password, String name, String phoneNumber, boolean businessRegistered) {
         if (!StringUtils.hasText(username)) {
@@ -49,13 +51,6 @@ public class User extends BaseTimeEntity {
         this.businessRegistered=businessRegistered;
     }
 
-    public void updateName(String name) {
-        if (!StringUtils.hasText(name)) {
-            throw new IllegalArgumentException("name은 null이거나 빈 문자열이 될 수 없습니다.");
-        }
-        this.name = name;
-    }
-
     public void updatePhoneNumber(String phoneNumber) {
         if (!StringUtils.hasText(phoneNumber)) {
             throw new IllegalArgumentException("phoneNumber은 null이거나 빈 문자열이 될 수 없습니다.");
@@ -65,5 +60,9 @@ public class User extends BaseTimeEntity {
 
     public boolean isSameId(Long userId) {
         return Objects.equals(this.id, userId);
+    }
+
+    public void updateProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
     }
 }

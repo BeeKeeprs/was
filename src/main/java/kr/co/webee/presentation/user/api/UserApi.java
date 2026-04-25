@@ -7,9 +7,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import kr.co.webee.presentation.support.annotation.UserId;
 import kr.co.webee.presentation.user.dto.response.UserProfileImageUploadResponse;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,5 +41,20 @@ public interface UserApi {
             )
             @RequestPart("image") MultipartFile image,
             @Parameter(hidden = true) @UserId Long userId
+    );
+
+    @Operation(
+            summary = "회원 탈퇴 (soft delete)",
+            description = "로그인 사용자를 soft delete 처리합니다. 실제 레코드는 삭제하지 않고 deletedAt만 기록합니다."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "탈퇴 성공"),
+            @ApiResponse(responseCode = "401", description = "인증 실패"),
+            @ApiResponse(responseCode = "404", description = "사용자 없음")
+    })
+    @DeleteMapping("/me")
+    String withdraw(
+            @Parameter(hidden = true) @UserId Long userId,
+            @Parameter(hidden = true) HttpServletResponse response
     );
 }

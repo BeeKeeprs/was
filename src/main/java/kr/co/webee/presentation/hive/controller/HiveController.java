@@ -4,9 +4,11 @@ import jakarta.validation.Valid;
 import kr.co.webee.application.hive.service.HiveService;
 import kr.co.webee.presentation.hive.api.HiveApi;
 import kr.co.webee.presentation.hive.dto.request.HiveRegisterRequest;
+import kr.co.webee.presentation.hive.dto.response.HiveListResponse;
 import kr.co.webee.presentation.hive.dto.response.HiveRegisterResponse;
 import kr.co.webee.presentation.support.annotation.UserId;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,5 +27,11 @@ public class HiveController implements HiveApi {
             @UserId Long userId
     ) {
         return hiveService.registerHive(request, userId);
+    }
+
+    @Override
+    @GetMapping
+    public HiveListResponse getAllHives(@UserId Long userId) {
+        return hiveService.getAllHives(userId);
     }
 }

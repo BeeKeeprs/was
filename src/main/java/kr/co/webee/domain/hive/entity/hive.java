@@ -21,7 +21,7 @@ import java.util.Objects;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class hive extends BaseTimeEntity {
+public class Hive extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -46,7 +46,7 @@ public class hive extends BaseTimeEntity {
     private User user;
 
     @Builder
-    private hive(String name, String region, String location, String serialNumber, String memo, User user) {
+    private Hive(String name, String region, String location, String serialNumber, String memo, User user) {
         if (!StringUtils.hasText(name)) {
             throw new IllegalArgumentException("name은 null이거나 빈 문자열이 될 수 없습니다.");
         }

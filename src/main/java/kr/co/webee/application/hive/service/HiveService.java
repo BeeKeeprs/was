@@ -7,6 +7,7 @@ import kr.co.webee.domain.hive.repository.HiveRepository;
 import kr.co.webee.domain.user.entity.User;
 import kr.co.webee.domain.user.repository.UserRepository;
 import kr.co.webee.presentation.hive.dto.request.HiveRegisterRequest;
+import kr.co.webee.presentation.hive.dto.response.HiveDetailResponse;
 import kr.co.webee.presentation.hive.dto.response.HiveListResponse;
 import kr.co.webee.presentation.hive.dto.response.HiveRegisterResponse;
 import lombok.RequiredArgsConstructor;
@@ -39,5 +40,13 @@ public class HiveService {
     public HiveListResponse getAllHives(Long userId) {
         List<Hive> hives = hiveRepository.findByUserId(userId);
         return HiveListResponse.from(hives);
+    }
+
+    @Transactional(readOnly = true)
+    public HiveDetailResponse getHiveDetail(Long hiveId, Long userId) {
+        Hive hive = hiveRepository.findByIdAndUserId(hiveId, userId)
+                .orElseThrow(() -> new BusinessException(ErrorType.HIVE_NOT_FOUND));
+
+        return HiveDetailResponse.from(hive);
     }
 }

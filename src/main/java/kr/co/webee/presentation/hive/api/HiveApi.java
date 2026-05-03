@@ -10,11 +10,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kr.co.webee.common.error.ErrorType;
 import kr.co.webee.presentation.hive.dto.request.HiveRegisterRequest;
+import kr.co.webee.presentation.hive.dto.response.HiveDetailResponse;
 import kr.co.webee.presentation.hive.dto.response.HiveListResponse;
 import kr.co.webee.presentation.hive.dto.response.HiveRegisterResponse;
 import kr.co.webee.presentation.support.annotation.ApiDocsErrorType;
 import kr.co.webee.presentation.support.annotation.UserId;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Tag(name = "벌통 API", description = "사용자 벌통 관련 API")
@@ -45,7 +47,7 @@ public interface HiveApi {
             @Parameter(hidden = true) @UserId Long userId
     );
 
-    @Operation(summary = "벌통 전체 목록 조회", description = "로그인한 사용자의 벌통 목록을 조회합니다.")
+    @Operation(summary = "전체 벌통 목록 조회", description = "전체 벌통 목록을 조회합니다.")
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
@@ -57,4 +59,22 @@ public interface HiveApi {
             ),
     })
     HiveListResponse getAllHives(@Parameter(hidden = true) @UserId Long userId);
+
+    @Operation(summary = "벌통 상세 조회", description = "벌통 상세 정보를 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "조회 성공",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = HiveDetailResponse.class)
+                    )
+            ),
+    })
+    @ApiDocsErrorType(ErrorType.HIVE_NOT_FOUND)
+    HiveDetailResponse getHiveDetail(
+            @Parameter(description = "벌통 ID", example = "1", required = true)
+            @PathVariable Long hiveId,
+            @Parameter(hidden = true) @UserId Long userId
+    );
 }

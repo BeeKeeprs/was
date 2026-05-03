@@ -54,6 +54,7 @@ public enum ErrorType {
     // BeeErrorType
     BEE_DISEASE_DETECT_FAILED(BAD_GATEWAY, ERROR, "BEE_001", "꿀벌 질병 탐지에 실패했습니다."),
     HIVE_SERIAL_NUMBER_ALREADY_EXISTS(CONFLICT, DEBUG, "HIVE_001", "이미 등록된 벌통 시리얼 넘버입니다"),
+    HIVE_NOT_FOUND(NOT_FOUND, DEBUG, "HIVE_002", "벌통을 찾을 수 없습니다"),
 
     // PostErrorType
     POST_NOT_FOUND(NOT_FOUND, DEBUG, "POST_001", "게시글을 찾을 수 없습니다"),

@@ -7,10 +7,13 @@ import kr.co.webee.domain.hive.repository.HiveRepository;
 import kr.co.webee.domain.user.entity.User;
 import kr.co.webee.domain.user.repository.UserRepository;
 import kr.co.webee.presentation.hive.dto.request.HiveRegisterRequest;
+import kr.co.webee.presentation.hive.dto.response.HiveListResponse;
 import kr.co.webee.presentation.hive.dto.response.HiveRegisterResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -30,5 +33,11 @@ public class HiveService {
         Hive hive = hiveRepository.save(request.toEntity(user));
 
         return HiveRegisterResponse.of(hive.getId());
+    }
+
+    @Transactional(readOnly = true)
+    public HiveListResponse getAllHives(Long userId) {
+        List<Hive> hives = hiveRepository.findByUserId(userId);
+        return HiveListResponse.from(hives);
     }
 }

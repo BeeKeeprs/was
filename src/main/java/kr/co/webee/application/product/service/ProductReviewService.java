@@ -9,6 +9,7 @@ import kr.co.webee.domain.user.entity.User;
 import kr.co.webee.domain.user.repository.UserRepository;
 import kr.co.webee.presentation.product.dto.request.ProductReviewCreateRequest;
 import kr.co.webee.presentation.product.dto.request.ProductReviewUpdateRequest;
+import kr.co.webee.presentation.product.dto.response.ProductReviewCreateResponse;
 import kr.co.webee.presentation.product.dto.response.ProductReviewResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class ProductReviewService {
     private final ProductReviewRepository reviewRepository;
 
     @Transactional
-    public Long createReview(Long productId, Long userId, ProductReviewCreateRequest request) {
+    public ProductReviewCreateResponse createReview(Long productId, Long userId, ProductReviewCreateRequest request) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new EntityNotFoundException("Product not found"));
         User user = userRepository.findById(userId)
@@ -37,7 +38,7 @@ public class ProductReviewService {
                 .user(user)
                 .build();
 
-        return reviewRepository.save(review).getId();
+        return new ProductReviewCreateResponse(reviewRepository.save(review).getId());
     }
 
     @Transactional(readOnly = true)

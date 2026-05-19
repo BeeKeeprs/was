@@ -7,6 +7,7 @@ import kr.co.webee.config.TestWebConfig;
 import kr.co.webee.presentation.config.WebConfig;
 import kr.co.webee.presentation.product.dto.request.ProductReviewCreateRequest;
 import kr.co.webee.presentation.product.dto.request.ProductReviewUpdateRequest;
+import kr.co.webee.presentation.product.dto.response.ProductReviewCreateResponse;
 import kr.co.webee.presentation.product.dto.response.ProductReviewResponse;
 import kr.co.webee.presentation.support.resolver.UserIdArgumentResolver;
 import org.junit.jupiter.api.DisplayName;
@@ -64,7 +65,7 @@ class ProductReviewControllerTest {
         //given
         ProductReviewCreateRequest request = new ProductReviewCreateRequest("리뷰 내용");
         Long productId = 1L;
-        when(productReviewService.createReview(anyLong(), anyLong(), any(ProductReviewCreateRequest.class))).thenReturn(1L);
+        when(productReviewService.createReview(anyLong(), anyLong(), any(ProductReviewCreateRequest.class))).thenReturn(new ProductReviewCreateResponse(1L));
 
         //when - then
         mockMvc.perform(

@@ -14,6 +14,7 @@ import kr.co.webee.domain.user.entity.User;
 import kr.co.webee.domain.user.repository.UserRepository;
 import kr.co.webee.presentation.product.dto.request.ProductReviewCreateRequest;
 import kr.co.webee.presentation.product.dto.request.ProductReviewUpdateRequest;
+import kr.co.webee.presentation.product.dto.response.ProductReviewCreateResponse;
 import kr.co.webee.presentation.product.dto.response.ProductReviewResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -75,12 +76,12 @@ class ProductReviewServiceTest {
         ProductReviewCreateRequest request = new ProductReviewCreateRequest("리뷰 내용");
 
         //when
-        Long reviewId = productReviewService.createReview(product.getId(), reviewer.getId(), request);
+        ProductReviewCreateResponse response = productReviewService.createReview(product.getId(), reviewer.getId(), request);
 
         //then
-        assertThat(reviewId).isNotNull();
+        assertThat(response.reviewId()).isNotNull();
 
-        ProductReview productReview = productReviewRepository.findById(reviewId).orElseThrow();
+        ProductReview productReview = productReviewRepository.findById(response.reviewId()).orElseThrow();
         assertThat(productReview.getContent()).isEqualTo(request.content());
         assertThat(productReview.getProduct().getId()).isEqualTo(product.getId());
         assertThat(productReview.getUser().getId()).isEqualTo(reviewer.getId());
@@ -197,7 +198,7 @@ class ProductReviewServiceTest {
     void deleteReview() {
         //given
         ProductReviewCreateRequest request = new ProductReviewCreateRequest("리뷰 내용");
-        Long reviewId = productReviewService.createReview(product.getId(), reviewer.getId(), request);
+        Long reviewId = productReviewService.createReview(product.getId(), reviewer.getId(), request).reviewId();
 
         //when
         productReviewService.deleteReview(reviewId);

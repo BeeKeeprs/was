@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.webee.presentation.product.dto.request.ProductReviewCreateRequest;
 import kr.co.webee.presentation.product.dto.request.ProductReviewUpdateRequest;
+import kr.co.webee.presentation.product.dto.response.ProductReviewCreateResponse;
 import kr.co.webee.presentation.product.dto.response.ProductReviewResponse;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public interface ProductReviewApi {
 
     @Operation(summary = "리뷰 생성", description = "상품에 리뷰를 등록합니다.")
     @ApiResponse(responseCode = "201", description = "리뷰 생성 완료")
-    Long createReview(Long productId, ProductReviewCreateRequest request, Long userId);
+    ProductReviewCreateResponse createReview(Long productId, ProductReviewCreateRequest request, Long userId);
 
     @Operation(summary = "리뷰 단건 조회", description = "리뷰 ID로 리뷰를 조회합니다.")
     @ApiResponse(responseCode = "200", description = "조회 성공")

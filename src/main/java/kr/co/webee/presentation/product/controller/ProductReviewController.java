@@ -6,6 +6,7 @@ import kr.co.webee.presentation.support.annotation.UserId;
 import kr.co.webee.presentation.product.api.ProductReviewApi;
 import kr.co.webee.presentation.product.dto.request.ProductReviewCreateRequest;
 import kr.co.webee.presentation.product.dto.request.ProductReviewUpdateRequest;
+import kr.co.webee.presentation.product.dto.response.ProductReviewCreateResponse;
 import kr.co.webee.presentation.product.dto.response.ProductReviewResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class ProductReviewController implements ProductReviewApi {
     private final ProductReviewService reviewService;
 
     @PostMapping("/{productId}")
-    public Long createReview(
+    public ProductReviewCreateResponse createReview(
             @PathVariable Long productId,
             @RequestBody @Valid ProductReviewCreateRequest request,
             @UserId Long userId) {

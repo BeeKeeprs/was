@@ -15,7 +15,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 public class AwsS3TestConfig {
 
     private static final DockerImageName LOCAL_STACK_IMAGE =
-            DockerImageName.parse("localstack/localstack:s3-latest");
+            DockerImageName.parse("localstack/localstack:3.0");
 
     @Bean(initMethod = "start", destroyMethod = "stop")
     LocalStackContainer localStackContainer() {

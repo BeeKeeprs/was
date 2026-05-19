@@ -67,6 +67,8 @@ class UserCropTest {
                 .cultivationLocation(location)
                 .cultivationArea(1980)
                 .plantingDate(LocalDate.of(2025, 3, 25))
+                .harvestStartDate(LocalDate.of(2025, 8, 1))
+                .harvestEndDate(LocalDate.of(2025, 11, 30))
                 .user(user)
                 .build();
     }

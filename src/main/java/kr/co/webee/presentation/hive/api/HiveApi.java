@@ -77,4 +77,18 @@ public interface HiveApi {
             @PathVariable Long hiveId,
             @Parameter(hidden = true) @UserId Long userId
     );
+
+    @Operation(summary = "벌통 삭제", description = "벌통을 삭제합니다.")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "삭제 성공"
+            ),
+    })
+    @ApiDocsErrorType(ErrorType.HIVE_NOT_FOUND)
+    void deleteHive(
+            @Parameter(description = "벌통 ID", example = "1", required = true)
+            @PathVariable Long hiveId,
+            @Parameter(hidden = true) @UserId Long userId
+    );
 }

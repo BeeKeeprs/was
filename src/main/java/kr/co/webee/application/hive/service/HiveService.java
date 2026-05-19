@@ -49,4 +49,12 @@ public class HiveService {
 
         return HiveDetailResponse.from(hive);
     }
+
+    @Transactional
+    public void deleteHive(Long hiveId, Long userId) {
+        Hive hive = hiveRepository.findByIdAndUserId(hiveId, userId)
+                .orElseThrow(() -> new BusinessException(ErrorType.HIVE_NOT_FOUND));
+
+        hiveRepository.delete(hive);
+    }
 }

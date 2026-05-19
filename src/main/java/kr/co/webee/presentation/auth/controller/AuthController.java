@@ -30,8 +30,9 @@ public class AuthController implements AuthApi {
 
     @Override
     @PostMapping("/sign-up")
-    public void signUp(@RequestBody @Valid SignUpRequest request) {
+    public String signUp(@RequestBody @Valid SignUpRequest request) {
         authService.signup(request);
+        return "OK";
     }
 
     @Override

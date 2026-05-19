@@ -4,12 +4,14 @@ import jakarta.validation.Valid;
 import kr.co.webee.application.hive.service.HiveService;
 import kr.co.webee.presentation.hive.api.HiveApi;
 import kr.co.webee.presentation.hive.dto.request.HiveRegisterRequest;
+import kr.co.webee.presentation.hive.dto.request.HiveUpdateRequest;
 import kr.co.webee.presentation.hive.dto.response.HiveDetailResponse;
 import kr.co.webee.presentation.hive.dto.response.HiveListResponse;
 import kr.co.webee.presentation.hive.dto.response.HiveRegisterResponse;
 import kr.co.webee.presentation.support.annotation.UserId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,6 +44,12 @@ public class HiveController implements HiveApi {
     @GetMapping("/{hiveId}")
     public HiveDetailResponse getHiveDetail(@PathVariable Long hiveId, @UserId Long userId) {
         return hiveService.getHiveDetail(hiveId, userId);
+    }
+
+    @Override
+    @PatchMapping("/{hiveId}")
+    public void updateHive(@PathVariable Long hiveId, @UserId Long userId, @RequestBody @Valid HiveUpdateRequest request) {
+        hiveService.updateHive(hiveId, userId, request);
     }
 
     @Override

@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface AuthApi {
     @Operation(summary = "회원가입", description = "사용자 정보를 등록하는 API")
     @ApiDocsErrorType(ErrorType.ALREADY_EXIST_USERNAME)
-    void signUp(@RequestBody @Valid SignUpRequest signUpRequest);
+    String signUp(@RequestBody @Valid SignUpRequest signUpRequest);
 
     @Operation(summary = "로그인", description = "사용자 인증을 하는 API")
     @ApiDocsErrorType(value = {ErrorType.INVALID_CREDENTIALS, ErrorType.FAILED_AUTHENTICATION})

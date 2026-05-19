@@ -63,8 +63,7 @@ class AuthControllerTest {
             //then
             result
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data").isMap())
-                    .andExpect(jsonPath("$.data").isEmpty());
+                    .andExpect(jsonPath("$.message").value("요청이 성공적으로 처리되었습니다."));
         }
     }
 }

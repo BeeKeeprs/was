@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kr.co.webee.common.error.ErrorType;
 import kr.co.webee.presentation.hive.dto.request.HiveRegisterRequest;
+import kr.co.webee.presentation.hive.dto.request.HiveUpdateRequest;
 import kr.co.webee.presentation.hive.dto.response.HiveDetailResponse;
 import kr.co.webee.presentation.hive.dto.response.HiveListResponse;
 import kr.co.webee.presentation.hive.dto.response.HiveRegisterResponse;
@@ -76,6 +77,29 @@ public interface HiveApi {
             @Parameter(description = "벌통 ID", example = "1", required = true)
             @PathVariable Long hiveId,
             @Parameter(hidden = true) @UserId Long userId
+    );
+
+    @Operation(summary = "벌통 수정", description = "벌통 정보를 수정합니다.")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "수정 성공"
+            ),
+    })
+    @ApiDocsErrorType(ErrorType.HIVE_NOT_FOUND)
+    void updateHive(
+            @Parameter(description = "벌통 ID", example = "1", required = true)
+            @PathVariable Long hiveId,
+            @Parameter(hidden = true) @UserId Long userId,
+            @Parameter(
+                    description = "벌통 수정 요청 JSON",
+                    required = true,
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = HiveUpdateRequest.class)
+                    )
+            )
+            @RequestBody @Valid HiveUpdateRequest request
     );
 
     @Operation(summary = "벌통 삭제", description = "벌통을 삭제합니다.")

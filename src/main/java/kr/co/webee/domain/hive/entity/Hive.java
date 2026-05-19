@@ -66,4 +66,20 @@ public class Hive extends BaseTimeEntity {
         this.memo = memo;
         this.user = Objects.requireNonNull(user, "user는 null이 될 수 없습니다.");
     }
+
+    public void update(String name, String region, String location, String memo) {
+        if (!StringUtils.hasText(name)) {
+            throw new IllegalArgumentException("name은 null이거나 빈 문자열이 될 수 없습니다.");
+        }
+        if (!StringUtils.hasText(region)) {
+            throw new IllegalArgumentException("region은 null이거나 빈 문자열이 될 수 없습니다.");
+        }
+        if (!StringUtils.hasText(location)) {
+            throw new IllegalArgumentException("location은 null이거나 빈 문자열이 될 수 없습니다.");
+        }
+        this.name = name;
+        this.region = region;
+        this.location = location;
+        this.memo = memo;
+    }
 }

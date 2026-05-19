@@ -7,6 +7,7 @@ import kr.co.webee.domain.hive.repository.HiveRepository;
 import kr.co.webee.domain.user.entity.User;
 import kr.co.webee.domain.user.repository.UserRepository;
 import kr.co.webee.presentation.hive.dto.request.HiveRegisterRequest;
+import kr.co.webee.presentation.hive.dto.request.HiveUpdateRequest;
 import kr.co.webee.presentation.hive.dto.response.HiveDetailResponse;
 import kr.co.webee.presentation.hive.dto.response.HiveListResponse;
 import kr.co.webee.presentation.hive.dto.response.HiveRegisterResponse;
@@ -48,6 +49,14 @@ public class HiveService {
                 .orElseThrow(() -> new BusinessException(ErrorType.HIVE_NOT_FOUND));
 
         return HiveDetailResponse.from(hive);
+    }
+
+    @Transactional
+    public void updateHive(Long hiveId, Long userId, HiveUpdateRequest request) {
+        Hive hive = hiveRepository.findByIdAndUserId(hiveId, userId)
+                .orElseThrow(() -> new BusinessException(ErrorType.HIVE_NOT_FOUND));
+
+        hive.update(request.name(), request.region(), request.location(), request.memo());
     }
 
     @Transactional

@@ -21,9 +21,9 @@ public record HiveRegisterRequest(
         @NotBlank
         String location,
 
-        @Schema(description = "시리얼 넘버", example = "HV-20240315-0001")
+        @Schema(description = "벌통 MAC 주소", example = "AA:BB:CC:DD:EE:FF")
         @NotBlank
-        String serialNumber,
+        String macAddress,
 
         @Schema(description = "메모", example = "월동 후 점검 필요")
         String memo
@@ -33,7 +33,7 @@ public record HiveRegisterRequest(
                 .name(name)
                 .region(region)
                 .location(location)
-                .serialNumber(serialNumber)
+                .macAddress(macAddress)
                 .memo(memo)
                 .user(user)
                 .build();

@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Builder
-@Schema(description = "벌통 전체 목록 조회 data")
+@Schema(description = "벌통 전체 목록 조회 response")
 public record HiveListResponse(
         @Schema(description = "벌통 총 개수", example = "2")
         int totalCount,
@@ -29,7 +29,7 @@ public record HiveListResponse(
     }
 
     @Builder
-    @Schema(description = "벌통 목록 항목")
+    @Schema(description = "벌통 목록 각 항목 정보")
     public record HiveSummaryResponse(
             @Schema(description = "벌통 ID", example = "1")
             Long hiveId,
@@ -43,8 +43,8 @@ public record HiveListResponse(
             @Schema(description = "설치 위치", example = "과수원 남쪽")
             String location,
 
-            @Schema(description = "일련번호", example = "HV-20240315-0001")
-            String serialNumber,
+            @Schema(description = "MAC 주소", example = "AA:BB:CC:DD:EE:FF")
+            String macAddress,
 
             @Schema(description = "메모", example = "월동 후 점검 필요", nullable = true)
             String memo,
@@ -58,7 +58,7 @@ public record HiveListResponse(
                     .name(hive.getName())
                     .region(hive.getRegion())
                     .location(hive.getLocation())
-                    .serialNumber(hive.getSerialNumber())
+                    .macAddress(hive.getMacAddress())
                     .memo(hive.getMemo())
                     .createdAt(hive.getCreatedAt())
                     .build();

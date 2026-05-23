@@ -21,8 +21,8 @@ public record HiveDetailResponse(
         @Schema(description = "설치 위치", example = "과수원 남쪽")
         String location,
 
-        @Schema(description = "일련번호", example = "HV-20240315-0001")
-        String serialNumber,
+        @Schema(description = "MAC 주소", example = "AA:BB:CC:DD:EE:FF")
+        String macAddress,
 
         @Schema(description = "메모", example = "월동 후 점검 필요", nullable = true)
         String memo,
@@ -39,7 +39,7 @@ public record HiveDetailResponse(
                 .name(hive.getName())
                 .region(hive.getRegion())
                 .location(hive.getLocation())
-                .serialNumber(hive.getSerialNumber())
+                .macAddress(hive.getMacAddress())
                 .memo(hive.getMemo())
                 .createdAt(hive.getCreatedAt())
                 .modifiedAt(hive.getModifiedAt())

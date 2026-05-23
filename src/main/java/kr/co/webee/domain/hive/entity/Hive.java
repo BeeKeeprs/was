@@ -16,6 +16,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
@@ -27,6 +28,9 @@ public class Hive extends BaseTimeEntity {
     private Long id;
 
     @Column(nullable = false)
+    private String macAddress;
+
+    @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
@@ -35,18 +39,23 @@ public class Hive extends BaseTimeEntity {
     @Column(nullable = false)
     private String location;
 
-    @Column(nullable = false, unique = true)
-    private String serialNumber;
-
     @Column(columnDefinition = "TEXT")
     private String memo;
+
+    @Column(nullable = false)
+    private boolean isConnected;
+
+    private LocalDateTime lastConnectedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Builder
-    private Hive(String name, String region, String location, String serialNumber, String memo, User user) {
+    private Hive(String macAddress, String name, String region, String location, String memo, User user) {
+        if (!StringUtils.hasText(macAddress)) {
+            throw new IllegalArgumentException("macAddress는 null이거나 빈 문자열이 될 수 없습니다.");
+        }
         if (!StringUtils.hasText(name)) {
             throw new IllegalArgumentException("name은 null이거나 빈 문자열이 될 수 없습니다.");
         }
@@ -56,14 +65,12 @@ public class Hive extends BaseTimeEntity {
         if (!StringUtils.hasText(location)) {
             throw new IllegalArgumentException("location은 null이거나 빈 문자열이 될 수 없습니다.");
         }
-        if (!StringUtils.hasText(serialNumber)) {
-            throw new IllegalArgumentException("serialNumber는 null이거나 빈 문자열이 될 수 없습니다.");
-        }
+        this.macAddress = macAddress;
         this.name = name;
         this.region = region;
         this.location = location;
-        this.serialNumber = serialNumber;
         this.memo = memo;
+        this.isConnected = false;
         this.user = Objects.requireNonNull(user, "user는 null이 될 수 없습니다.");
     }
 

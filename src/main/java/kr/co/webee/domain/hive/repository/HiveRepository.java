@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface HiveRepository extends JpaRepository<Hive, Long> {
 
-    boolean existsBySerialNumber(String serialNumber);
+    boolean existsByMacAddress(String macAddress);
 
     List<Hive> findByUserId(Long userId);
 

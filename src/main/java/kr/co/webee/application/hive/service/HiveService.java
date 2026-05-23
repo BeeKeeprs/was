@@ -25,8 +25,8 @@ public class HiveService {
 
     @Transactional
     public HiveRegisterResponse registerHive(HiveRegisterRequest request, Long userId) {
-        if (hiveRepository.existsBySerialNumber(request.serialNumber())) {
-            throw new BusinessException(ErrorType.HIVE_SERIAL_NUMBER_ALREADY_EXISTS);
+        if (hiveRepository.existsByMacAddress(request.macAddress())) {
+            throw new BusinessException(ErrorType.HIVE_MAC_ADDRESS_ALREADY_EXISTS);
         }
 
         User user = userRepository.findById(userId)

@@ -34,7 +34,7 @@ public interface HiveApi {
                     )
             ),
     })
-    @ApiDocsErrorType(ErrorType.HIVE_SERIAL_NUMBER_ALREADY_EXISTS)
+    @ApiDocsErrorType(ErrorType.HIVE_MAC_ADDRESS_ALREADY_EXISTS)
     HiveRegisterResponse registerHive(
             @Parameter(
                     description = "벌통 등록 요청 JSON",

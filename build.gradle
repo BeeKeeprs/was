@@ -65,6 +65,11 @@ dependencies {
         exclude group: 'org.json', module: 'json'
     }
 
+    // MQTT
+    implementation 'org.springframework.boot:spring-boot-starter-integration'
+    implementation 'org.springframework.integration:spring-integration-mqtt'
+    implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5'
+
     // HTML Parsing
     implementation group: 'org.jsoup', name: 'jsoup', version: '1.20.1'
 

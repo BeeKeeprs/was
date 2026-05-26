@@ -53,12 +53,18 @@ public class MqttBrokerConfig {
         adapter.setConverter(new DefaultPahoMessageConverter());
         adapter.setQos(1);
         adapter.setOutputChannel(mqttInputChannel);
+        adapter.setErrorChannel(mqttErrorChannel());
 
         return adapter;
     }
 
     @Bean
     public MessageChannel mqttInputChannel() { // inboundChannel
+        return new DirectChannel();
+    }
+
+    @Bean
+    public MessageChannel mqttErrorChannel() {
         return new DirectChannel();
     }
 

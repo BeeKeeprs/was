@@ -1,6 +1,6 @@
 package kr.co.webee.infrastructure.mqtt.config;
 
-import kr.co.webee.infrastructure.mqtt.MqttMessageSubscriber;
+import kr.co.webee.application.mqtt.MqttMessageDispatcher;
 import kr.co.webee.infrastructure.mqtt.properties.MqttProperties;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
@@ -64,17 +64,19 @@ public class MqttBrokerConfig {
 
     @Bean
     @ServiceActivator(inputChannel = "mqttInputChannel") // MQTT 구독 핸들러
-    public MessageHandler inboundMessageHandler() {
-        return new MqttMessageSubscriber();
+    public MessageHandler inboundMessageHandler(MqttMessageDispatcher dispatcher) {
+        return dispatcher;
     }
 
     @Bean
     @ServiceActivator(inputChannel = "mqttOutboundChannel")
     public MessageHandler mqttOutbound() { // outboundChannel 어댑터
-        MqttPahoMessageHandler messageHandler =
-                new MqttPahoMessageHandler(properties.getOutboundClientId(), mqttClientFactory());
+        MqttPahoMessageHandler messageHandler = new MqttPahoMessageHandler(
+                properties.getOutboundClientId(),
+                mqttClientFactory()
+        );
         messageHandler.setAsync(true);
-        messageHandler.setAsyncEvents(true);
+        messageHandler.setAsyncEvents(true); // TODO: eventListener 추가
         messageHandler.setDefaultQos(1);
         return messageHandler;
     }
@@ -85,7 +87,7 @@ public class MqttBrokerConfig {
     }
 
     @MessagingGateway(defaultRequestChannel = "mqttOutboundChannel")
-    public interface MyGateway { // 메시지 발행 게이트웨이
+    public interface MqttPublisher { // 메시지 발행 게이트웨이
         void publish(@Header(MqttHeaders.TOPIC) String topic, String payload);
     }
 }

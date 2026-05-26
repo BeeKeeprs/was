@@ -12,6 +12,8 @@ public interface HiveRepository extends JpaRepository<Hive, Long> {
 
     boolean existsByMacAddress(String macAddress);
 
+    Optional<Hive> findByMacAddress(String macAddress);
+
     List<Hive> findByUserId(Long userId);
 
     Optional<Hive> findByIdAndUserId(Long id, Long userId);

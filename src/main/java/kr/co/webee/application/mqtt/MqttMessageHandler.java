@@ -5,5 +5,4 @@ public interface MqttMessageHandler {
     MqttTopicType getTopicType();
 
     void handle(Object payload, String macAddress);
-
 }

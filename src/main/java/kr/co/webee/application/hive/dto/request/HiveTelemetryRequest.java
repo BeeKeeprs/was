@@ -1,4 +1,4 @@
-package kr.co.webee.application.hive.dto;
+package kr.co.webee.application.hive.dto.request;
 
 import kr.co.webee.domain.hive.entity.Hive;
 import kr.co.webee.domain.hive.entity.HiveTelemetry;

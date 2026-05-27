@@ -4,7 +4,7 @@ import kr.co.webee.application.hive.service.HiveTelemetryService;
 import kr.co.webee.domain.hive.type.Period;
 import kr.co.webee.domain.hive.type.SensorType;
 import kr.co.webee.presentation.hive.api.HiveTelemetryApi;
-import kr.co.webee.application.hive.dto.HiveTelemetryResponse;
+import kr.co.webee.application.hive.dto.response.HiveTelemetryResponse;
 import kr.co.webee.presentation.support.annotation.UserId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

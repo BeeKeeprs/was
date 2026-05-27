@@ -1,6 +1,6 @@
 package kr.co.webee.application.hive.service;
 
-import kr.co.webee.application.hive.dto.HiveTelemetryRequest;
+import kr.co.webee.application.hive.dto.request.HiveTelemetryRequest;
 import kr.co.webee.common.error.ErrorType;
 import kr.co.webee.common.error.exception.BusinessException;
 import kr.co.webee.domain.hive.entity.Hive;
@@ -9,8 +9,8 @@ import kr.co.webee.domain.hive.repository.HiveRepository;
 import kr.co.webee.domain.hive.repository.HiveTelemetryRepository;
 import kr.co.webee.domain.hive.type.Period;
 import kr.co.webee.domain.hive.type.SensorType;
-import kr.co.webee.application.hive.dto.HiveTelemetryResponse;
-import kr.co.webee.application.hive.dto.HiveTelemetryResponse.DataPoint;
+import kr.co.webee.application.hive.dto.response.HiveTelemetryResponse;
+import kr.co.webee.application.hive.dto.response.HiveTelemetryResponse.DataPoint;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

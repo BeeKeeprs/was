@@ -115,4 +115,5 @@ public interface HiveApi {
             @PathVariable Long hiveId,
             @Parameter(hidden = true) @UserId Long userId
     );
+
 }

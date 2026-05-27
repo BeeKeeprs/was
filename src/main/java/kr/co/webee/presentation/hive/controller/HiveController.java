@@ -27,10 +27,7 @@ public class HiveController implements HiveApi {
 
     @Override
     @PostMapping
-    public HiveRegisterResponse registerHive(
-            @RequestBody @Valid HiveRegisterRequest request,
-            @UserId Long userId
-    ) {
+    public HiveRegisterResponse registerHive(@RequestBody @Valid HiveRegisterRequest request, @UserId Long userId) {
         return hiveService.registerHive(request, userId);
     }
 
@@ -57,4 +54,5 @@ public class HiveController implements HiveApi {
     public void deleteHive(@PathVariable Long hiveId, @UserId Long userId) {
         hiveService.deleteHive(hiveId, userId);
     }
+
 }

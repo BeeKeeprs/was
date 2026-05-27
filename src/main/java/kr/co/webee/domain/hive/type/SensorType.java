@@ -1,5 +1,6 @@
 package kr.co.webee.domain.hive.type;
 
+import kr.co.webee.domain.hive.entity.HiveTelemetry;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -14,4 +15,14 @@ public enum SensorType {
     CO2("CO2 농도");
 
     private final String description;
+
+    public Double extract(HiveTelemetry telemetry) {
+        return switch (this) {
+            case INTERNAL_TEMPERATURE -> telemetry.getInternalTemperature();
+            case EXTERNAL_TEMPERATURE -> telemetry.getExternalTemperature();
+            case INTERNAL_HUMIDITY -> telemetry.getInternalHumidity();
+            case EXTERNAL_HUMIDITY -> telemetry.getExternalHumidity();
+            case CO2 -> telemetry.getCo2();
+        };
+    }
 }

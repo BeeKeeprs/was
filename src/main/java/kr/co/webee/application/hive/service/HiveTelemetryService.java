@@ -33,7 +33,7 @@ public class HiveTelemetryService {
     @Transactional
     public void recordTelemetry(HiveTelemetryRequest request, String macAddress) {
         Hive hive = hiveRepository.findByMacAddress(macAddress)
-                .orElseThrow();
+                .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 벌통입니다. macAddress=" + macAddress));
 
         HiveTelemetry telemetry = request.toEntity(hive);
 

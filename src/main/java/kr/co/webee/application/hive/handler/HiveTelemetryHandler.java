@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
-public class TelemetryHandler implements MqttMessageHandler {
+public class HiveTelemetryHandler implements MqttMessageHandler {
     private final HiveTelemetryService hiveTelemetryService;
     private final JsonConverter jsonConverter;
 

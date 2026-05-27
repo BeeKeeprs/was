@@ -1,4 +1,4 @@
-package kr.co.webee.application.hive.dto;
+package kr.co.webee.application.hive.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import kr.co.webee.domain.hive.type.Period;

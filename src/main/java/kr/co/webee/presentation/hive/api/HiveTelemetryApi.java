@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.webee.common.error.ErrorType;
 import kr.co.webee.domain.hive.type.Period;
 import kr.co.webee.domain.hive.type.SensorType;
-import kr.co.webee.application.hive.dto.HiveTelemetryResponse;
+import kr.co.webee.application.hive.dto.response.HiveTelemetryResponse;
 import kr.co.webee.presentation.support.annotation.ApiDocsErrorType;
 import kr.co.webee.presentation.support.annotation.UserId;
 import org.springframework.http.MediaType;

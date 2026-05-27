@@ -89,4 +89,12 @@ public class Hive extends BaseTimeEntity {
         this.location = location;
         this.memo = memo;
     }
+
+    public void updateConnection(boolean isConnected) {
+        this.isConnected = isConnected;
+
+        if (isConnected) {
+            this.lastConnectedAt = LocalDateTime.now();
+        }
+    }
 }

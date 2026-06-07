@@ -57,6 +57,9 @@ public enum ErrorType {
     // HiveErrorType
     HIVE_MAC_ADDRESS_ALREADY_EXISTS(CONFLICT, DEBUG, "HIVE_001", "이미 등록된 벌통 MAC 주소입니다."),
     HIVE_NOT_FOUND(NOT_FOUND, DEBUG, "HIVE_002", "벌통을 찾을 수 없습니다"),
+    HIVE_CONTROL_SCHEDULE_NOT_FOUND(NOT_FOUND, DEBUG, "HIVE_003", "벌통 자동제어 스케줄을 찾을 수 없습니다"),
+    HIVE_CONTROL_SCHEDULE_INVALID_TIME_RANGE(BAD_REQUEST, DEBUG, "HIVE_004", "자동제어 시작 시간은 종료 시간보다 이전이어야 합니다."),
+    HIVE_CONTROL_SCHEDULE_ALREADY_EXISTS_IN_TIME_RANGE(BAD_REQUEST, DEBUG, "HIVE_005", "해당 시간대에 이미 등록된 자동제어 스케줄이 존재합니다."),
 
     // PostErrorType
     POST_NOT_FOUND(NOT_FOUND, DEBUG, "POST_001", "게시글을 찾을 수 없습니다"),
@@ -65,7 +68,7 @@ public enum ErrorType {
     POST_COMMENT_ACCESS_DENIED(FORBIDDEN, DEBUG, "POST_004", "해당 댓글에 대한 권한이 없습니다"),
 
     //BusinessErrorType
-    BUSINESS_CERTIFICATE_AUTHENTICATION_FAILED(BAD_GATEWAY, ERROR,"BUSINESS_CERTIFICATE_001","사업자등록정보 진위확인에 실패했습니다."),
+    BUSINESS_CERTIFICATE_AUTHENTICATION_FAILED(BAD_GATEWAY, ERROR, "BUSINESS_CERTIFICATE_001", "사업자등록정보 진위확인에 실패했습니다."),
     ;
 
     private final HttpStatus httpStatus;

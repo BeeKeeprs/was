@@ -1,5 +1,6 @@
 package kr.co.webee.application.hive.dto.request;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import kr.co.webee.domain.hive.entity.Hive;
@@ -24,5 +25,10 @@ public record HiveControlScheduleRegisterRequest(
                 .endTime(endTime)
                 .enabled(true)
                 .build();
+    }
+
+    @Hidden
+    public boolean isValidTimeRange() {
+        return startTime.isBefore(endTime);
     }
 }

@@ -1,6 +1,7 @@
 package kr.co.webee.application.hive.service;
 
 import kr.co.webee.application.hive.dto.request.HiveControlScheduleRegisterRequest;
+import kr.co.webee.application.hive.dto.response.HiveControlScheduleListResponse;
 import kr.co.webee.application.hive.dto.response.HiveControlScheduleRegisterResponse;
 import kr.co.webee.common.error.ErrorType;
 import kr.co.webee.common.error.exception.BusinessException;
@@ -11,6 +12,8 @@ import kr.co.webee.domain.hive.repository.HiveRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -26,5 +29,15 @@ public class HiveControlScheduleService {
         HiveControlSchedule hiveControlSchedule = hiveControlScheduleRepository.save(request.toEntity(hive));
 
         return HiveControlScheduleRegisterResponse.of(hiveControlSchedule.getId());
+    }
+
+    @Transactional(readOnly = true)
+    public List<HiveControlScheduleListResponse> getHiveControlSchedules(Long hiveId, Long userId) {
+        hiveRepository.findByIdAndUserId(hiveId, userId)
+                .orElseThrow(() -> new BusinessException(ErrorType.HIVE_NOT_FOUND));
+
+        return hiveControlScheduleRepository.findAllByHiveId(hiveId).stream()
+                .map(HiveControlScheduleListResponse::from)
+                .toList();
     }
 }

@@ -8,6 +8,7 @@ import kr.co.webee.application.hive.service.HiveControlScheduleService;
 import kr.co.webee.presentation.hive.api.HiveControlScheduleApi;
 import kr.co.webee.presentation.support.annotation.UserId;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,10 +36,21 @@ public class HiveControlScheduleController implements HiveControlScheduleApi {
 
     @Override
     @GetMapping("/{hiveId}/control/auto/schedules")
-    public List<HiveControlScheduleListResponse> getHiveControlSchedules(
+    public List<HiveControlScheduleListResponse> getHiveControlScheduleList(
             @PathVariable Long hiveId,
             @UserId Long userId
     ) {
-        return hiveControlScheduleService.getHiveControlSchedules(hiveId, userId);
+        return hiveControlScheduleService.getHiveControlScheduleList(hiveId, userId);
+    }
+
+    @Override
+    @DeleteMapping("/{hiveId}/control/auto/schedules/{scheduleId}")
+    public String deleteHiveControlSchedule(
+            @PathVariable Long hiveId,
+            @UserId Long userId,
+            @PathVariable Long scheduleId
+    ) {
+        hiveControlScheduleService.deleteHiveControlSchedule(hiveId, userId, scheduleId);
+        return "OK";
     }
 }

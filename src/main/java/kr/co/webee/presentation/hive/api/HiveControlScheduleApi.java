@@ -65,10 +65,28 @@ public interface HiveControlScheduleApi {
             ),
     })
     @ApiDocsErrorType(ErrorType.HIVE_NOT_FOUND)
-    List<HiveControlScheduleListResponse> getHiveControlSchedules(
+    List<HiveControlScheduleListResponse> getHiveControlScheduleList(
             @Parameter(description = "벌통 ID", example = "1", required = true)
             @PathVariable Long hiveId,
 
             @Parameter(hidden = true) @UserId Long userId
+    );
+
+    @Operation(summary = "자동제어 스케줄 삭제", description = "벌통 센서 자동제어 스케줄을 삭제합니다.")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "삭제 성공"
+            ),
+    })
+    @ApiDocsErrorType({ErrorType.HIVE_NOT_FOUND, ErrorType.HIVE_CONTROL_SCHEDULE_NOT_FOUND})
+    String deleteHiveControlSchedule(
+            @Parameter(description = "벌통 ID", example = "1", required = true)
+            @PathVariable Long hiveId,
+
+            @Parameter(hidden = true) @UserId Long userId,
+
+            @Parameter(description = "스케줄 ID", example = "1", required = true)
+            @PathVariable Long scheduleId
     );
 }

@@ -39,10 +39,10 @@ public class HiveControlSchedule extends BaseTimeEntity {
     private boolean enabled;
 
     @Builder
-    private HiveControlSchedule(Hive hive, LocalTime startTime, LocalTime endTime) {
+    private HiveControlSchedule(Hive hive, LocalTime startTime, LocalTime endTime, boolean enabled) {
         this.hive = Objects.requireNonNull(hive, "hive는 null이 될 수 없습니다.");
         this.startTime = Objects.requireNonNull(startTime, "startTime은 null이 될 수 없습니다.");
         this.endTime = Objects.requireNonNull(endTime, "endTime은 null이 될 수 없습니다.");
-        this.enabled = true;
+        this.enabled = Objects.requireNonNull(enabled, "enabled는 null이 될 수 없습니다.");
     }
 }

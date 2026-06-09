@@ -39,13 +39,31 @@ public class HiveControl extends BaseTimeEntity {
     private boolean autoEnabled;
 
     @Column(nullable = false)
+    private boolean manualEnabled;
+
+    @Column(nullable = false)
     private boolean isOn;
 
     @Builder
-    private HiveControl(Hive hive, ControlType type, boolean autoEnabled, boolean isOn) {
+    private HiveControl(Hive hive, ControlType type, boolean autoEnabled, boolean manualEnabled, boolean isOn) {
         this.hive = Objects.requireNonNull(hive, "hive는 null이 될 수 없습니다.");
         this.type = Objects.requireNonNull(type, "type은 null이 될 수 없습니다.");
         this.autoEnabled = autoEnabled;
+        this.manualEnabled = manualEnabled;
         this.isOn = isOn;
+    }
+
+    public static HiveControl createAutoControl(Hive hive, ControlType type, boolean autoEnabled) {
+        return HiveControl.builder()
+                .hive(hive)
+                .type(type)
+                .autoEnabled(autoEnabled)
+                .manualEnabled(false)
+                .isOn(false)
+                .build();
+    }
+
+    public void updateAutoEnabled(boolean autoEnabled) {
+        this.autoEnabled = autoEnabled;
     }
 }

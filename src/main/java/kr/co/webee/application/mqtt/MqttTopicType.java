@@ -10,9 +10,9 @@ import java.util.Arrays;
 public enum MqttTopicType {
     TELEMETRY("telemetry"),
     CONNECTION("connection"),
-    COMMAND_RESPONSE("command/response"),
     BEE_COUNT("bee-count"),
-    ALERT("alert");
+    ALERT("alert"),
+    CONTROL_RESPONSE("control/response");
 
     private final String suffix;
 

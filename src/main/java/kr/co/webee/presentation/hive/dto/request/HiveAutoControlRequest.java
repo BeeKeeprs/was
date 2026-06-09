@@ -2,8 +2,6 @@ package kr.co.webee.presentation.hive.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
-import kr.co.webee.domain.hive.entity.Hive;
-import kr.co.webee.domain.hive.entity.HiveControl;
 import kr.co.webee.domain.hive.type.ControlType;
 
 @Schema(description = "벌통 센서 자동제어 설정 request")

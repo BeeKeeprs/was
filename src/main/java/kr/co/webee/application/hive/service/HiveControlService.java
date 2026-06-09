@@ -1,8 +1,9 @@
 package kr.co.webee.application.hive.service;
 
-import kr.co.webee.application.hive.dto.request.HiveControlCommandRequest;
+import kr.co.webee.application.hive.dto.request.HiveAutoControlCommandRequest;
+import kr.co.webee.application.hive.dto.request.HiveManualControlCommandRequest;
 import kr.co.webee.application.hive.dto.response.HiveControlCommandResponse;
-import kr.co.webee.application.hive.dto.response.HiveAutoControlCommandProcessResponse;
+import kr.co.webee.application.hive.dto.response.HiveControlCommandProcessResponse;
 import kr.co.webee.application.hive.dto.HivePendingCommand;
 
 import kr.co.webee.common.error.ErrorType;
@@ -13,10 +14,10 @@ import kr.co.webee.domain.hive.entity.HiveControl;
 import kr.co.webee.domain.hive.repository.HiveControlRepository;
 import kr.co.webee.domain.hive.repository.HiveControlScheduleRepository;
 import kr.co.webee.domain.hive.repository.HiveRepository;
-import kr.co.webee.domain.hive.type.ControlMode;
 import kr.co.webee.infrastructure.mqtt.config.MqttBrokerConfig;
 import kr.co.webee.infrastructure.redis.service.RedisService;
 import kr.co.webee.presentation.hive.dto.request.HiveAutoControlRequest;
+import kr.co.webee.presentation.hive.dto.request.HiveManualControlRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -58,44 +59,96 @@ public class HiveControlService {
         // 5. redis에 command 정보 저장
         redisService.set(
                 HivePendingCommand.redisKey(commandId),
-                HivePendingCommand.of(userId, hiveId, request.type(), request.enabled()),
+                HivePendingCommand.createAutoControlCommand(userId, hiveId, request.type(), request.enabled()),
                 COMMAND_TTL
         );
 
         // 6. MQTT 발송
-        HiveControlCommandRequest command = HiveControlCommandRequest.of(commandId, request.type(), ControlMode.AUTO, request.enabled(), hive.getMacAddress());
+        HiveAutoControlCommandRequest command = HiveAutoControlCommandRequest.of(commandId, request.type(), request.enabled(), hive.getMacAddress());
+        mqttPublisher.publish("hive/%s/control".formatted(hive.getMacAddress()), jsonConverter.toJson(command));
+    }
+
+    @Transactional(readOnly = true)
+    public void setManualControl(Long hiveId, Long userId, HiveManualControlRequest request) {
+        // 1. 벌통 조회
+        Hive hive = hiveRepository.findByIdAndUserId(hiveId, userId)
+                .orElseThrow(() -> new BusinessException(ErrorType.HIVE_NOT_FOUND));
+
+        // 2. MQTT 응답 수신 시 command 구분용 UUID 생성
+        String commandId = UUID.randomUUID().toString();
+
+        // 3. redis에 command 정보 저장
+        redisService.set(
+                HivePendingCommand.redisKey(commandId),
+                HivePendingCommand.createManualControlCommand(userId, hiveId, request.type(), request.enabled(), request.isOn()),
+                COMMAND_TTL
+        );
+
+        // 4. MQTT 발송
+        HiveManualControlCommandRequest command = HiveManualControlCommandRequest.of(commandId, request.type(), request.enabled(), request.isOn(), hive.getMacAddress());
         mqttPublisher.publish("hive/%s/control".formatted(hive.getMacAddress()), jsonConverter.toJson(command));
     }
 
     @Transactional
-    public HiveAutoControlCommandProcessResponse processAutoControlCommandResponse(HivePendingCommand pending, HiveControlCommandResponse response) {
+    public HiveControlCommandProcessResponse processAutoControlCommandResponse(HivePendingCommand pending, HiveControlCommandResponse response) {
+        // 요청 실패 처리
         if (!response.success()) {
             log.warn("자동제어 명령 실패 commandId={}, message={}", response.commandId(), response.message());
-
-            return HiveAutoControlCommandProcessResponse.failure(response.commandId(), pending.hiveId(), pending.type(), response.message());
+            return HiveControlCommandProcessResponse.failure(response.commandId(), pending.hiveId(), pending.type(), response.message());
         }
 
+        // 자동 제어 활성화 처리
         Hive hive = hiveRepository.findById(pending.hiveId())
                 .orElseThrow(() -> new BusinessException(ErrorType.HIVE_NOT_FOUND));
 
         hiveControlRepository.findByHiveIdAndType(pending.hiveId(), pending.type())
                 .ifPresentOrElse(
-                        control -> control.updateAutoEnabled(pending.autoEnabled()),
-
+                        control -> control.updateAutoControl(pending.autoEnabled()),
                         () -> hiveControlRepository.save(
                                 HiveControl.createAutoControl(hive, pending.type(), pending.autoEnabled())
                         ));
 
-        return HiveAutoControlCommandProcessResponse.success(response.commandId(), pending.hiveId(), pending.type(), pending.autoEnabled());
+        return HiveControlCommandProcessResponse.autoSuccess(response.commandId(), pending.hiveId(), pending.type(), pending.autoEnabled());
+    }
+
+    @Transactional
+    public HiveControlCommandProcessResponse processManualControlCommandResponse(HivePendingCommand pending, HiveControlCommandResponse response) {
+        // 요청 실패 처리
+        if (!response.success()) {
+            log.warn("수동제어 명령 실패 commandId={}, message={}", response.commandId(), response.message());
+            return HiveControlCommandProcessResponse.failure(response.commandId(), pending.hiveId(), pending.type(), response.message());
+        }
+
+        // 수동 제어 비활성화 처리
+        if (!pending.manualEnabled()) {
+            hiveControlRepository.findByHiveIdAndType(pending.hiveId(), pending.type())
+                    .ifPresent(HiveControl::disableManualControl);
+
+            return HiveControlCommandProcessResponse.manualSuccess(response.commandId(), pending.hiveId(), pending.type(), false, null);
+        }
+
+        // 수동 제어 활성화 처리
+        Hive hive = hiveRepository.findById(pending.hiveId())
+                .orElseThrow(() -> new BusinessException(ErrorType.HIVE_NOT_FOUND));
+
+        hiveControlRepository.findByHiveIdAndType(pending.hiveId(), pending.type())
+                .ifPresentOrElse(
+                        control -> control.enableManualControl(pending.isOn()),
+
+                        () -> hiveControlRepository.save(
+                                HiveControl.createManualControl(hive, pending.type(), pending.isOn())
+                        ));
+
+        return HiveControlCommandProcessResponse.manualSuccess(response.commandId(), pending.hiveId(), pending.type(), true, pending.isOn());
     }
 
     private static void validateManualEnabled(HiveControl existing) {
-        if (existing != null && existing.isManualEnabled()) { // 수동 제어가 활성화되있는지
+        if (existing != null && existing.isManualEnabled()) {
             throw new BusinessException(ErrorType.HIVE_AUTO_CONTROL_BLOCKED_BY_MANUAL);
         }
     }
 
-    private void validateActiveSchedule(Long hiveId) { // 현재 기점으로 자동제어 스케줄이 진행중인지
+    private void validateActiveSchedule(Long hiveId) {
         if (hiveControlScheduleRepository.existsActiveSchedule(hiveId, LocalTime.now())) {
             throw new BusinessException(ErrorType.HIVE_AUTO_CONTROL_BLOCKED_BY_SCHEDULE);
         }

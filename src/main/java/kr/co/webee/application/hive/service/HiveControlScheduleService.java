@@ -74,5 +74,4 @@ public class HiveControlScheduleService {
             throw new BusinessException(ErrorType.HIVE_CONTROL_SCHEDULE_ALREADY_EXISTS_IN_TIME_RANGE);
         }
     }
-
 }

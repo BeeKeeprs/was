@@ -1,7 +1,7 @@
 package kr.co.webee.application.hive.handler;
 
 import kr.co.webee.application.hive.dto.response.HiveControlCommandResponse;
-import kr.co.webee.application.hive.dto.response.HiveAutoControlCommandProcessResponse;
+import kr.co.webee.application.hive.dto.response.HiveControlCommandProcessResponse;
 import kr.co.webee.application.hive.dto.HivePendingCommand;
 import kr.co.webee.application.hive.service.HiveControlService;
 import kr.co.webee.application.mqtt.MqttMessageHandler;
@@ -9,6 +9,7 @@ import kr.co.webee.application.mqtt.MqttTopicType;
 import kr.co.webee.application.sse.service.SseEmitterService;
 import kr.co.webee.application.sse.type.SseEventType;
 import kr.co.webee.common.util.JsonConverter;
+import kr.co.webee.domain.hive.type.ControlMode;
 import kr.co.webee.infrastructure.redis.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +44,10 @@ public class HiveControlResponseHandler implements MqttMessageHandler {
         redisService.delete(redisKey);
 
         HivePendingCommand pending = jsonConverter.convert(stored, HivePendingCommand.class);
-        HiveAutoControlCommandProcessResponse result = hiveControlService.processAutoControlCommandResponse(pending, response);
+
+        HiveControlCommandProcessResponse result = pending.mode() == ControlMode.MANUAL
+                ? hiveControlService.processManualControlCommandResponse(pending, response)
+                : hiveControlService.processAutoControlCommandResponse(pending, response);
 
         sseEmitterService.sendToClient(SseEventType.HIVE_CONTROL_RESULT, pending.userId(), result);
     }

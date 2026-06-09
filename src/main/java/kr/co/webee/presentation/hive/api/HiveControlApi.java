@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kr.co.webee.common.error.ErrorType;
 import kr.co.webee.presentation.hive.dto.request.HiveAutoControlRequest;
+import kr.co.webee.presentation.hive.dto.request.HiveManualControlRequest;
 import kr.co.webee.presentation.support.annotation.ApiDocsErrorType;
 import kr.co.webee.presentation.support.annotation.UserId;
 import org.springframework.http.MediaType;
@@ -46,5 +47,34 @@ public interface HiveControlApi {
                     )
             )
             @RequestBody @Valid HiveAutoControlRequest request
+    );
+
+    @Operation(summary = "센서 수동제어", description = "벌통 센서를 수동으로 ON/OFF 합니다.")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "요청 성공",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(type = "string", example = "OK")
+                    )
+            ),
+    })
+    @ApiDocsErrorType({ErrorType.HIVE_NOT_FOUND})
+    String setManualControl(
+            @Parameter(description = "벌통 ID", example = "1", required = true)
+            @PathVariable Long hiveId,
+
+            @Parameter(hidden = true) @UserId Long userId,
+
+            @Parameter(
+                    description = "수동제어 요청 JSON",
+                    required = true,
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = HiveManualControlRequest.class)
+                    )
+            )
+            @RequestBody @Valid HiveManualControlRequest request
     );
 }

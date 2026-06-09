@@ -63,7 +63,28 @@ public class HiveControl extends BaseTimeEntity {
                 .build();
     }
 
-    public void updateAutoEnabled(boolean autoEnabled) {
+    public static HiveControl createManualControl(Hive hive, ControlType type, boolean isOn) {
+        return HiveControl.builder()
+                .hive(hive)
+                .type(type)
+                .autoEnabled(false)
+                .manualEnabled(true)
+                .isOn(isOn)
+                .build();
+    }
+
+    public void updateAutoControl(boolean autoEnabled) {
         this.autoEnabled = autoEnabled;
+        this.manualEnabled = false;
+    }
+
+    public void enableManualControl(boolean isOn) {
+        this.autoEnabled = false;
+        this.manualEnabled = true;
+        this.isOn = isOn;
+    }
+
+    public void disableManualControl() {
+        this.manualEnabled = false;
     }
 }

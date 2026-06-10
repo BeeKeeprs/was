@@ -1,12 +1,14 @@
 package kr.co.webee.presentation.hive.controller;
 
 import jakarta.validation.Valid;
+import kr.co.webee.application.hive.dto.response.HiveControlListResponse;
 import kr.co.webee.application.hive.service.HiveControlService;
 import kr.co.webee.presentation.hive.api.HiveControlApi;
 import kr.co.webee.presentation.hive.dto.request.HiveAutoControlRequest;
 import kr.co.webee.presentation.hive.dto.request.HiveManualControlRequest;
 import kr.co.webee.presentation.support.annotation.UserId;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +20,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HiveControlController implements HiveControlApi {
     private final HiveControlService hiveControlService;
+
+    @Override
+    @GetMapping("/{hiveId}/control")
+    public HiveControlListResponse getControlList(
+            @PathVariable Long hiveId,
+            @UserId Long userId
+    ) {
+        return hiveControlService.getControlList(hiveId, userId);
+    }
 
     @Override
     @PostMapping("/{hiveId}/control/auto")

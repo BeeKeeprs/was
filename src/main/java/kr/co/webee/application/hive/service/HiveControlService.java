@@ -4,6 +4,7 @@ import kr.co.webee.application.hive.dto.request.HiveAutoControlCommandRequest;
 import kr.co.webee.application.hive.dto.request.HiveManualControlCommandRequest;
 import kr.co.webee.application.hive.dto.response.HiveControlCommandResponse;
 import kr.co.webee.application.hive.dto.response.HiveControlCommandProcessResponse;
+import kr.co.webee.application.hive.dto.response.HiveControlListResponse;
 import kr.co.webee.application.hive.dto.HivePendingCommand;
 
 import kr.co.webee.common.error.ErrorType;
@@ -39,6 +40,14 @@ public class HiveControlService {
     private final RedisService redisService;
     private final JsonConverter jsonConverter;
     private final MqttBrokerConfig.MqttPublisher mqttPublisher;
+
+    @Transactional(readOnly = true)
+    public HiveControlListResponse getControlList(Long hiveId, Long userId) {
+        hiveRepository.findByIdAndUserId(hiveId, userId)
+                .orElseThrow(() -> new BusinessException(ErrorType.HIVE_NOT_FOUND));
+
+        return HiveControlListResponse.of(hiveControlRepository.findAllByHiveId(hiveId));
+    }
 
     @Transactional(readOnly = true)
     public void setAutoControl(Long hiveId, Long userId, HiveAutoControlRequest request) {

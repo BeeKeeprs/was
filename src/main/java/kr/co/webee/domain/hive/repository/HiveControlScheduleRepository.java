@@ -16,6 +16,8 @@ public interface HiveControlScheduleRepository extends JpaRepository<HiveControl
 
     List<HiveControlSchedule> findAllByHiveId(Long hiveId);
 
+    List<HiveControlSchedule> findAllByEnabled(boolean enabled);
+
     Optional<HiveControlSchedule> findByIdAndHiveId(Long id, Long hiveId);
 
     @Query("""

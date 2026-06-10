@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import kr.co.webee.application.hive.dto.response.HiveControlListResponse;
 import kr.co.webee.common.error.ErrorType;
 import kr.co.webee.presentation.hive.dto.request.HiveAutoControlRequest;
 import kr.co.webee.presentation.hive.dto.request.HiveManualControlRequest;
@@ -19,6 +20,25 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @Tag(name = "벌통 센서 제어 API", description = "벌통 센서 제어 관련 API")
 public interface HiveControlApi {
+
+    @Operation(summary = "제어 설정 조회", description = "벌통의 자동제어 및 수동제어 설정 상태를 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "조회 성공",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = HiveControlListResponse.class)
+                    )
+            ),
+    })
+    @ApiDocsErrorType({ErrorType.HIVE_NOT_FOUND})
+    HiveControlListResponse getControlList(
+            @Parameter(description = "벌통 ID", example = "1", required = true)
+            @PathVariable Long hiveId,
+
+            @Parameter(hidden = true) @UserId Long userId
+    );
 
     @Operation(summary = "센서 자동제어 설정", description = "벌통 센서의 자동제어 활성화 여부를 설정합니다.")
     @ApiResponses({

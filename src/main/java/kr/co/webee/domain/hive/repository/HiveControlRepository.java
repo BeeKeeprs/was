@@ -5,9 +5,12 @@ import kr.co.webee.domain.hive.type.ControlType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface HiveControlRepository extends JpaRepository<HiveControl, Long> {
     Optional<HiveControl> findByHiveIdAndType(Long hiveId, ControlType type);
+
+    List<HiveControl> findAllByHiveId(Long hiveId);
 }

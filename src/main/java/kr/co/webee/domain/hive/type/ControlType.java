@@ -4,6 +4,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public enum ControlType {
@@ -15,4 +18,12 @@ public enum ControlType {
     DOOR("문");
 
     private final String description;
+
+    public static List<ControlType> autoControlTypes() {
+        return Arrays.asList(values());
+    }
+
+    public static List<ControlType> manualControlTypes() {
+        return List.of(FAN, HEATER, DOOR);
+    }
 }

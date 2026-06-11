@@ -2,6 +2,7 @@ package kr.co.webee.annotation;
 
 import kr.co.webee.config.AwsS3TestConfig;
 import kr.co.webee.config.TestAiConfig;
+import kr.co.webee.config.TestFcmConfig;
 import kr.co.webee.config.TestcontainersConfig;
 import org.springframework.ai.model.openai.autoconfigure.OpenAiAudioSpeechAutoConfiguration;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
@@ -23,6 +24,6 @@ import java.lang.annotation.Target;
 @ImportAutoConfiguration(exclude = {
         OpenAiAudioSpeechAutoConfiguration.class,
 })
-@Import({TestcontainersConfig.class, AwsS3TestConfig.class, TestAiConfig.class})
+@Import({TestcontainersConfig.class, AwsS3TestConfig.class, TestAiConfig.class, TestFcmConfig.class})
 public @interface IntegrationTest {
 }

@@ -66,3 +66,6 @@ bee:
 
 business-certificate-validation:
   api-key: business-certificate-api-test-key
+
+firebase:
+  key-path: ourbee-firebase-adminsdk.json

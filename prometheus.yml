@@ -1,0 +1,10 @@
+global:
+  scrape_interval: 5s # 메트릭 수집 주기. 아래에서 설정한 메트릭 경로를 5초마다 호출
+  evaluation_interval: 5s # 알람 및 집계 룰을 몇 초마다 계산할지 정하는 값(룰 없으면 사용 X)
+
+scrape_configs:
+  - job_name: 'api'
+    metrics_path: '/actuator/prometheus' # 메트릭 엔드포인트 경로
+    static_configs:
+      - targets: [ 'api:8080' ]
+  # 메트릭 수집할 실제 주소. api → Docker 네트워크 상의 컨테이너 이름, 같은 도커 네트워크 안에 있을 때 동작

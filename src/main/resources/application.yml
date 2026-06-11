@@ -133,3 +133,12 @@ mqtt:
 
 firebase:
   key-path: ${FIREBASE_KEY_PATH:}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,metrics,info,prometheus"
+  endpoint:
+    health:
+      show-details: always  # 상세한 헬스 정보 표시

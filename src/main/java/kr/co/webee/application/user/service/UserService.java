@@ -2,6 +2,7 @@ package kr.co.webee.application.user.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import kr.co.webee.application.auth.service.RefreshTokenService;
+import kr.co.webee.domain.fcmtoken.repository.FcmTokenRepository;
 import kr.co.webee.domain.user.entity.User;
 import kr.co.webee.domain.user.repository.UserRepository;
 import kr.co.webee.infrastructure.storage.FileStorageClient;
@@ -17,6 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final FcmTokenRepository fcmTokenRepository;
     private final RefreshTokenService refreshTokenService;
     private final FileStorageClient fileStorageClient;
 
@@ -46,6 +48,7 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found: " + userId));
 
+        fcmTokenRepository.deleteAllByUserId(userId);
         refreshTokenService.delete(userId);
         userRepository.delete(user);
     }

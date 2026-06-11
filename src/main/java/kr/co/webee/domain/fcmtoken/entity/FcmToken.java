@@ -18,13 +18,21 @@ public class FcmToken {
     @Column(nullable = false, unique = true)
     private String token;
 
+    @Column(nullable = false)
+    private String deviceInfo;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Builder
-    private FcmToken(String token, User user) {
+    private FcmToken(String token, String deviceInfo, User user) {
         this.token = token;
+        this.deviceInfo = deviceInfo;
         this.user = user;
+    }
+
+    public void updateToken(String token) {
+        this.token = token;
     }
 }

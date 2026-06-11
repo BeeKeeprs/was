@@ -43,6 +43,7 @@ public enum ErrorType {
 
     // UserErrorType
     ALREADY_EXIST_USERNAME(CONFLICT, WARN, "USER_001", "이미 존재하는 아이디입니다"),
+    USER_NOT_FOUND(NOT_FOUND, DEBUG, "USER_002", "사용자를 찾을 수 없습니다"),
 
     // MarketErrorType
     INTEREST_MARKET_ALREADY_EXISTS(CONFLICT, DEBUG, "MARKET_001", "이미 등록된 관심 시장입니다"),

@@ -32,4 +32,9 @@ public class FcmTokenService {
                         }
                 );
     }
+
+    @Transactional
+    public void deleteToken(Long userId, String deviceInfo) {
+        fcmTokenRepository.deleteByUserIdAndDeviceInfo(userId, deviceInfo);
+    }
 }

@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class FcmNotificationService {
 
-    public void send(String token, String title, String content) {
-        Message message = buildMessage(token, title, content);
+    public void send(String token, String title, String body) {
+        Message message = buildMessage(token, title, body);
 
         try {
             String response = FirebaseMessaging.getInstance().send(message);
@@ -21,12 +21,12 @@ public class FcmNotificationService {
         }
     }
 
-    private Message buildMessage(String token, String title, String content) {
+    private Message buildMessage(String token, String title, String body) {
         return Message.builder()
                 .setToken(token)
                 .setNotification(Notification.builder()
                         .setTitle(title)
-                        .setBody(content)
+                        .setBody(body)
                         .build())
                 .build();
     }

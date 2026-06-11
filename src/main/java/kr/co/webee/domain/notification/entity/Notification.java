@@ -40,11 +40,23 @@ public class Notification extends BaseTimeEntity {
     private User user;
 
     @Builder
-    private Notification(User user, NotificationType type, String title, String content, boolean isRead) {
+    private Notification(User user, NotificationType type, String title, String content, LocalDateTime sentAt, boolean isRead) {
         this.user = Objects.requireNonNull(user, "user는 null이 될 수 없습니다.");
         this.type = Objects.requireNonNull(type, "type은 null이 될 수 없습니다.");
         this.title = Objects.requireNonNull(title, "title은 null이 될 수 없습니다.");
         this.content = Objects.requireNonNull(content, "content는 null이 될 수 없습니다.");
+        this.sentAt = Objects.requireNonNull(sentAt, "sentAt는 null이 될 수 없습니다.");
         this.isRead = isRead;
+    }
+
+    public static Notification create(User user, NotificationType type, String title, String content) {
+        return Notification.builder()
+                .user(user)
+                .type(type)
+                .title(title)
+                .content(content)
+                .sentAt(LocalDateTime.now())
+                .isRead(false)
+                .build();
     }
 }

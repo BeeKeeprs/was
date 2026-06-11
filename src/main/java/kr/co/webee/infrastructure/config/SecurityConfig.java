@@ -38,6 +38,7 @@ public class SecurityConfig {
             "/api/v1/auth/preorder/phone",
             "/api/v1/auth/phone/**",
             "/api/v1/oauth/sign-in/**",
+            "/actuator/**"
     };
 
     private static final String[] READ_ONLY_ENDPOINTS = {

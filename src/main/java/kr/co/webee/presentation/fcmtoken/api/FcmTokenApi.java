@@ -12,6 +12,7 @@ import kr.co.webee.presentation.fcmtoken.dto.request.FcmTokenRegisterRequest;
 import kr.co.webee.presentation.support.annotation.UserId;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "FCM 토큰 API", description = "FCM 토큰 관련 API")
 public interface FcmTokenApi {
@@ -39,5 +40,23 @@ public interface FcmTokenApi {
                     )
             )
             @RequestBody @Valid FcmTokenRegisterRequest request
+    );
+
+    @Operation(summary = "FCM 토큰 삭제", description = "로그아웃 시 해당 기기의 FCM 토큰을 삭제합니다.")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "삭제 성공",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(type = "string", example = "OK")
+                    )
+            ),
+    })
+    String deleteToken(
+            @Parameter(hidden = true) @UserId Long userId,
+
+            @Parameter(description = "기기 정보", required = true)
+            @RequestParam String deviceInfo
     );
 }

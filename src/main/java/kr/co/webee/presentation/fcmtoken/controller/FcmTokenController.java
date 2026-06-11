@@ -6,9 +6,11 @@ import kr.co.webee.presentation.fcmtoken.api.FcmTokenApi;
 import kr.co.webee.presentation.fcmtoken.dto.request.FcmTokenRegisterRequest;
 import kr.co.webee.presentation.support.annotation.UserId;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/api/v1/fcm-tokens")
@@ -24,6 +26,16 @@ public class FcmTokenController implements FcmTokenApi {
             @RequestBody @Valid FcmTokenRegisterRequest request
     ) {
         fcmTokenService.registerToken(userId, request);
+        return "OK";
+    }
+
+    @Override
+    @DeleteMapping
+    public String deleteToken(
+            @UserId Long userId,
+            @RequestParam String deviceInfo
+    ) {
+        fcmTokenService.deleteToken(userId, deviceInfo);
         return "OK";
     }
 }

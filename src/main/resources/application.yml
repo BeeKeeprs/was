@@ -130,3 +130,6 @@ mqtt:
   topic-filter: ${MQTT_TOPIC_FILTER:server-inbound}
   username: ${MQTT_USERNAME:username}
   password: ${MQTT_PASSWORD:password}
+
+firebase:
+  key-path: ${FIREBASE_KEY_PATH:}

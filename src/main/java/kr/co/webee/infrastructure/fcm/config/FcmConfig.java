@@ -1,4 +1,4 @@
-package kr.co.webee.infrastructure.fcm;
+package kr.co.webee.infrastructure.fcm.config;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;

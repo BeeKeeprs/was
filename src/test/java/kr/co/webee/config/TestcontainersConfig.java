@@ -6,6 +6,7 @@ import org.springframework.boot.testcontainers.service.connection.ServiceConnect
 import org.springframework.context.annotation.Bean;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.containers.RabbitMQContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.utility.DockerImageName;
@@ -23,6 +24,12 @@ public class TestcontainersConfig {
     MySQLContainer<?> mySQLContainer() {
         return new MySQLContainer<>(
                 DockerImageName.parse("mysql:8.0.34").asCompatibleSubstituteFor("mysql"));
+    }
+
+    @Bean
+    @ServiceConnection
+    RabbitMQContainer rabbitMQContainer() {
+        return new RabbitMQContainer(DockerImageName.parse("rabbitmq:3-management"));
     }
     
     @Container

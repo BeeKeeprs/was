@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.integration.annotation.MessagingGateway;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.channel.DirectChannel;
+import org.springframework.integration.channel.ExecutorChannel;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.integration.core.MessageProducer;
 import org.springframework.integration.mqtt.core.DefaultMqttPahoClientFactory;
 import org.springframework.integration.mqtt.core.MqttPahoClientFactory;
@@ -60,7 +62,13 @@ public class MqttBrokerConfig {
 
     @Bean
     public MessageChannel mqttInputChannel() { // inboundChannel
-        return new DirectChannel();
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(5);
+        executor.setMaxPoolSize(10);
+        executor.setQueueCapacity(200);
+        executor.setThreadNamePrefix("mqtt-proc-");
+        executor.initialize();
+        return new ExecutorChannel(executor);
     }
 
     @Bean

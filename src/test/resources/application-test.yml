@@ -69,3 +69,8 @@ business-certificate-validation:
 
 firebase:
   key-path: ourbee-firebase-adminsdk.json
+
+rabbitmq:
+  queue-name: test-queue
+  exchange-name: test-exchange
+  routing-key: test-key

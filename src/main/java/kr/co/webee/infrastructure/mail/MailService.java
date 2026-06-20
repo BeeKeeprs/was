@@ -20,14 +20,14 @@ public class MailService {
 
     private final JavaMailSender mailSender;
 
-    public void sendEmail(String content, String name) {
+    public void sendEmail(String content, String name, String userEmail) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
             helper.setTo(email);
             helper.setSubject(title);
-            helper.setText("<h3>" + name + "님이 남긴 피드백입니다.</h3><p>" + "</p>" + content, true);
+            helper.setText("<h3>" + name + "님이 주신 문의입니다.</h3><p>이메일: " + userEmail + "</p><p>" + content + "</p>", true);
 
             mailSender.send(message);
         } catch (Exception e) {

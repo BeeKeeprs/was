@@ -18,6 +18,6 @@ public class FeedbackService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-        mailService.sendEmail(request.content(), user.getName());
+        mailService.sendEmail(request.content(), user.getName(), request.email());
     }
 }

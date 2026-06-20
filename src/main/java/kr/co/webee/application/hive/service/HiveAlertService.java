@@ -1,7 +1,6 @@
 package kr.co.webee.application.hive.service;
 
 import io.micrometer.core.instrument.DistributionSummary;
-import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
 import kr.co.webee.application.hive.dto.FcmMessageDto;
 import kr.co.webee.application.hive.dto.request.HiveAlertRequest;
@@ -29,12 +28,9 @@ public class HiveAlertService {
     private final FcmTokenRepository fcmTokenRepository;
     private final NotificationRepository notificationRepository;
     private final RabbitMessageProducer rabbitMessageProducer;
-    private final MeterRegistry meterRegistry;
 
     @Transactional
     public void processAlert(HiveAlertRequest request, String macAddress) {
-        Timer.Sample sample = Timer.start(meterRegistry);
-
         Hive hive = hiveRepository.findByMacAddress(macAddress)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 벌통입니다. macAddress=" + macAddress));
 
@@ -49,16 +45,5 @@ public class HiveAlertService {
                     FcmMessageDto message = FcmMessageDto.of(fcmToken.getToken(), title, content);
                     rabbitMessageProducer.send(message);
                 });
-
-        sample.stop(Timer.builder("hive.alert.process.duration")
-                .publishPercentileHistogram()
-                .register(meterRegistry));
-
-        long e2eLatencyMs = Duration.between(request.timestamp(), Instant.now()).toMillis();
-        DistributionSummary.builder("hive.alert.e2e.latency")
-                .baseUnit("ms")
-                .publishPercentileHistogram()
-                .register(meterRegistry)
-                .record(e2eLatencyMs);
     }
 }

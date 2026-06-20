@@ -104,7 +104,7 @@ public class HiveControlScheduleService {
 
             redisService.set(
                     HivePendingCommand.redisKey(commandId),
-                    HivePendingCommand.createAutoControlCommand(userId, hiveId, type, enabled),
+                    jsonConverter.toJson(HivePendingCommand.createAutoControlCommand(userId, hiveId, type, enabled)),
                     COMMAND_TTL
             );
 

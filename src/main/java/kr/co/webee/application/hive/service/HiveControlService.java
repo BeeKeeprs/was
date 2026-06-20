@@ -68,7 +68,7 @@ public class HiveControlService {
         // 5. redis에 command 정보 저장
         redisService.set(
                 HivePendingCommand.redisKey(commandId),
-                HivePendingCommand.createAutoControlCommand(userId, hiveId, request.type(), request.enabled()),
+                jsonConverter.toJson(HivePendingCommand.createAutoControlCommand(userId, hiveId, request.type(), request.enabled())),
                 COMMAND_TTL
         );
 
@@ -89,7 +89,7 @@ public class HiveControlService {
         // 3. redis에 command 정보 저장
         redisService.set(
                 HivePendingCommand.redisKey(commandId),
-                HivePendingCommand.createManualControlCommand(userId, hiveId, request.type(), request.enabled(), request.isOn()),
+                jsonConverter.toJson(HivePendingCommand.createManualControlCommand(userId, hiveId, request.type(), request.enabled(), request.isOn())),
                 COMMAND_TTL
         );
 

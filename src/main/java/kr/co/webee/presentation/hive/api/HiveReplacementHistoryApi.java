@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kr.co.webee.common.error.ErrorType;
 import kr.co.webee.presentation.hive.dto.request.HiveReplacementHistoryCreateRequest;
+import kr.co.webee.presentation.hive.dto.request.HiveReplacementHistoryUpdateRequest;
 import kr.co.webee.presentation.hive.dto.response.HiveReplacementHistoryCreateResponse;
 import kr.co.webee.presentation.hive.dto.response.HiveReplacementHistoryDetailResponse;
 import kr.co.webee.presentation.hive.dto.response.HiveReplacementHistoryListResponse;
@@ -84,5 +85,27 @@ public interface HiveReplacementHistoryApi {
             @PathVariable Long hiveId,
             @Parameter(hidden = true) @UserId Long userId,
             Pageable pageable
+    );
+
+    @Operation(summary = "벌통 교체 기록 수정", description = "벌통 교체 기록을 수정합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "수정 성공"),
+    })
+    @ApiDocsErrorType(ErrorType.HIVE_REPLACEMENT_HISTORY_NOT_FOUND)
+    void updateReplacementHistory(
+            @Parameter(description = "벌통 ID", example = "1", required = true)
+            @PathVariable Long hiveId,
+            @Parameter(description = "교체 기록 ID", example = "31", required = true)
+            @PathVariable Long historyId,
+            @Parameter(hidden = true) @UserId Long userId,
+            @Parameter(
+                    description = "벌통 교체 기록 수정 요청 JSON",
+                    required = true,
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = HiveReplacementHistoryUpdateRequest.class)
+                    )
+            )
+            @RequestBody @Valid HiveReplacementHistoryUpdateRequest request
     );
 }

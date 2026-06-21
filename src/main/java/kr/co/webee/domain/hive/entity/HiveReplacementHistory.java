@@ -36,4 +36,8 @@ public class HiveReplacementHistory extends BaseTimeEntity {
     public void updateUsageDays(long usageDays) {
         this.usageDays = usageDays;
     }
+
+    public void updateReplacedAt(LocalDate replacedAt) {
+        this.replacedAt = Objects.requireNonNull(replacedAt, "replacedAt은 null이 될 수 없습니다.");
+    }
 }

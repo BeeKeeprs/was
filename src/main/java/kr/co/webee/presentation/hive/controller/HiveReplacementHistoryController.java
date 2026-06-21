@@ -5,6 +5,7 @@ import kr.co.webee.application.hive.service.HiveReplacementHistoryService;
 import kr.co.webee.presentation.hive.api.HiveReplacementHistoryApi;
 import kr.co.webee.presentation.hive.dto.request.HiveReplacementHistoryCreateRequest;
 import kr.co.webee.presentation.hive.dto.response.HiveReplacementHistoryCreateResponse;
+import kr.co.webee.presentation.hive.dto.response.HiveReplacementHistoryDetailResponse;
 import kr.co.webee.presentation.hive.dto.response.HiveReplacementHistoryListResponse;
 import kr.co.webee.presentation.support.annotation.UserId;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,16 @@ public class HiveReplacementHistoryController implements HiveReplacementHistoryA
             @RequestBody @Valid HiveReplacementHistoryCreateRequest request
     ) {
         return hiveReplacementHistoryService.createReplacementHistory(hiveId, userId, request);
+    }
+
+    @Override
+    @GetMapping("/{hiveId}/replacement-history/{historyId}")
+    public HiveReplacementHistoryDetailResponse getReplacementHistoryDetail(
+            @PathVariable Long hiveId,
+            @PathVariable Long historyId,
+            @UserId Long userId
+    ) {
+        return hiveReplacementHistoryService.getReplacementHistoryDetail(hiveId, historyId, userId);
     }
 
     @Override

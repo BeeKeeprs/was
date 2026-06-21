@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import kr.co.webee.common.error.ErrorType;
 import kr.co.webee.presentation.hive.dto.request.HiveReplacementHistoryCreateRequest;
 import kr.co.webee.presentation.hive.dto.response.HiveReplacementHistoryCreateResponse;
+import kr.co.webee.presentation.hive.dto.response.HiveReplacementHistoryDetailResponse;
 import kr.co.webee.presentation.hive.dto.response.HiveReplacementHistoryListResponse;
 import kr.co.webee.presentation.support.annotation.ApiDocsErrorType;
 import kr.co.webee.presentation.support.annotation.UserId;
@@ -48,6 +49,26 @@ public interface HiveReplacementHistoryApi {
                     )
             )
             @RequestBody @Valid HiveReplacementHistoryCreateRequest request
+    );
+
+    @Operation(summary = "벌통 교체 기록 상세 조회", description = "벌통 교체 기록을 상세 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "조회 성공",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = HiveReplacementHistoryDetailResponse.class)
+                    )
+            ),
+    })
+    @ApiDocsErrorType(ErrorType.HIVE_REPLACEMENT_HISTORY_NOT_FOUND)
+    HiveReplacementHistoryDetailResponse getReplacementHistoryDetail(
+            @Parameter(description = "벌통 ID", example = "1", required = true)
+            @PathVariable Long hiveId,
+            @Parameter(description = "교체 기록 ID", example = "31", required = true)
+            @PathVariable Long historyId,
+            @Parameter(hidden = true) @UserId Long userId
     );
 
     @Operation(summary = "벌통 교체 기록 목록 조회", description = "벌통 교체 기록 목록을 교체일 기준 최신순으로 조회합니다.")

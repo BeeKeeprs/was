@@ -63,7 +63,7 @@ public interface HiveReplacementHistoryApi {
                     )
             ),
     })
-    @ApiDocsErrorType(ErrorType.HIVE_REPLACEMENT_HISTORY_NOT_FOUND)
+    @ApiDocsErrorType({ErrorType.HIVE_NOT_FOUND, ErrorType.HIVE_REPLACEMENT_HISTORY_NOT_FOUND})
     HiveReplacementHistoryDetailResponse getReplacementHistoryDetail(
             @Parameter(description = "벌통 ID", example = "1", required = true)
             @PathVariable Long hiveId,
@@ -91,7 +91,7 @@ public interface HiveReplacementHistoryApi {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "수정 성공"),
     })
-    @ApiDocsErrorType(ErrorType.HIVE_REPLACEMENT_HISTORY_NOT_FOUND)
+    @ApiDocsErrorType({ErrorType.HIVE_NOT_FOUND, ErrorType.HIVE_REPLACEMENT_HISTORY_NOT_FOUND})
     void updateReplacementHistory(
             @Parameter(description = "벌통 ID", example = "1", required = true)
             @PathVariable Long hiveId,
@@ -107,5 +107,18 @@ public interface HiveReplacementHistoryApi {
                     )
             )
             @RequestBody @Valid HiveReplacementHistoryUpdateRequest request
+    );
+
+    @Operation(summary = "벌통 교체 기록 삭제", description = "벌통 교체 기록을 삭제합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "삭제 성공"),
+    })
+    @ApiDocsErrorType({ErrorType.HIVE_NOT_FOUND, ErrorType.HIVE_REPLACEMENT_HISTORY_NOT_FOUND})
+    void deleteReplacementHistory(
+            @Parameter(description = "벌통 ID", example = "1", required = true)
+            @PathVariable Long hiveId,
+            @Parameter(description = "교체 기록 ID", example = "31", required = true)
+            @PathVariable Long historyId,
+            @Parameter(hidden = true) @UserId Long userId
     );
 }

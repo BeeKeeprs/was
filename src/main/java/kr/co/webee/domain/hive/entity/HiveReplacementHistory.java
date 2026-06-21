@@ -34,7 +34,14 @@ public class HiveReplacementHistory extends BaseTimeEntity {
     }
 
     public void updateUsageDays(long usageDays) {
+        if (usageDays < 0) {
+            throw new IllegalArgumentException("usageDays는 0 이상이어야 합니다.");
+        }
         this.usageDays = usageDays;
+    }
+
+    public void clearUsageDays() {
+        this.usageDays = null;
     }
 
     public void updateReplacedAt(LocalDate replacedAt) {

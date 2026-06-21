@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -67,5 +68,15 @@ public class HiveReplacementHistoryController implements HiveReplacementHistoryA
             @RequestBody @Valid HiveReplacementHistoryUpdateRequest request
     ) {
         hiveReplacementHistoryService.updateReplacementHistory(hiveId, historyId, userId, request);
+    }
+
+    @Override
+    @DeleteMapping("/{hiveId}/replacement-history/{historyId}")
+    public void deleteReplacementHistory(
+            @PathVariable Long hiveId,
+            @PathVariable Long historyId,
+            @UserId Long userId
+    ) {
+        hiveReplacementHistoryService.deleteReplacementHistory(hiveId, historyId, userId);
     }
 }

@@ -3,6 +3,7 @@ package kr.co.webee.presentation.hive.dto.request;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 
 import java.time.LocalDate;
 
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 public record HiveReplacementHistoryUpdateRequest(
         @Schema(description = "교체 일자", example = "2026-06-05")
         @JsonFormat(pattern = "yyyy-MM-dd")
+        @PastOrPresent
         @NotNull
         LocalDate replacedAt
 ) {

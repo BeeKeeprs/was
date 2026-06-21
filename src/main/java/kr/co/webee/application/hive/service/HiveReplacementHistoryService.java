@@ -8,6 +8,7 @@ import kr.co.webee.domain.hive.repository.HiveRepository;
 import kr.co.webee.domain.hive.repository.HiveReplacementHistoryRepository;
 import kr.co.webee.presentation.hive.dto.request.HiveReplacementHistoryCreateRequest;
 import kr.co.webee.presentation.hive.dto.response.HiveReplacementHistoryCreateResponse;
+import kr.co.webee.presentation.hive.dto.response.HiveReplacementHistoryDetailResponse;
 import kr.co.webee.presentation.hive.dto.response.HiveReplacementHistoryListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -33,6 +34,17 @@ public class HiveReplacementHistoryService {
         HiveReplacementHistory history = hiveReplacementHistoryRepository.save(request.toEntity(hive));
 
         return HiveReplacementHistoryCreateResponse.of(history.getId());
+    }
+
+    @Transactional(readOnly = true)
+    public HiveReplacementHistoryDetailResponse getReplacementHistoryDetail(Long hiveId, Long historyId, Long userId) {
+        hiveRepository.findByIdAndUserId(hiveId, userId)
+                .orElseThrow(() -> new BusinessException(ErrorType.HIVE_NOT_FOUND));
+
+        HiveReplacementHistory history = hiveReplacementHistoryRepository.findByIdAndHiveId(historyId, hiveId)
+                .orElseThrow(() -> new BusinessException(ErrorType.HIVE_REPLACEMENT_HISTORY_NOT_FOUND));
+
+        return HiveReplacementHistoryDetailResponse.from(history);
     }
 
     @Transactional(readOnly = true)

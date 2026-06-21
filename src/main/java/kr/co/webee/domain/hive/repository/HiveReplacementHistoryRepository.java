@@ -13,6 +13,8 @@ public interface HiveReplacementHistoryRepository extends JpaRepository<HiveRepl
 
     Slice<HiveReplacementHistory> findAllByHiveId(Long hiveId, Pageable pageable);
 
+    Optional<HiveReplacementHistory> findByIdAndHiveId(Long id, Long hiveId);
+
     @Query("""
             SELECT h FROM HiveReplacementHistory h
             WHERE h.hive.id = :hiveId

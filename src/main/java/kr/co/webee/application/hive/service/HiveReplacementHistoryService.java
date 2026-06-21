@@ -8,14 +8,13 @@ import kr.co.webee.domain.hive.repository.HiveRepository;
 import kr.co.webee.domain.hive.repository.HiveReplacementHistoryRepository;
 import kr.co.webee.presentation.hive.dto.request.HiveReplacementHistoryCreateRequest;
 import kr.co.webee.presentation.hive.dto.response.HiveReplacementHistoryCreateResponse;
-import kr.co.webee.presentation.hive.dto.response.HiveReplacementHistoryResponse;
+import kr.co.webee.presentation.hive.dto.response.HiveReplacementHistoryListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 @RequiredArgsConstructor
@@ -29,14 +28,26 @@ public class HiveReplacementHistoryService {
         Hive hive = hiveRepository.findByIdAndUserId(hiveId, userId)
                 .orElseThrow(() -> new BusinessException(ErrorType.HIVE_NOT_FOUND));
 
-        // 직전 기록의 usageDays 업데이트
-        hiveReplacementHistoryRepository.findLatestByHiveId(hiveId)
-                .ifPresent(prev -> prev.updateUsageDays(
-                        ChronoUnit.DAYS.between(prev.getReplacedAt(), request.replacedAt())
-                ));
+        updatePreviousUsageDays(hiveId, request);
 
         HiveReplacementHistory history = hiveReplacementHistoryRepository.save(request.toEntity(hive));
 
         return HiveReplacementHistoryCreateResponse.of(history.getId());
+    }
+
+    @Transactional(readOnly = true)
+    public Slice<HiveReplacementHistoryListResponse> getAllReplacementHistories(Long hiveId, Long userId, Pageable pageable) {
+        hiveRepository.findByIdAndUserId(hiveId, userId)
+                .orElseThrow(() -> new BusinessException(ErrorType.HIVE_NOT_FOUND));
+
+        return hiveReplacementHistoryRepository.findAllByHiveId(hiveId, pageable)
+                .map(HiveReplacementHistoryListResponse::from);
+    }
+
+    private void updatePreviousUsageDays(Long hiveId, HiveReplacementHistoryCreateRequest request) {
+        hiveReplacementHistoryRepository.findLatestByHiveId(hiveId)
+                .ifPresent(prev -> prev.updateUsageDays(
+                        ChronoUnit.DAYS.between(prev.getReplacedAt(), request.replacedAt())
+                ));
     }
 }

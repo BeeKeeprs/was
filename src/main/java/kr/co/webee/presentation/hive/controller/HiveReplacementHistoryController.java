@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import kr.co.webee.application.hive.service.HiveReplacementHistoryService;
 import kr.co.webee.presentation.hive.api.HiveReplacementHistoryApi;
 import kr.co.webee.presentation.hive.dto.request.HiveReplacementHistoryCreateRequest;
+import kr.co.webee.presentation.hive.dto.request.HiveReplacementHistoryUpdateRequest;
 import kr.co.webee.presentation.hive.dto.response.HiveReplacementHistoryCreateResponse;
 import kr.co.webee.presentation.hive.dto.response.HiveReplacementHistoryDetailResponse;
 import kr.co.webee.presentation.hive.dto.response.HiveReplacementHistoryListResponse;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -54,5 +56,16 @@ public class HiveReplacementHistoryController implements HiveReplacementHistoryA
             @PageableDefault(size = 10, sort = "replacedAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         return hiveReplacementHistoryService.getAllReplacementHistories(hiveId, userId, pageable);
+    }
+
+    @Override
+    @PatchMapping("/{hiveId}/replacement-history/{historyId}")
+    public void updateReplacementHistory(
+            @PathVariable Long hiveId,
+            @PathVariable Long historyId,
+            @UserId Long userId,
+            @RequestBody @Valid HiveReplacementHistoryUpdateRequest request
+    ) {
+        hiveReplacementHistoryService.updateReplacementHistory(hiveId, historyId, userId, request);
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 public interface HiveReplacementHistoryRepository extends JpaRepository<HiveReplacementHistory, Long> {
@@ -22,4 +23,20 @@ public interface HiveReplacementHistoryRepository extends JpaRepository<HiveRepl
             LIMIT 1
             """)
     Optional<HiveReplacementHistory> findLatestByHiveId(Long hiveId);
+
+    @Query("""
+            SELECT h FROM HiveReplacementHistory h
+            WHERE h.hive.id = :hiveId AND h.replacedAt > :replacedAt
+            ORDER BY h.replacedAt ASC
+            LIMIT 1
+            """)
+    Optional<HiveReplacementHistory> findNewerByHiveId(Long hiveId, LocalDate replacedAt);
+
+    @Query("""
+            SELECT h FROM HiveReplacementHistory h
+            WHERE h.hive.id = :hiveId AND h.replacedAt < :replacedAt
+            ORDER BY h.replacedAt DESC
+            LIMIT 1
+            """)
+    Optional<HiveReplacementHistory> findOlderByHiveId(Long hiveId, LocalDate replacedAt);
 }

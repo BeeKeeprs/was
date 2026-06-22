@@ -20,7 +20,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
-
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
@@ -45,14 +44,15 @@ class HiveReplacementHistoryServiceTest {
     private User user;
     private Hive hive;
 
-    private static int seq = 0;
-
     @BeforeEach
     void setUp() {
-        seq++;
+        hiveReplacementHistoryRepository.deleteAll();
+        hiveRepository.deleteAll();
+        userRepository.deleteAll();
+
         user = userRepository.save(
                 User.builder()
-                        .username("hive-user-" + seq)
+                        .username("hive-user")
                         .password("password")
                         .name("테스트유저")
                         .businessRegistered(false)
@@ -60,7 +60,7 @@ class HiveReplacementHistoryServiceTest {
         );
         hive = hiveRepository.save(
                 Hive.builder()
-                        .macAddress(String.format("AA:BB:CC:DD:EE:%02X", seq))
+                        .macAddress("AA:BB:CC:DD:EE:FF")
                         .name("테스트 벌통")
                         .region("서울")
                         .location("강남구")

@@ -20,7 +20,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -55,6 +54,11 @@ class ProductReviewServiceTest {
 
     @BeforeEach
     void setUp() {
+        productReviewRepository.deleteAll();
+        productRepository.deleteAll();
+        businessRepository.deleteAll();
+        userRepository.deleteAll();
+
         User owner = User.builder().username("ownerUsername").password("ownerPassword").name("ownerName").businessRegistered(false).build();
         userRepository.save(owner);
 

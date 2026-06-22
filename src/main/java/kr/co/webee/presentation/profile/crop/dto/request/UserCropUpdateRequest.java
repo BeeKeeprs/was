@@ -35,7 +35,6 @@ public record UserCropUpdateRequest(
         Integer cultivationArea,
 
         @Schema(description = "정식일", example = "2024-02-25")
-        @NotNull
         LocalDate plantingDate,
 
         @Schema(description = "수확 시작일", example = "2024-05-10")

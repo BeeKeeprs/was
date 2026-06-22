@@ -21,7 +21,6 @@ import static kr.co.webee.domain.product.enums.Origin.DOMESTIC;
 import static kr.co.webee.domain.product.enums.TransactionMethod.OFFLINE;
 import static kr.co.webee.domain.product.enums.TransactionType.PURCHASE;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @RepositoryTest
 class ProductReviewRepositoryTest {

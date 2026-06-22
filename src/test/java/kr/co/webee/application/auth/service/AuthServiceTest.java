@@ -24,8 +24,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -85,8 +85,8 @@ class AuthServiceTest {
             //then
             verify(userRepository).save(userCaptor.capture());
 
-            assertEquals(request.username(), userCaptor.getValue().getUsername());
-            assertEquals(userCaptor.getValue().getName(), request.name());
+            assertThat(userCaptor.getValue().getUsername()).isEqualTo(request.username());
+            assertThat(userCaptor.getValue().getName()).isEqualTo(request.name());
         }
 
         @Test
@@ -97,11 +97,11 @@ class AuthServiceTest {
 
             when(userRepository.existsByUsername(request.username())).thenReturn(true);
 
-            //when
-            BusinessException exception = assertThrows(BusinessException.class, () -> authService.signup(request));
-
-            //then
-            assertEquals(ErrorType.ALREADY_EXIST_USERNAME, exception.getType());
+            //when - then
+            assertThatThrownBy(() -> authService.signup(request))
+                    .isInstanceOf(BusinessException.class)
+                    .extracting("type")
+                    .isEqualTo(ErrorType.ALREADY_EXIST_USERNAME);
         }
     }
 
@@ -125,11 +125,11 @@ class AuthServiceTest {
             SignInDto response = authService.signIn(request);
 
             //then
-            assertNotNull(response);
-            assertEquals(response.name(),"name");
+            assertThat(response).isNotNull();
+            assertThat(response.name()).isEqualTo("name");
             JwtTokenDto token = response.jwtTokenDto();
-            assertEquals("accessToken", token.accessToken());
-            assertEquals("refreshToken", token.refreshToken());
+            assertThat(token.accessToken()).isEqualTo("accessToken");
+            assertThat(token.refreshToken()).isEqualTo("refreshToken");
         }
 
         @Test
@@ -138,11 +138,11 @@ class AuthServiceTest {
             //given
             when(userRepository.findByUsername(request.username())).thenReturn(Optional.empty());
 
-            //when
-            BusinessException exception = assertThrows(BusinessException.class, () -> authService.signIn(request));
-
-            //then
-            assertEquals(exception.getType(), ErrorType.INVALID_CREDENTIALS);
+            //when - then
+            assertThatThrownBy(() -> authService.signIn(request))
+                    .isInstanceOf(BusinessException.class)
+                    .extracting("type")
+                    .isEqualTo(ErrorType.INVALID_CREDENTIALS);
         }
 
         @Test
@@ -152,11 +152,11 @@ class AuthServiceTest {
             when(userRepository.findByUsername(request.username())).thenReturn(Optional.of(user));
             when(passwordEncoder.matches(request.password(), user.getPassword())).thenReturn(false);
 
-            //when
-            BusinessException exception = assertThrows(BusinessException.class, () -> authService.signIn(request));
-
-            // then
-            assertEquals(exception.getType(), ErrorType.FAILED_AUTHENTICATION);
+            //when - then
+            assertThatThrownBy(() -> authService.signIn(request))
+                    .isInstanceOf(BusinessException.class)
+                    .extracting("type")
+                    .isEqualTo(ErrorType.FAILED_AUTHENTICATION);
         }
     }
 }

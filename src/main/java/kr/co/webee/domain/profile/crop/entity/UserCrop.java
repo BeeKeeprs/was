@@ -37,7 +37,7 @@ public class UserCrop extends BaseTimeEntity {
     @Column(nullable = false)
     private Integer cultivationArea;
 
-    @Column(nullable = false)
+    @Column
     private LocalDate plantingDate;
 
     @Column
@@ -63,7 +63,7 @@ public class UserCrop extends BaseTimeEntity {
         this.cultivationType = Objects.requireNonNull(cultivationType, "cultivationType은 null이 될 수 없습니다.");
         this.cultivationLocation =Objects.requireNonNull(cultivationLocation,"cultivationLocation은 null이 될 수 없습니다.");
         this.cultivationArea = Objects.requireNonNull(cultivationArea, "cultivationArea는 null이 될 수 없습니다.");
-        this.plantingDate = Objects.requireNonNull(plantingDate, "plantingDate는 null이 될 수 없습니다.");
+        this.plantingDate = plantingDate;
         this.harvestStartDate = Objects.requireNonNull(harvestStartDate, "harvestStartDate는 null이 될 수 없습니다.");
         this.harvestEndDate  = Objects.requireNonNull(harvestEndDate, "harvestEndDate는 null이 될 수 없습니다.");
         if (harvestStartDate.isAfter(harvestEndDate)) {
@@ -83,7 +83,7 @@ public class UserCrop extends BaseTimeEntity {
         this.variety = variety;
         this.cultivationType = Objects.requireNonNull(cultivationType, "cultivationType은 null이 될 수 없습니다.");
         this.cultivationArea = Objects.requireNonNull(cultivationArea, "cultivationArea는 null이 될 수 없습니다.");
-        this.plantingDate = Objects.requireNonNull(plantingDate, "plantingDate는 null이 될 수 없습니다.");
+        this.plantingDate = plantingDate;
         this.harvestStartDate = Objects.requireNonNull(harvestStartDate, "harvestStartDate는 null이 될 수 없습니다.");
         this.harvestEndDate  = Objects.requireNonNull(harvestEndDate, "harvestEndDate는 null이 될 수 없습니다.");
         if (harvestStartDate.isAfter(harvestEndDate)) {

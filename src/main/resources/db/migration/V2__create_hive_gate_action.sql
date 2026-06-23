@@ -5,7 +5,7 @@ CREATE TABLE hive_gate_action
     title          VARCHAR(255) NOT NULL,
     action_type    VARCHAR(20)  NOT NULL,
     action_time    TIME         NOT NULL,
-    repeat_enabled TINYINT(1)   NOT NULL DEFAULT 0,
+    repeat_enabled BOOLEAN      NOT NULL DEFAULT FALSE,
     created_at     DATETIME(6)  NOT NULL,
     modified_at    DATETIME(6),
     PRIMARY KEY (id),

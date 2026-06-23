@@ -123,12 +123,29 @@ class SignUp {
 }
 ```
 
-**픽스처 헬퍼**: 반복 생성 객체는 `private` 메서드로 분리.
+**픽스처 헬퍼**: 반복 생성 객체는 `TestFixture`를 우선 사용한다. 없으면 `private` 메서드로 분리.
+
+`TestFixture` 위치: `src/test/java/kr/co/webee/support/util/TestFixture.java`
+
+- 파라미터가 `null`이면 기본값을 사용하는 null-safe 팩토리 메서드 패턴
+- 여러 테스트 클래스에서 공유하는 엔티티 생성 로직을 중앙화
+
 ```java
-private User createUser() {
-    return User.builder().username("test").password("pw").name("이름").build();
+// TestFixture 사용 예시
+User user = TestFixture.createUser("gate-user");           // username 지정
+Hive hive = TestFixture.createHive(null, user);            // macAddress는 기본값
+HiveGateAction action = TestFixture.createHiveGateAction(null, GateActionType.OPEN_ONLY, null, hive);
+
+// TestFixture 메서드 구조
+public static Xxx createXxx(String field, ...) {
+    return Xxx.builder()
+            .field(field != null ? field : "기본값")
+            ...
+            .build();
 }
 ```
+
+새로운 엔티티에 대한 픽스처가 필요하면 `TestFixture`에 추가한다.
 
 ### 2-3. 레이어별 템플릿
 

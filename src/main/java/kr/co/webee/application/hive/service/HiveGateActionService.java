@@ -1,6 +1,7 @@
 package kr.co.webee.application.hive.service;
 
 import kr.co.webee.application.hive.dto.request.HiveGateActionRegisterRequest;
+import kr.co.webee.application.hive.dto.response.HiveGateActionDetailResponse;
 import kr.co.webee.application.hive.dto.response.HiveGateActionListResponse;
 import kr.co.webee.application.hive.dto.response.HiveGateActionRegisterResponse;
 import kr.co.webee.common.error.ErrorType;
@@ -40,5 +41,16 @@ public class HiveGateActionService {
         return hiveGateActionRepository.findAllByHiveId(hiveId).stream()
                 .map(HiveGateActionListResponse::from)
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public HiveGateActionDetailResponse getHiveGateAction(Long hiveId, Long userId, Long actionId) {
+        hiveRepository.findByIdAndUserId(hiveId, userId)
+                .orElseThrow(() -> new BusinessException(ErrorType.HIVE_NOT_FOUND));
+
+        HiveGateAction hiveGateAction = hiveGateActionRepository.findByIdAndHiveId(actionId, hiveId)
+                .orElseThrow(() -> new BusinessException(ErrorType.HIVE_GATE_ACTION_NOT_FOUND));
+
+        return HiveGateActionDetailResponse.from(hiveGateAction);
     }
 }

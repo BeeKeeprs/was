@@ -2,6 +2,7 @@ package kr.co.webee.presentation.hive.controller;
 
 import jakarta.validation.Valid;
 import kr.co.webee.application.hive.dto.request.HiveGateActionRegisterRequest;
+import kr.co.webee.application.hive.dto.response.HiveGateActionDetailResponse;
 import kr.co.webee.application.hive.dto.response.HiveGateActionListResponse;
 import kr.co.webee.application.hive.dto.response.HiveGateActionRegisterResponse;
 import kr.co.webee.application.hive.service.HiveGateActionService;
@@ -41,5 +42,15 @@ public class HiveGateActionController implements HiveGateActionApi {
             @UserId Long userId
     ) {
         return hiveGateActionService.getAllHiveGateActionList(hiveId, userId);
+    }
+
+    @Override
+    @GetMapping("/{hiveId}/gate/actions/{actionId}")
+    public HiveGateActionDetailResponse getHiveGateAction(
+            @PathVariable Long hiveId,
+            @PathVariable Long actionId,
+            @UserId Long userId
+    ) {
+        return hiveGateActionService.getHiveGateAction(hiveId, userId, actionId);
     }
 }

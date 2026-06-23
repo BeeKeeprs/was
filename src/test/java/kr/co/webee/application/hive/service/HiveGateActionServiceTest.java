@@ -2,6 +2,7 @@ package kr.co.webee.application.hive.service;
 
 import kr.co.webee.annotation.IntegrationTest;
 import kr.co.webee.application.hive.dto.request.HiveGateActionRegisterRequest;
+import kr.co.webee.application.hive.dto.response.HiveGateActionDetailResponse;
 import kr.co.webee.application.hive.dto.response.HiveGateActionListResponse;
 import kr.co.webee.application.hive.dto.response.HiveGateActionRegisterResponse;
 import kr.co.webee.common.error.ErrorType;
@@ -189,6 +190,71 @@ class HiveGateActionServiceTest {
                     .isInstanceOf(BusinessException.class)
                     .extracting("type")
                     .isEqualTo(ErrorType.HIVE_NOT_FOUND);
+        }
+    }
+
+    @Nested
+    @DisplayName("개폐기 동작 단건 조회")
+    class GetHiveGateAction {
+
+        @Test
+        @DisplayName("개폐기 동작을 단건 조회한다.")
+        void getHiveGateAction() {
+            //given
+            HiveGateAction saved = hiveGateActionRepository.save(
+                    TestFixture.createHiveGateAction("아침 열기", GateActionType.OPEN_ONLY, LocalTime.of(8, 0), hive));
+
+            //when
+            HiveGateActionDetailResponse result = hiveGateActionService.getHiveGateAction(hive.getId(), user.getId(), saved.getId());
+
+            //then
+            assertThat(result.id()).isEqualTo(saved.getId());
+            assertThat(result.title()).isEqualTo("아침 열기");
+            assertThat(result.actionType()).isEqualTo(GateActionType.OPEN_ONLY);
+            assertThat(result.actionTime()).isEqualTo(LocalTime.of(8, 0));
+        }
+
+        @Test
+        @DisplayName("존재하지 않는 개폐기 동작을 조회하려는 경우 예외가 발생한다.")
+        void getHiveGateActionNotFound() {
+            //given
+            Long notFoundActionId = -1L;
+
+            //when - then
+            assertThatThrownBy(() -> hiveGateActionService.getHiveGateAction(hive.getId(), user.getId(), notFoundActionId))
+                    .isInstanceOf(BusinessException.class)
+                    .extracting("type")
+                    .isEqualTo(ErrorType.HIVE_GATE_ACTION_NOT_FOUND);
+        }
+
+        @Test
+        @DisplayName("존재하지 않는 벌통의 개폐기 동작을 조회하려는 경우 예외가 발생한다.")
+        void getHiveGateActionWithNotFoundHive() {
+            //given
+            Long notFoundHiveId = -1L;
+            HiveGateAction saved = hiveGateActionRepository.save(
+                    TestFixture.createHiveGateAction("아침 열기", GateActionType.OPEN_ONLY, LocalTime.of(8, 0), hive));
+
+            //when - then
+            assertThatThrownBy(() -> hiveGateActionService.getHiveGateAction(notFoundHiveId, user.getId(), saved.getId()))
+                    .isInstanceOf(BusinessException.class)
+                    .extracting("type")
+                    .isEqualTo(ErrorType.HIVE_NOT_FOUND);
+        }
+
+        @Test
+        @DisplayName("다른 벌통의 개폐기 동작을 조회하려는 경우 예외가 발생한다.")
+        void getHiveGateActionFromOtherHive() {
+            //given
+            Hive otherHive = hiveRepository.save(TestFixture.createHive(null, user));
+            HiveGateAction action = hiveGateActionRepository.save(
+                    TestFixture.createHiveGateAction("아침 열기", GateActionType.OPEN_ONLY, LocalTime.of(8, 0), otherHive));
+
+            //when - then
+            assertThatThrownBy(() -> hiveGateActionService.getHiveGateAction(hive.getId(), user.getId(), action.getId()))
+                    .isInstanceOf(BusinessException.class)
+                    .extracting("type")
+                    .isEqualTo(ErrorType.HIVE_GATE_ACTION_NOT_FOUND);
         }
     }
 }

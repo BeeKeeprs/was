@@ -2,10 +2,10 @@ package kr.co.webee.domain.hive.repository;
 
 import kr.co.webee.domain.hive.entity.HiveControlSchedule;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -29,4 +29,8 @@ public interface HiveControlScheduleRepository extends JpaRepository<HiveControl
               AND s.endTime > :now
             """)
     boolean existsActiveSchedule(@Param("hiveId") Long hiveId, @Param("now") LocalTime now);
+
+    @Modifying
+    @Query("DELETE FROM HiveControlSchedule s WHERE s.hive.id = :hiveId")
+    void deleteAllByHiveId(@Param("hiveId") Long hiveId);
 }

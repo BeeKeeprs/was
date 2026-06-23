@@ -48,9 +48,9 @@ class HiveGateActionServiceTest {
 
     @BeforeEach
     void setUp() {
-        hiveGateActionRepository.deleteAll();
-        hiveRepository.deleteAll();
-        userRepository.deleteAll();
+        hiveGateActionRepository.deleteAllInBatch();
+        hiveRepository.deleteAllInBatch();
+        userRepository.deleteAllInBatch();
 
         user = userRepository.save(TestFixture.createUser("gate-user"));
         hive = hiveRepository.save(TestFixture.createHive(null, user));

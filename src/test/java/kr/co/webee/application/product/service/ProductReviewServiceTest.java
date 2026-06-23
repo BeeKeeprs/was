@@ -54,10 +54,10 @@ class ProductReviewServiceTest {
 
     @BeforeEach
     void setUp() {
-        productReviewRepository.deleteAll();
-        productRepository.deleteAll();
-        businessRepository.deleteAll();
-        userRepository.deleteAll();
+        productReviewRepository.deleteAllInBatch();
+        productRepository.deleteAllInBatch();
+        businessRepository.deleteAllInBatch();
+        userRepository.deleteAllInBatch();
 
         User owner = User.builder().username("ownerUsername").password("ownerPassword").name("ownerName").businessRegistered(false).build();
         userRepository.save(owner);

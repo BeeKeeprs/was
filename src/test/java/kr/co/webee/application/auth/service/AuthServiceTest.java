@@ -33,7 +33,7 @@ class AuthServiceTest {
 
     @BeforeEach
     void cleanUp() {
-        userRepository.deleteAll();
+        userRepository.deleteAllInBatch();
     }
 
     @Nested

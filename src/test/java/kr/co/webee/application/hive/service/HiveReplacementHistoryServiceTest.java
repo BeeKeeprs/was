@@ -46,9 +46,9 @@ class HiveReplacementHistoryServiceTest {
 
     @BeforeEach
     void setUp() {
-        hiveReplacementHistoryRepository.deleteAll();
-        hiveRepository.deleteAll();
-        userRepository.deleteAll();
+        hiveReplacementHistoryRepository.deleteAllInBatch();
+        hiveRepository.deleteAllInBatch();
+        userRepository.deleteAllInBatch();
 
         user = userRepository.save(
                 User.builder()

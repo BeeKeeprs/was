@@ -127,4 +127,19 @@ public interface HiveGateActionApi {
             )
             @RequestBody @Valid HiveGateActionUpdateRequest request
     );
+
+    @Operation(summary = "개폐기 동작 삭제", description = "벌통에 등록된 개폐기 동작을 삭제합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "삭제 성공"),
+    })
+    @ApiDocsErrorType({ErrorType.HIVE_NOT_FOUND, ErrorType.HIVE_GATE_ACTION_NOT_FOUND})
+    String deleteHiveGateAction(
+            @Parameter(description = "벌통 ID", example = "1", required = true)
+            @PathVariable Long hiveId,
+
+            @Parameter(description = "개폐기 동작 ID", example = "1", required = true)
+            @PathVariable Long actionId,
+
+            @Parameter(hidden = true) @UserId Long userId
+    );
 }

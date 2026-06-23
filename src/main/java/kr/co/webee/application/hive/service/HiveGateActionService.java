@@ -67,4 +67,15 @@ public class HiveGateActionService {
 
         return HiveGateActionDetailResponse.from(hiveGateAction);
     }
+
+    @Transactional
+    public void deleteHiveGateAction(Long hiveId, Long userId, Long actionId) {
+        hiveRepository.findByIdAndUserId(hiveId, userId)
+                .orElseThrow(() -> new BusinessException(ErrorType.HIVE_NOT_FOUND));
+
+        HiveGateAction hiveGateAction = hiveGateActionRepository.findByIdAndHiveId(actionId, hiveId)
+                .orElseThrow(() -> new BusinessException(ErrorType.HIVE_GATE_ACTION_NOT_FOUND));
+
+        hiveGateActionRepository.delete(hiveGateAction);
+    }
 }

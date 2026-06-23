@@ -10,6 +10,7 @@ import kr.co.webee.application.hive.service.HiveGateActionService;
 import kr.co.webee.presentation.hive.api.HiveGateActionApi;
 import kr.co.webee.presentation.support.annotation.UserId;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -65,5 +66,16 @@ public class HiveGateActionController implements HiveGateActionApi {
             @RequestBody @Valid HiveGateActionUpdateRequest request
     ) {
         return hiveGateActionService.updateHiveGateAction(hiveId, userId, actionId, request);
+    }
+
+    @Override
+    @DeleteMapping("/{hiveId}/gate/actions/{actionId}")
+    public String deleteHiveGateAction(
+            @PathVariable Long hiveId,
+            @PathVariable Long actionId,
+            @UserId Long userId
+    ) {
+        hiveGateActionService.deleteHiveGateAction(hiveId, userId, actionId);
+        return "OK";
     }
 }

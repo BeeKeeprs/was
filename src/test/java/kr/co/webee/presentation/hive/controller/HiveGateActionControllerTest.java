@@ -33,6 +33,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -240,6 +241,22 @@ class HiveGateActionControllerTest {
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.code").value(ErrorType.FAILED_VALIDATION.getCode()))
+                    .andDo(print());
+        }
+    }
+
+    @Nested
+    @DisplayName("개폐기 동작 삭제")
+    class DeleteHiveGateAction {
+
+        @Test
+        @DisplayName("개폐기 동작을 삭제한다.")
+        void deleteHiveGateAction() throws Exception {
+            //when - then
+            mockMvc.perform(delete("/api/v1/hives/{hiveId}/gate/actions/{actionId}", 1L, 1L))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.message").value("요청이 성공적으로 처리되었습니다."))
+                    .andExpect(jsonPath("$.data").value("OK"))
                     .andDo(print());
         }
     }

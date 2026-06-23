@@ -335,4 +335,66 @@ class HiveGateActionServiceTest {
                     .isEqualTo(ErrorType.HIVE_NOT_FOUND);
         }
     }
+
+    @Nested
+    @DisplayName("개폐기 동작 삭제")
+    class DeleteHiveGateAction {
+
+        @Test
+        @DisplayName("개폐기 동작을 삭제한다.")
+        void deleteHiveGateAction() {
+            //given
+            HiveGateAction saved = hiveGateActionRepository.save(
+                    TestFixture.createHiveGateAction("아침 열기", GateActionType.OPEN_ONLY, LocalTime.of(8, 0), hive));
+
+            //when
+            hiveGateActionService.deleteHiveGateAction(hive.getId(), user.getId(), saved.getId());
+
+            //then
+            assertThat(hiveGateActionRepository.findById(saved.getId())).isEmpty();
+        }
+
+        @Test
+        @DisplayName("존재하지 않는 개폐기 동작을 삭제하려는 경우 예외가 발생한다.")
+        void deleteHiveGateActionNotFound() {
+            //given
+            Long notFoundActionId = -1L;
+
+            //when - then
+            assertThatThrownBy(() -> hiveGateActionService.deleteHiveGateAction(hive.getId(), user.getId(), notFoundActionId))
+                    .isInstanceOf(BusinessException.class)
+                    .extracting("type")
+                    .isEqualTo(ErrorType.HIVE_GATE_ACTION_NOT_FOUND);
+        }
+
+        @Test
+        @DisplayName("존재하지 않는 벌통의 개폐기 동작을 삭제하려는 경우 예외가 발생한다.")
+        void deleteHiveGateActionWithNotFoundHive() {
+            //given
+            Long notFoundHiveId = -1L;
+            HiveGateAction saved = hiveGateActionRepository.save(
+                    TestFixture.createHiveGateAction("아침 열기", GateActionType.OPEN_ONLY, LocalTime.of(8, 0), hive));
+
+            //when - then
+            assertThatThrownBy(() -> hiveGateActionService.deleteHiveGateAction(notFoundHiveId, user.getId(), saved.getId()))
+                    .isInstanceOf(BusinessException.class)
+                    .extracting("type")
+                    .isEqualTo(ErrorType.HIVE_NOT_FOUND);
+        }
+
+        @Test
+        @DisplayName("다른 사용자의 벌통에 있는 개폐기 동작을 삭제하려는 경우 예외가 발생한다.")
+        void deleteHiveGateActionWithOtherUserHive() {
+            //given
+            User otherUser = userRepository.save(TestFixture.createUser("other-user"));
+            HiveGateAction saved = hiveGateActionRepository.save(
+                    TestFixture.createHiveGateAction("아침 열기", GateActionType.OPEN_ONLY, LocalTime.of(8, 0), hive));
+
+            //when - then
+            assertThatThrownBy(() -> hiveGateActionService.deleteHiveGateAction(hive.getId(), otherUser.getId(), saved.getId()))
+                    .isInstanceOf(BusinessException.class)
+                    .extracting("type")
+                    .isEqualTo(ErrorType.HIVE_NOT_FOUND);
+        }
+    }
 }

@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kr.co.webee.application.hive.dto.request.HiveGateActionRegisterRequest;
+import kr.co.webee.application.hive.dto.response.HiveGateActionDetailResponse;
 import kr.co.webee.application.hive.dto.response.HiveGateActionListResponse;
 import kr.co.webee.application.hive.dto.response.HiveGateActionRegisterResponse;
 import kr.co.webee.common.error.ErrorType;
@@ -68,6 +69,28 @@ public interface HiveGateActionApi {
     List<HiveGateActionListResponse> getAllHiveGateActionList(
             @Parameter(description = "벌통 ID", example = "1", required = true)
             @PathVariable Long hiveId,
+
+            @Parameter(hidden = true) @UserId Long userId
+    );
+
+    @Operation(summary = "개폐기 동작 단건 조회", description = "벌통에 등록된 특정 개폐기 동작을 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "조회 성공",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = HiveGateActionDetailResponse.class)
+                    )
+            ),
+    })
+    @ApiDocsErrorType({ErrorType.HIVE_NOT_FOUND, ErrorType.HIVE_GATE_ACTION_NOT_FOUND})
+    HiveGateActionDetailResponse getHiveGateAction(
+            @Parameter(description = "벌통 ID", example = "1", required = true)
+            @PathVariable Long hiveId,
+
+            @Parameter(description = "개폐기 동작 ID", example = "1", required = true)
+            @PathVariable Long actionId,
 
             @Parameter(hidden = true) @UserId Long userId
     );

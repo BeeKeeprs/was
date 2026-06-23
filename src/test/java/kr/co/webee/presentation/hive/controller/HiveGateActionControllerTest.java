@@ -2,6 +2,7 @@ package kr.co.webee.presentation.hive.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.webee.application.hive.dto.request.HiveGateActionRegisterRequest;
+import kr.co.webee.application.hive.dto.response.HiveGateActionDetailResponse;
 import kr.co.webee.application.hive.dto.response.HiveGateActionListResponse;
 import kr.co.webee.application.hive.dto.response.HiveGateActionRegisterResponse;
 import kr.co.webee.application.hive.service.HiveGateActionService;
@@ -169,6 +170,29 @@ class HiveGateActionControllerTest {
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.data").isArray())
                     .andExpect(jsonPath("$.data.length()").value(0))
+                    .andDo(print());
+        }
+    }
+
+    @Nested
+    @DisplayName("개폐기 동작 단건 조회")
+    class GetHiveGateAction {
+
+        @Test
+        @DisplayName("개폐기 동작을 단건 조회한다.")
+        void getHiveGateAction() throws Exception {
+            //given
+            HiveGateActionDetailResponse response = new HiveGateActionDetailResponse(
+                    1L, "아침 열기", GateActionType.OPEN_ONLY, LocalTime.of(8, 0), true
+            );
+            when(hiveGateActionService.getHiveGateAction(anyLong(), anyLong(), anyLong())).thenReturn(response);
+
+            //when - then
+            mockMvc.perform(get("/api/v1/hives/{hiveId}/gate/actions/{actionId}", 1L, 1L))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.message").value("요청이 성공적으로 처리되었습니다."))
+                    .andExpect(jsonPath("$.data.id").value(1L))
+                    .andExpect(jsonPath("$.data.title").value("아침 열기"))
                     .andDo(print());
         }
     }

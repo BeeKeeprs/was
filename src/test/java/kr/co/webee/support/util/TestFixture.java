@@ -1,10 +1,18 @@
 package kr.co.webee.support.util;
 
 import kr.co.webee.domain.hive.entity.Hive;
+import kr.co.webee.domain.hive.entity.HiveBeeCount;
+import kr.co.webee.domain.hive.entity.HiveControl;
+import kr.co.webee.domain.hive.entity.HiveControlSchedule;
 import kr.co.webee.domain.hive.entity.HiveGateAction;
+import kr.co.webee.domain.hive.entity.HiveReplacementHistory;
+import kr.co.webee.domain.hive.entity.HiveTelemetry;
+import kr.co.webee.domain.hive.type.ControlType;
 import kr.co.webee.domain.hive.type.GateActionType;
 import kr.co.webee.domain.user.entity.User;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class TestFixture {
@@ -35,6 +43,48 @@ public class TestFixture {
                 .actionType(actionType != null ? actionType : GateActionType.OPEN_ONLY)
                 .actionTime(actionTime != null ? actionTime : LocalTime.of(9, 0))
                 .repeatEnabled(false)
+                .build();
+    }
+
+    public static HiveBeeCount createHiveBeeCount(Hive hive) {
+        return HiveBeeCount.builder()
+                .hive(hive)
+                .count(100)
+                .recordedAt(LocalDateTime.now())
+                .build();
+    }
+
+    public static HiveControl createHiveControl(ControlType type, Hive hive) {
+        return HiveControl.builder()
+                .hive(hive)
+                .type(type != null ? type : ControlType.FAN)
+                .autoEnabled(false)
+                .manualEnabled(false)
+                .isOn(false)
+                .build();
+    }
+
+    public static HiveControlSchedule createHiveControlSchedule(Hive hive) {
+        return HiveControlSchedule.builder()
+                .hive(hive)
+                .startTime(LocalTime.of(8, 0))
+                .endTime(LocalTime.of(18, 0))
+                .enabled(true)
+                .build();
+    }
+
+    public static HiveReplacementHistory createHiveReplacementHistory(Hive hive) {
+        return HiveReplacementHistory.builder()
+                .hive(hive)
+                .replacedAt(LocalDate.now())
+                .build();
+    }
+
+    public static HiveTelemetry createHiveTelemetry(Hive hive) {
+        return HiveTelemetry.builder()
+                .hive(hive)
+                .internalTemperature(25.0)
+                .recordedAt(LocalDateTime.now())
                 .build();
     }
 }

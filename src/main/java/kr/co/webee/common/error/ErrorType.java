@@ -65,6 +65,7 @@ public enum ErrorType {
     HIVE_AUTO_CONTROL_BLOCKED_BY_SCHEDULE(CONFLICT, DEBUG, "HIVE_007", "자동제어 스케줄이 진행 중입니다"),
     HIVE_REPLACEMENT_HISTORY_NOT_FOUND(NOT_FOUND, DEBUG, "HIVE_008", "벌통 교체 기록을 찾을 수 없습니다"),
     HIVE_REPLACEMENT_HISTORY_INVALID_DATE(BAD_REQUEST, DEBUG, "HIVE_009", "교체 일자는 가장 최근 교체 일자 이후여야 합니다"),
+    HIVE_GATE_ACTION_NOT_FOUND(NOT_FOUND, DEBUG, "HIVE_010", "개폐기 동작을 찾을 수 없습니다"),
 
     // PostErrorType
     POST_NOT_FOUND(NOT_FOUND, DEBUG, "POST_001", "게시글을 찾을 수 없습니다"),

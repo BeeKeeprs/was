@@ -4,8 +4,9 @@ import kr.co.webee.domain.hive.entity.HiveReplacementHistory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
-
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -39,4 +40,8 @@ public interface HiveReplacementHistoryRepository extends JpaRepository<HiveRepl
             LIMIT 1
             """)
     Optional<HiveReplacementHistory> findOlderByHiveId(Long hiveId, LocalDate replacedAt);
+
+    @Modifying
+    @Query("DELETE FROM HiveReplacementHistory h WHERE h.hive.id = :hiveId")
+    void deleteAllByHiveId(@Param("hiveId") Long hiveId);
 }

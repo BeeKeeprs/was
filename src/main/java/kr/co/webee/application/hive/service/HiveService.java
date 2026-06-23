@@ -3,7 +3,13 @@ package kr.co.webee.application.hive.service;
 import kr.co.webee.common.error.ErrorType;
 import kr.co.webee.common.error.exception.BusinessException;
 import kr.co.webee.domain.hive.entity.Hive;
+import kr.co.webee.domain.hive.repository.HiveBeeCountRepository;
+import kr.co.webee.domain.hive.repository.HiveControlRepository;
+import kr.co.webee.domain.hive.repository.HiveControlScheduleRepository;
+import kr.co.webee.domain.hive.repository.HiveGateActionRepository;
 import kr.co.webee.domain.hive.repository.HiveRepository;
+import kr.co.webee.domain.hive.repository.HiveReplacementHistoryRepository;
+import kr.co.webee.domain.hive.repository.HiveTelemetryRepository;
 import kr.co.webee.domain.user.entity.User;
 import kr.co.webee.domain.user.repository.UserRepository;
 import kr.co.webee.presentation.hive.dto.request.HiveRegisterRequest;
@@ -22,6 +28,12 @@ import java.util.List;
 public class HiveService {
     private final HiveRepository hiveRepository;
     private final UserRepository userRepository;
+    private final HiveTelemetryRepository hiveTelemetryRepository;
+    private final HiveBeeCountRepository hiveBeeCountRepository;
+    private final HiveControlRepository hiveControlRepository;
+    private final HiveControlScheduleRepository hiveControlScheduleRepository;
+    private final HiveGateActionRepository hiveGateActionRepository;
+    private final HiveReplacementHistoryRepository hiveReplacementHistoryRepository;
 
     @Transactional
     public HiveRegisterResponse registerHive(HiveRegisterRequest request, Long userId) {
@@ -64,6 +76,12 @@ public class HiveService {
         Hive hive = hiveRepository.findByIdAndUserId(hiveId, userId)
                 .orElseThrow(() -> new BusinessException(ErrorType.HIVE_NOT_FOUND));
 
+        hiveTelemetryRepository.deleteAllByHiveId(hiveId);
+        hiveBeeCountRepository.deleteAllByHiveId(hiveId);
+        hiveControlRepository.deleteAllByHiveId(hiveId);
+        hiveControlScheduleRepository.deleteAllByHiveId(hiveId);
+        hiveGateActionRepository.deleteAllByHiveId(hiveId);
+        hiveReplacementHistoryRepository.deleteAllByHiveId(hiveId);
         hiveRepository.delete(hive);
     }
 }

@@ -2,6 +2,7 @@ package kr.co.webee.application.hive.service;
 
 import kr.co.webee.annotation.IntegrationTest;
 import kr.co.webee.application.hive.dto.request.HiveGateActionRegisterRequest;
+import kr.co.webee.application.hive.dto.response.HiveGateActionListResponse;
 import kr.co.webee.application.hive.dto.response.HiveGateActionRegisterResponse;
 import kr.co.webee.common.error.ErrorType;
 import kr.co.webee.common.error.exception.BusinessException;
@@ -144,6 +145,50 @@ class HiveGateActionServiceTest {
 
             //then
             assertThat(actions).hasSize(2);
+        }
+    }
+
+    @Nested
+    @DisplayName("개폐기 동작 목록 조회")
+    class GetAllHiveGateActionList {
+
+        @Test
+        @DisplayName("벌통의 개폐기 동작 목록을 조회한다.")
+        void getAllHiveGateActionList() {
+            //given
+            hiveGateActionRepository.save(TestFixture.createHiveGateAction("아침 열기", GateActionType.OPEN_ONLY, LocalTime.of(8, 0), hive));
+            hiveGateActionRepository.save(TestFixture.createHiveGateAction("저녁 닫기", GateActionType.CLOSE_ONLY, LocalTime.of(20, 0), hive));
+
+            //when
+            List<HiveGateActionListResponse> result = hiveGateActionService.getAllHiveGateActionList(hive.getId(), user.getId());
+
+            //then
+            assertThat(result).hasSize(2)
+                    .extracting("title")
+                    .containsExactlyInAnyOrder("아침 열기", "저녁 닫기");
+        }
+
+        @Test
+        @DisplayName("등록된 개폐기 동작이 없으면 빈 목록을 반환한다.")
+        void getAllHiveGateActionListEmpty() {
+            //when
+            List<HiveGateActionListResponse> result = hiveGateActionService.getAllHiveGateActionList(hive.getId(), user.getId());
+
+            //then
+            assertThat(result).isEmpty();
+        }
+
+        @Test
+        @DisplayName("존재하지 않는 벌통의 개폐기 동작 목록을 조회하려는 경우 예외가 발생한다.")
+        void getAllHiveGateActionListWithNotFoundHive() {
+            //given
+            Long notFoundHiveId = -1L;
+
+            //when - then
+            assertThatThrownBy(() -> hiveGateActionService.getAllHiveGateActionList(notFoundHiveId, user.getId()))
+                    .isInstanceOf(BusinessException.class)
+                    .extracting("type")
+                    .isEqualTo(ErrorType.HIVE_NOT_FOUND);
         }
     }
 }

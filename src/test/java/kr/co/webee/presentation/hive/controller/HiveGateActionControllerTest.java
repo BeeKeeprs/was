@@ -2,6 +2,7 @@ package kr.co.webee.presentation.hive.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.webee.application.hive.dto.request.HiveGateActionRegisterRequest;
+import kr.co.webee.application.hive.dto.response.HiveGateActionListResponse;
 import kr.co.webee.application.hive.dto.response.HiveGateActionRegisterResponse;
 import kr.co.webee.application.hive.service.HiveGateActionService;
 import kr.co.webee.common.error.ErrorType;
@@ -25,10 +26,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.time.LocalTime;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -128,6 +131,44 @@ class HiveGateActionControllerTest {
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.code").value(ErrorType.FAILED_VALIDATION.getCode()))
+                    .andDo(print());
+        }
+    }
+
+    @Nested
+    @DisplayName("개폐기 동작 목록 조회")
+    class GetAllHiveGateActionList {
+
+        @Test
+        @DisplayName("개폐기 동작 목록을 조회한다.")
+        void getAllHiveGateActionList() throws Exception {
+            //given
+            List<HiveGateActionListResponse> response = List.of(
+                    new HiveGateActionListResponse(1L, "아침 열기", GateActionType.OPEN_ONLY, LocalTime.of(8, 0), true),
+                    new HiveGateActionListResponse(2L, "저녁 닫기", GateActionType.CLOSE_ONLY, LocalTime.of(20, 0), false)
+            );
+            when(hiveGateActionService.getAllHiveGateActionList(anyLong(), anyLong())).thenReturn(response);
+
+            //when - then
+            mockMvc.perform(get("/api/v1/hives/{hiveId}/gate/actions", 1L))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.message").value("요청이 성공적으로 처리되었습니다."))
+                    .andExpect(jsonPath("$.data").isArray())
+                    .andExpect(jsonPath("$.data.length()").value(2))
+                    .andDo(print());
+        }
+
+        @Test
+        @DisplayName("등록된 개폐기 동작이 없으면 빈 배열을 반환한다.")
+        void getAllHiveGateActionListEmpty() throws Exception {
+            //given
+            when(hiveGateActionService.getAllHiveGateActionList(anyLong(), anyLong())).thenReturn(List.of());
+
+            //when - then
+            mockMvc.perform(get("/api/v1/hives/{hiveId}/gate/actions", 1L))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.data").isArray())
+                    .andExpect(jsonPath("$.data.length()").value(0))
                     .andDo(print());
         }
     }

@@ -2,6 +2,7 @@ package kr.co.webee.application.hive.service;
 
 import kr.co.webee.annotation.IntegrationTest;
 import kr.co.webee.application.hive.dto.request.HiveGateActionRegisterRequest;
+import kr.co.webee.application.hive.dto.request.HiveGateActionUpdateRequest;
 import kr.co.webee.application.hive.dto.response.HiveGateActionDetailResponse;
 import kr.co.webee.application.hive.dto.response.HiveGateActionListResponse;
 import kr.co.webee.application.hive.dto.response.HiveGateActionRegisterResponse;
@@ -255,6 +256,83 @@ class HiveGateActionServiceTest {
                     .isInstanceOf(BusinessException.class)
                     .extracting("type")
                     .isEqualTo(ErrorType.HIVE_GATE_ACTION_NOT_FOUND);
+        }
+    }
+
+    @Nested
+    @DisplayName("개폐기 동작 수정")
+    class UpdateHiveGateAction {
+
+        @Test
+        @DisplayName("개폐기 동작을 수정한다.")
+        void updateHiveGateAction() {
+            //given
+            HiveGateAction saved = hiveGateActionRepository.save(
+                    TestFixture.createHiveGateAction("아침 열기", GateActionType.OPEN_ONLY, LocalTime.of(8, 0), hive));
+            HiveGateActionUpdateRequest request = new HiveGateActionUpdateRequest(
+                    "저녁 닫기", GateActionType.CLOSE_ONLY, LocalTime.of(20, 0), true
+            );
+
+            //when
+            HiveGateActionDetailResponse result = hiveGateActionService.updateHiveGateAction(hive.getId(), user.getId(), saved.getId(), request);
+
+            //then
+            assertThat(result.title()).isEqualTo("저녁 닫기");
+            assertThat(result.actionType()).isEqualTo(GateActionType.CLOSE_ONLY);
+            assertThat(result.actionTime()).isEqualTo(LocalTime.of(20, 0));
+            assertThat(result.repeatEnabled()).isTrue();
+        }
+
+        @Test
+        @DisplayName("존재하지 않는 개폐기 동작을 수정하려는 경우 예외가 발생한다.")
+        void updateHiveGateActionNotFound() {
+            //given
+            Long notFoundActionId = -1L;
+            HiveGateActionUpdateRequest request = new HiveGateActionUpdateRequest(
+                    "저녁 닫기", GateActionType.CLOSE_ONLY, LocalTime.of(20, 0), false
+            );
+
+            //when - then
+            assertThatThrownBy(() -> hiveGateActionService.updateHiveGateAction(hive.getId(), user.getId(), notFoundActionId, request))
+                    .isInstanceOf(BusinessException.class)
+                    .extracting("type")
+                    .isEqualTo(ErrorType.HIVE_GATE_ACTION_NOT_FOUND);
+        }
+
+        @Test
+        @DisplayName("존재하지 않는 벌통의 개폐기 동작을 수정하려는 경우 예외가 발생한다.")
+        void updateHiveGateActionWithNotFoundHive() {
+            //given
+            Long notFoundHiveId = -1L;
+            HiveGateAction saved = hiveGateActionRepository.save(
+                    TestFixture.createHiveGateAction("아침 열기", GateActionType.OPEN_ONLY, LocalTime.of(8, 0), hive));
+            HiveGateActionUpdateRequest request = new HiveGateActionUpdateRequest(
+                    "저녁 닫기", GateActionType.CLOSE_ONLY, LocalTime.of(20, 0), false
+            );
+
+            //when - then
+            assertThatThrownBy(() -> hiveGateActionService.updateHiveGateAction(notFoundHiveId, user.getId(), saved.getId(), request))
+                    .isInstanceOf(BusinessException.class)
+                    .extracting("type")
+                    .isEqualTo(ErrorType.HIVE_NOT_FOUND);
+        }
+
+        @Test
+        @DisplayName("다른 사용자의 벌통에 있는 개폐기 동작을 수정하려는 경우 예외가 발생한다.")
+        void updateHiveGateActionWithOtherUserHive() {
+            //given
+            User otherUser = userRepository.save(TestFixture.createUser("other-user"));
+            HiveGateAction saved = hiveGateActionRepository.save(
+                    TestFixture.createHiveGateAction("아침 열기", GateActionType.OPEN_ONLY, LocalTime.of(8, 0), hive));
+            HiveGateActionUpdateRequest request = new HiveGateActionUpdateRequest(
+                    "저녁 닫기", GateActionType.CLOSE_ONLY, LocalTime.of(20, 0), false
+            );
+
+            //when - then
+            assertThatThrownBy(() -> hiveGateActionService.updateHiveGateAction(hive.getId(), otherUser.getId(), saved.getId(), request))
+                    .isInstanceOf(BusinessException.class)
+                    .extracting("type")
+                    .isEqualTo(ErrorType.HIVE_NOT_FOUND);
         }
     }
 }

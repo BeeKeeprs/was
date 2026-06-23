@@ -2,6 +2,7 @@ package kr.co.webee.presentation.hive.controller;
 
 import jakarta.validation.Valid;
 import kr.co.webee.application.hive.dto.request.HiveGateActionRegisterRequest;
+import kr.co.webee.application.hive.dto.request.HiveGateActionUpdateRequest;
 import kr.co.webee.application.hive.dto.response.HiveGateActionDetailResponse;
 import kr.co.webee.application.hive.dto.response.HiveGateActionListResponse;
 import kr.co.webee.application.hive.dto.response.HiveGateActionRegisterResponse;
@@ -10,6 +11,7 @@ import kr.co.webee.presentation.hive.api.HiveGateActionApi;
 import kr.co.webee.presentation.support.annotation.UserId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -52,5 +54,16 @@ public class HiveGateActionController implements HiveGateActionApi {
             @UserId Long userId
     ) {
         return hiveGateActionService.getHiveGateAction(hiveId, userId, actionId);
+    }
+
+    @Override
+    @PatchMapping("/{hiveId}/gate/actions/{actionId}")
+    public HiveGateActionDetailResponse updateHiveGateAction(
+            @PathVariable Long hiveId,
+            @PathVariable Long actionId,
+            @UserId Long userId,
+            @RequestBody @Valid HiveGateActionUpdateRequest request
+    ) {
+        return hiveGateActionService.updateHiveGateAction(hiveId, userId, actionId, request);
     }
 }

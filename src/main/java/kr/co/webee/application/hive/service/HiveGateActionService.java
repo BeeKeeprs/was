@@ -1,6 +1,7 @@
 package kr.co.webee.application.hive.service;
 
 import kr.co.webee.application.hive.dto.request.HiveGateActionRegisterRequest;
+import kr.co.webee.application.hive.dto.request.HiveGateActionUpdateRequest;
 import kr.co.webee.application.hive.dto.response.HiveGateActionDetailResponse;
 import kr.co.webee.application.hive.dto.response.HiveGateActionListResponse;
 import kr.co.webee.application.hive.dto.response.HiveGateActionRegisterResponse;
@@ -50,6 +51,19 @@ public class HiveGateActionService {
 
         HiveGateAction hiveGateAction = hiveGateActionRepository.findByIdAndHiveId(actionId, hiveId)
                 .orElseThrow(() -> new BusinessException(ErrorType.HIVE_GATE_ACTION_NOT_FOUND));
+
+        return HiveGateActionDetailResponse.from(hiveGateAction);
+    }
+
+    @Transactional
+    public HiveGateActionDetailResponse updateHiveGateAction(Long hiveId, Long userId, Long actionId, HiveGateActionUpdateRequest request) {
+        hiveRepository.findByIdAndUserId(hiveId, userId)
+                .orElseThrow(() -> new BusinessException(ErrorType.HIVE_NOT_FOUND));
+
+        HiveGateAction hiveGateAction = hiveGateActionRepository.findByIdAndHiveId(actionId, hiveId)
+                .orElseThrow(() -> new BusinessException(ErrorType.HIVE_GATE_ACTION_NOT_FOUND));
+
+        hiveGateAction.update(request.title(), request.actionType(), request.actionTime(), request.repeatEnabled());
 
         return HiveGateActionDetailResponse.from(hiveGateAction);
     }

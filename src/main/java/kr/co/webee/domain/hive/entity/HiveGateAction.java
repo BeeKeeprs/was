@@ -58,4 +58,15 @@ public class HiveGateAction extends BaseTimeEntity {
         this.repeatEnabled = repeatEnabled;
         this.hive = Objects.requireNonNull(hive, "hive는 null이 될 수 없습니다.");
     }
+
+    public void update(String title, GateActionType actionType, LocalTime actionTime, boolean repeatEnabled) {
+        if (!StringUtils.hasText(title)) {
+            throw new IllegalArgumentException("title은 null이거나 빈 문자열이 될 수 없습니다.");
+        }
+
+        this.title = title;
+        this.actionType = Objects.requireNonNull(actionType, "actionType은 null이 될 수 없습니다.");
+        this.actionTime = Objects.requireNonNull(actionTime, "actionTime은 null이 될 수 없습니다.");
+        this.repeatEnabled = repeatEnabled;
+    }
 }

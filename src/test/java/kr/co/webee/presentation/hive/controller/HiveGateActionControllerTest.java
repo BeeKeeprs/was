@@ -2,6 +2,7 @@ package kr.co.webee.presentation.hive.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.webee.application.hive.dto.request.HiveGateActionRegisterRequest;
+import kr.co.webee.application.hive.dto.request.HiveGateActionUpdateRequest;
 import kr.co.webee.application.hive.dto.response.HiveGateActionDetailResponse;
 import kr.co.webee.application.hive.dto.response.HiveGateActionListResponse;
 import kr.co.webee.application.hive.dto.response.HiveGateActionRegisterResponse;
@@ -33,6 +34,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -193,6 +195,51 @@ class HiveGateActionControllerTest {
                     .andExpect(jsonPath("$.message").value("요청이 성공적으로 처리되었습니다."))
                     .andExpect(jsonPath("$.data.id").value(1L))
                     .andExpect(jsonPath("$.data.title").value("아침 열기"))
+                    .andDo(print());
+        }
+    }
+
+    @Nested
+    @DisplayName("개폐기 동작 수정")
+    class UpdateHiveGateAction {
+
+        @Test
+        @DisplayName("개폐기 동작을 수정한다.")
+        void updateHiveGateAction() throws Exception {
+            //given
+            HiveGateActionUpdateRequest request = new HiveGateActionUpdateRequest(
+                    "저녁 닫기", GateActionType.CLOSE_ONLY, LocalTime.of(20, 0), true
+            );
+            HiveGateActionDetailResponse response = new HiveGateActionDetailResponse(
+                    1L, "저녁 닫기", GateActionType.CLOSE_ONLY, LocalTime.of(20, 0), true
+            );
+            when(hiveGateActionService.updateHiveGateAction(anyLong(), anyLong(), anyLong(), any())).thenReturn(response);
+
+            //when - then
+            mockMvc.perform(patch("/api/v1/hives/{hiveId}/gate/actions/{actionId}", 1L, 1L)
+                            .content(objectMapper.writeValueAsString(request))
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.message").value("요청이 성공적으로 처리되었습니다."))
+                    .andExpect(jsonPath("$.data.title").value("저녁 닫기"))
+                    .andExpect(jsonPath("$.data.actionType").value("CLOSE_ONLY"))
+                    .andDo(print());
+        }
+
+        @Test
+        @DisplayName("제목 없이 개폐기 동작을 수정하려는 경우 400을 반환한다.")
+        void updateWithBlankTitle() throws Exception {
+            //given
+            HiveGateActionUpdateRequest request = new HiveGateActionUpdateRequest(
+                    "", GateActionType.CLOSE_ONLY, LocalTime.of(20, 0), false
+            );
+
+            //when - then
+            mockMvc.perform(patch("/api/v1/hives/{hiveId}/gate/actions/{actionId}", 1L, 1L)
+                            .content(objectMapper.writeValueAsString(request))
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.code").value(ErrorType.FAILED_VALIDATION.getCode()))
                     .andDo(print());
         }
     }

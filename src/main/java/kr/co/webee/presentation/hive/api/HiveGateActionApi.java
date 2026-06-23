@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kr.co.webee.application.hive.dto.request.HiveGateActionRegisterRequest;
+import kr.co.webee.application.hive.dto.request.HiveGateActionUpdateRequest;
 import kr.co.webee.application.hive.dto.response.HiveGateActionDetailResponse;
 import kr.co.webee.application.hive.dto.response.HiveGateActionListResponse;
 import kr.co.webee.application.hive.dto.response.HiveGateActionRegisterResponse;
@@ -93,5 +94,37 @@ public interface HiveGateActionApi {
             @PathVariable Long actionId,
 
             @Parameter(hidden = true) @UserId Long userId
+    );
+
+    @Operation(summary = "개폐기 동작 수정", description = "벌통에 등록된 개폐기 동작을 수정합니다.")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "수정 성공",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = HiveGateActionDetailResponse.class)
+                    )
+            ),
+    })
+    @ApiDocsErrorType({ErrorType.HIVE_NOT_FOUND, ErrorType.HIVE_GATE_ACTION_NOT_FOUND})
+    HiveGateActionDetailResponse updateHiveGateAction(
+            @Parameter(description = "벌통 ID", example = "1", required = true)
+            @PathVariable Long hiveId,
+
+            @Parameter(description = "개폐기 동작 ID", example = "1", required = true)
+            @PathVariable Long actionId,
+
+            @Parameter(hidden = true) @UserId Long userId,
+
+            @Parameter(
+                    description = "개폐기 동작 수정 요청 JSON",
+                    required = true,
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = HiveGateActionUpdateRequest.class)
+                    )
+            )
+            @RequestBody @Valid HiveGateActionUpdateRequest request
     );
 }

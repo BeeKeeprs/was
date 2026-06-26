@@ -163,3 +163,8 @@ rabbitmq:
   queue-name: ${RABBITMQ_QUEUE_NAME:queue}
   exchange-name: ${RABBITMQ_EXCHANGE_NAME:exchange}
   routing-key: ${RABBITMQ_ROUTING_KEY:key}
+
+news:
+  api-Url: ${NEWS_API_URL:}
+  client-id: ${NEWS_CLIENT_ID:}
+  client-secret: ${NEWS_CLIENT_SECRET:}

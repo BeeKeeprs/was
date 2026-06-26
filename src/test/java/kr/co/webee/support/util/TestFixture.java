@@ -9,6 +9,8 @@ import kr.co.webee.domain.hive.entity.HiveReplacementHistory;
 import kr.co.webee.domain.hive.entity.HiveTelemetry;
 import kr.co.webee.domain.hive.type.ControlType;
 import kr.co.webee.domain.hive.type.GateActionType;
+import kr.co.webee.domain.news.entity.NewsArticle;
+import kr.co.webee.domain.news.entity.NewsArticleKeyword;
 import kr.co.webee.domain.user.entity.User;
 
 import java.time.LocalDate;
@@ -85,6 +87,24 @@ public class TestFixture {
                 .hive(hive)
                 .internalTemperature(25.0)
                 .recordedAt(LocalDateTime.now())
+                .build();
+    }
+
+    public static NewsArticle createNewsArticle(String title, String originalLink) {
+        return NewsArticle.builder()
+                .title(title != null ? title : "테스트 뉴스 기사")
+                .summary("테스트 요약")
+                .originalLink(originalLink != null ? originalLink : "https://news.example.com/test")
+                .source("테스트 언론사")
+                .publishedAt(LocalDateTime.of(2026, 6, 16, 9, 0))
+                .fetchedAt(LocalDateTime.now())
+                .build();
+    }
+
+    public static NewsArticleKeyword createNewsArticleKeyword(NewsArticle article, String keyword) {
+        return NewsArticleKeyword.builder()
+                .newsArticle(article)
+                .keyword(keyword != null ? keyword : "꿀벌")
                 .build();
     }
 }

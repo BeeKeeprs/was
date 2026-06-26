@@ -29,9 +29,9 @@ import org.springframework.data.domain.SliceImpl;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -145,6 +145,22 @@ class InterestPesticideControllerTest {
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.data.content").isArray())
                     .andExpect(jsonPath("$.data.content.length()").value(0))
+                    .andDo(print());
+        }
+    }
+
+    @Nested
+    @DisplayName("관심 농약 삭제")
+    class RemoveInterestPesticide {
+
+        @Test
+        @DisplayName("관심 농약을 삭제한다.")
+        void removeInterestPesticide() throws Exception {
+            //when - then
+            mockMvc.perform(delete("/api/v1/interest-pesticides/{interestPesticideId}", 1L))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.message").value("요청이 성공적으로 처리되었습니다."))
+                    .andExpect(jsonPath("$.data").value("OK"))
                     .andDo(print());
         }
     }

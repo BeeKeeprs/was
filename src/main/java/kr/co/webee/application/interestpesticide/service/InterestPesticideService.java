@@ -39,4 +39,12 @@ public class InterestPesticideService {
         return interestPesticideRepository.findByUserId(userId, pageable)
                 .map(InterestPesticideListResponse::from);
     }
+
+    @Transactional
+    public void removeInterestPesticide(Long interestPesticideId, Long userId) {
+        InterestPesticide entity = interestPesticideRepository.findByIdAndUserId(interestPesticideId, userId)
+                .orElseThrow(() -> new BusinessException(ErrorType.INTEREST_PESTICIDE_NOT_FOUND));
+
+        interestPesticideRepository.delete(entity);
+    }
 }

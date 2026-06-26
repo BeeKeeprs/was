@@ -166,4 +166,54 @@ class InterestPesticideServiceTest {
             assertThat(result.getContent()).hasSize(1);
         }
     }
+
+    @Nested
+    @DisplayName("관심 농약 삭제")
+    class RemoveInterestPesticide {
+
+        @Test
+        @DisplayName("관심 농약을 삭제한다.")
+        void removeInterestPesticide() {
+            //given
+            Long id = interestPesticideService.registerInterestPesticide(
+                    InterestPesticideRegisterRequest.builder()
+                            .pesticideApplicationNo("1-1-000001")
+                            .build(),
+                    user.getId()).interestPesticideId();
+
+            //when
+            interestPesticideService.removeInterestPesticide(id, user.getId());
+
+            //then
+            assertThat(interestPesticideRepository.count()).isZero();
+        }
+
+        @Test
+        @DisplayName("존재하지 않는 관심 농약을 삭제하면 예외가 발생한다.")
+        void removeInterestPesticide_notFound() {
+            //when - then
+            assertThatThrownBy(() -> interestPesticideService.removeInterestPesticide(-1L, user.getId()))
+                    .isInstanceOf(BusinessException.class)
+                    .extracting("type")
+                    .isEqualTo(ErrorType.INTEREST_PESTICIDE_NOT_FOUND);
+        }
+
+        @Test
+        @DisplayName("다른 사용자의 관심 농약을 삭제하면 예외가 발생한다.")
+        void removeInterestPesticide_otherUser() {
+            //given
+            Long id = interestPesticideService.registerInterestPesticide(
+                    InterestPesticideRegisterRequest.builder()
+                            .pesticideApplicationNo("1-1-000001")
+                            .build(),
+                    user.getId()).interestPesticideId();
+            User otherUser = userRepository.save(TestFixture.createUser("other-user"));
+
+            //when - then
+            assertThatThrownBy(() -> interestPesticideService.removeInterestPesticide(id, otherUser.getId()))
+                    .isInstanceOf(BusinessException.class)
+                    .extracting("type")
+                    .isEqualTo(ErrorType.INTEREST_PESTICIDE_NOT_FOUND);
+        }
+    }
 }

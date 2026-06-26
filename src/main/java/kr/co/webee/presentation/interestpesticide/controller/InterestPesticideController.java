@@ -36,4 +36,14 @@ public class InterestPesticideController implements InterestPesticideApi {
     ) {
         return interestPesticideService.getAllInterestPesticides(userId, PageRequest.of(page, size));
     }
+
+    @Override
+    @DeleteMapping("/{interestPesticideId}")
+    public String removeInterestPesticide(
+            @PathVariable Long interestPesticideId,
+            @UserId Long userId
+    ) {
+        interestPesticideService.removeInterestPesticide(interestPesticideId, userId);
+        return "OK";
+    }
 }

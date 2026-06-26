@@ -15,6 +15,7 @@ import kr.co.webee.presentation.interestpesticide.dto.response.InterestPesticide
 import kr.co.webee.presentation.support.annotation.ApiDocsErrorType;
 import kr.co.webee.presentation.support.annotation.UserId;
 import org.springframework.data.domain.Slice;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -49,5 +50,16 @@ public interface InterestPesticideApi {
             @Parameter(hidden = true) @UserId Long userId,
             @Parameter(description = "페이지 번호 (0부터 시작)", example = "0") @RequestParam(defaultValue = "0") int page,
             @Parameter(description = "페이지 크기", example = "10") @RequestParam(defaultValue = "10") int size
+    );
+
+    @Operation(summary = "관심 농약 삭제", description = "등록한 관심 농약을 삭제합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "삭제 성공"),
+    })
+    @ApiDocsErrorType(ErrorType.INTEREST_PESTICIDE_NOT_FOUND)
+    String removeInterestPesticide(
+            @Parameter(description = "관심 농약 등록 ID", example = "1", required = true)
+            @PathVariable Long interestPesticideId,
+            @Parameter(hidden = true) @UserId Long userId
     );
 }

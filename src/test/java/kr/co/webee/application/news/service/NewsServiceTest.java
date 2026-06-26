@@ -111,17 +111,14 @@ class NewsServiceTest {
     @DisplayName("키워드별 뉴스 기사 저장")
     class AddNewsArticleByKeyword {
 
-        private List<NaverNewsResponse.Item> singleItem(String title, String originalLink) {
-            return List.of(new NaverNewsResponse.Item(
-                    title, "테스트 요약", originalLink, originalLink,
-                    "Tue, 16 Jun 2026 09:00:00 +0900"));
-        }
-
         @Test
         @DisplayName("새로운 기사이면 저장한다.")
         void addNewsArticleByKeyword_savesNewArticle() {
             //when
-            newsService.addNewsArticleByKeyword("꿀벌", singleItem("꿀벌 기사", "https://news.example.com/1"));
+            newsService.addNewsArticleByKeyword("꿀벌", List.of(
+                    new NaverNewsResponse.Item("꿀벌 기사", "테스트 요약",
+                            "https://news.example.com/1", "https://news.example.com/1",
+                            "Tue, 16 Jun 2026 09:00:00 +0900")));
 
             //then
             assertThat(newsArticleRepository.count()).isEqualTo(1);
@@ -137,7 +134,10 @@ class NewsServiceTest {
             newsArticleKeywordRepository.save(TestFixture.createNewsArticleKeyword(article, "꿀벌"));
 
             //when
-            newsService.addNewsArticleByKeyword("양봉", singleItem("꿀벌 기사", "https://news.example.com/1"));
+            newsService.addNewsArticleByKeyword("양봉", List.of(
+                    new NaverNewsResponse.Item("꿀벌 기사", "테스트 요약",
+                            "https://news.example.com/1", "https://news.example.com/1",
+                            "Tue, 16 Jun 2026 09:00:00 +0900")));
 
             //then
             assertThat(newsArticleRepository.count()).isEqualTo(1);
@@ -153,7 +153,10 @@ class NewsServiceTest {
             newsArticleKeywordRepository.save(TestFixture.createNewsArticleKeyword(article, "꿀벌"));
 
             //when
-            newsService.addNewsArticleByKeyword("꿀벌", singleItem("꿀벌 기사", "https://news.example.com/1"));
+            newsService.addNewsArticleByKeyword("꿀벌", List.of(
+                    new NaverNewsResponse.Item("꿀벌 기사", "테스트 요약",
+                            "https://news.example.com/1", "https://news.example.com/1",
+                            "Tue, 16 Jun 2026 09:00:00 +0900")));
 
             //then
             assertThat(newsArticleKeywordRepository.count()).isEqualTo(1);

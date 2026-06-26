@@ -45,22 +45,16 @@ class NewsCollectServiceTest {
     @DisplayName("뉴스 기사 수집")
     class CollectNewsArticles {
 
-        private final NaverNewsResponse emptyResponse = new NaverNewsResponse(0, 0, List.of());
-
-        private NaverNewsResponse singleItemResponse(String title, String originalLink) {
-            return new NaverNewsResponse(1, 1, List.of(
-                    new NaverNewsResponse.Item(title, "테스트 요약", originalLink, originalLink,
-                            "Tue, 16 Jun 2026 09:00:00 +0900")
-            ));
-        }
-
         @Test
         @DisplayName("기본 키워드에 해당하는 기사를 수집하여 저장한다.")
         void collectNewsArticles_savesArticlesForDefaultKeywords() {
             //given
-            when(newsClient.fetchNews(anyString())).thenReturn(emptyResponse);
-            when(newsClient.fetchNews(eq("꿀벌"))).thenReturn(
-                    singleItemResponse("꿀벌 기사", "https://news.example.com/1"));
+            when(newsClient.fetchNews(anyString())).thenReturn(new NaverNewsResponse(0, 0, List.of()));
+            when(newsClient.fetchNews(eq("꿀벌"))).thenReturn(new NaverNewsResponse(1, 1, List.of(
+                    new NaverNewsResponse.Item("꿀벌 기사", "테스트 요약",
+                            "https://news.example.com/1", "https://news.example.com/1",
+                            "Tue, 16 Jun 2026 09:00:00 +0900")
+            )));
 
             //when
             newsCollectService.collectNewsArticles();
@@ -74,7 +68,7 @@ class NewsCollectServiceTest {
         @DisplayName("빈 응답이면 기사를 저장하지 않는다.")
         void collectNewsArticles_emptyResponse() {
             //given
-            when(newsClient.fetchNews(anyString())).thenReturn(emptyResponse);
+            when(newsClient.fetchNews(anyString())).thenReturn(new NaverNewsResponse(0, 0, List.of()));
 
             //when
             newsCollectService.collectNewsArticles();

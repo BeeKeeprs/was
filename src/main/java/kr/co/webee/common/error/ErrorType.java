@@ -49,6 +49,10 @@ public enum ErrorType {
     INTEREST_MARKET_ALREADY_EXISTS(CONFLICT, DEBUG, "MARKET_001", "이미 등록된 관심 시장입니다"),
     INTEREST_MARKET_NOT_FOUND(NOT_FOUND, DEBUG, "MARKET_002", "등록된 관심 시장을 찾을 수 없습니다"),
 
+    // PesticideErrorType
+    INTEREST_PESTICIDE_ALREADY_EXISTS(CONFLICT, DEBUG, "PESTICIDE_001", "이미 등록된 관심 농약입니다"),
+    INTEREST_PESTICIDE_NOT_FOUND(NOT_FOUND, DEBUG, "PESTICIDE_002", "등록된 관심 농약을 찾을 수 없습니다"),
+
     // FileErrorType
     FILE_UPLOAD_FAILED(BAD_GATEWAY, ERROR, "FILE_001", "파일 업로드에 실패했습니다"),
 

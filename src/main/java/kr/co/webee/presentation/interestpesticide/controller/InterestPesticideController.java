@@ -5,8 +5,11 @@ import kr.co.webee.application.interestpesticide.service.InterestPesticideServic
 import kr.co.webee.presentation.interestpesticide.api.InterestPesticideApi;
 import kr.co.webee.presentation.interestpesticide.dto.request.InterestPesticideRegisterRequest;
 import kr.co.webee.presentation.interestpesticide.dto.response.InterestPesticideRegisterResponse;
+import kr.co.webee.presentation.interestpesticide.dto.response.InterestPesticideListResponse;
 import kr.co.webee.presentation.support.annotation.UserId;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/v1/interest-pesticides")
@@ -22,5 +25,15 @@ public class InterestPesticideController implements InterestPesticideApi {
             @UserId Long userId
     ) {
         return interestPesticideService.registerInterestPesticide(request, userId);
+    }
+
+    @Override
+    @GetMapping
+    public Slice<InterestPesticideListResponse> getAllInterestPesticides(
+            @UserId Long userId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return interestPesticideService.getAllInterestPesticides(userId, PageRequest.of(page, size));
     }
 }

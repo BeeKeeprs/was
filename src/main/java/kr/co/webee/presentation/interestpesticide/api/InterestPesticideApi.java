@@ -11,9 +11,12 @@ import jakarta.validation.Valid;
 import kr.co.webee.common.error.ErrorType;
 import kr.co.webee.presentation.interestpesticide.dto.request.InterestPesticideRegisterRequest;
 import kr.co.webee.presentation.interestpesticide.dto.response.InterestPesticideRegisterResponse;
+import kr.co.webee.presentation.interestpesticide.dto.response.InterestPesticideListResponse;
 import kr.co.webee.presentation.support.annotation.ApiDocsErrorType;
 import kr.co.webee.presentation.support.annotation.UserId;
+import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "Interest Pesticide", description = "사용자 관심 농약 API")
 public interface InterestPesticideApi {
@@ -36,5 +39,15 @@ public interface InterestPesticideApi {
     InterestPesticideRegisterResponse registerInterestPesticide(
             @RequestBody @Valid InterestPesticideRegisterRequest request,
             @Parameter(hidden = true) @UserId Long userId
+    );
+
+    @Operation(summary = "관심 농약 목록 조회", description = "등록한 관심 농약 목록을 페이지 단위로 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "조회 성공"),
+    })
+    Slice<InterestPesticideListResponse> getAllInterestPesticides(
+            @Parameter(hidden = true) @UserId Long userId,
+            @Parameter(description = "페이지 번호 (0부터 시작)", example = "0") @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "페이지 크기", example = "10") @RequestParam(defaultValue = "10") int size
     );
 }

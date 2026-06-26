@@ -8,7 +8,10 @@ import kr.co.webee.domain.user.entity.User;
 import kr.co.webee.domain.user.repository.UserRepository;
 import kr.co.webee.presentation.interestpesticide.dto.request.InterestPesticideRegisterRequest;
 import kr.co.webee.presentation.interestpesticide.dto.response.InterestPesticideRegisterResponse;
+import kr.co.webee.presentation.interestpesticide.dto.response.InterestPesticideListResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,5 +32,11 @@ public class InterestPesticideService {
 
         InterestPesticide interestPesticide = interestPesticideRepository.save(request.toEntity(user));
         return InterestPesticideRegisterResponse.of(interestPesticide.getId());
+    }
+
+    @Transactional(readOnly = true)
+    public Slice<InterestPesticideListResponse> getAllInterestPesticides(Long userId, Pageable pageable) {
+        return interestPesticideRepository.findByUserId(userId, pageable)
+                .map(InterestPesticideListResponse::from);
     }
 }

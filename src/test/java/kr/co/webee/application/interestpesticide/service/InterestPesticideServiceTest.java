@@ -8,12 +8,15 @@ import kr.co.webee.domain.user.entity.User;
 import kr.co.webee.domain.user.repository.UserRepository;
 import kr.co.webee.presentation.interestpesticide.dto.request.InterestPesticideRegisterRequest;
 import kr.co.webee.presentation.interestpesticide.dto.response.InterestPesticideRegisterResponse;
+import kr.co.webee.presentation.interestpesticide.dto.response.InterestPesticideListResponse;
 import kr.co.webee.support.util.TestFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -94,6 +97,73 @@ class InterestPesticideServiceTest {
                     .isInstanceOf(BusinessException.class)
                     .extracting("type")
                     .isEqualTo(ErrorType.USER_NOT_FOUND);
+        }
+    }
+
+    @Nested
+    @DisplayName("관심 농약 목록 조회")
+    class GetAllInterestPesticides {
+
+        @Test
+        @DisplayName("등록한 관심 농약 목록을 조회한다.")
+        void getAllInterestPesticides() {
+            //given
+            interestPesticideService.registerInterestPesticide(
+                    InterestPesticideRegisterRequest.builder()
+                            .pesticideApplicationNo("1-1-000001")
+                            .cropName("딸기")
+                            .build(),
+                    user.getId());
+            interestPesticideService.registerInterestPesticide(
+                    InterestPesticideRegisterRequest.builder()
+                            .pesticideApplicationNo("1-1-000002")
+                            .cropName("벼")
+                            .build(),
+                    user.getId());
+
+            //when
+            Slice<InterestPesticideListResponse> result = interestPesticideService.getAllInterestPesticides(
+                    user.getId(), PageRequest.of(0, 10));
+
+            //then
+            assertThat(result.getContent()).hasSize(2)
+                    .extracting("pesticideApplicationNo")
+                    .containsExactlyInAnyOrder("1-1-000001", "1-1-000002");
+        }
+
+        @Test
+        @DisplayName("등록한 관심 농약이 없으면 빈 목록을 반환한다.")
+        void getAllInterestPesticides_empty() {
+            //when
+            Slice<InterestPesticideListResponse> result = interestPesticideService.getAllInterestPesticides(
+                    user.getId(), PageRequest.of(0, 10));
+
+            //then
+            assertThat(result.getContent()).isEmpty();
+        }
+
+        @Test
+        @DisplayName("페이지 크기보다 많으면 hasNext가 true다.")
+        void getAllInterestPesticides_hasNext() {
+            //given
+            interestPesticideService.registerInterestPesticide(
+                    InterestPesticideRegisterRequest.builder()
+                            .pesticideApplicationNo("1-1-000001")
+                            .build(),
+                    user.getId());
+            interestPesticideService.registerInterestPesticide(
+                    InterestPesticideRegisterRequest.builder()
+                            .pesticideApplicationNo("1-1-000002")
+                            .build(),
+                    user.getId());
+
+            //when
+            Slice<InterestPesticideListResponse> result = interestPesticideService.getAllInterestPesticides(
+                    user.getId(), PageRequest.of(0, 1));
+
+            //then
+            assertThat(result.hasNext()).isTrue();
+            assertThat(result.getContent()).hasSize(1);
         }
     }
 }

@@ -11,6 +11,8 @@ import kr.co.webee.domain.hive.type.ControlType;
 import kr.co.webee.domain.hive.type.GateActionType;
 import kr.co.webee.domain.news.entity.NewsArticle;
 import kr.co.webee.domain.news.entity.NewsArticleKeyword;
+import kr.co.webee.domain.post.entity.Post;
+import kr.co.webee.domain.post.type.PostCategory;
 import kr.co.webee.domain.user.entity.User;
 
 import java.time.LocalDate;
@@ -87,6 +89,15 @@ public class TestFixture {
                 .hive(hive)
                 .internalTemperature(25.0)
                 .recordedAt(LocalDateTime.now())
+                .build();
+    }
+
+    public static Post createPost(PostCategory category, User user) {
+        return Post.builder()
+                .title("테스트 게시글")
+                .content("테스트 내용")
+                .category(category != null ? category : PostCategory.KNOWHOW)
+                .user(user)
                 .build();
     }
 

@@ -8,6 +8,7 @@ import kr.co.webee.domain.post.repository.PostCommentRepository;
 import kr.co.webee.domain.post.repository.PostLikeRepository;
 import kr.co.webee.domain.post.repository.PostRepository;
 import kr.co.webee.domain.user.entity.User;
+import java.time.LocalDateTime;
 import kr.co.webee.domain.user.repository.UserRepository;
 import kr.co.webee.presentation.post.dto.request.PostCreateRequest;
 import kr.co.webee.presentation.post.dto.request.PostUpdateRequest;
@@ -56,6 +57,7 @@ public class PostService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
+        user.updateLastActivityAt(LocalDateTime.now());
         Post post = postRepository.save(request.toEntity(user));
 
         return PostCreateResponse.of(post.getId());

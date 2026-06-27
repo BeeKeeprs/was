@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -45,6 +46,7 @@ public class PostCommentService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
+        user.updateLastActivityAt(LocalDateTime.now());
         PostComment postComment = postCommentRepository.save(request.toEntity(post, user));
 
         return PostCommentCreateResponse.of(postComment.getId());

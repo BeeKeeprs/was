@@ -2,6 +2,7 @@ package kr.co.webee.presentation.post.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import kr.co.webee.domain.post.entity.Post;
+import kr.co.webee.domain.post.type.PostCategory;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
@@ -21,6 +22,9 @@ public record PostListResponse(
         @Schema(description = "내용", example = "내용")
         String content,
 
+        @Schema(description = "카테고리", example = "KNOWHOW")
+        PostCategory category,
+
         @Schema(description = "좋아요 수", example = "10")
         int likeCount,
 
@@ -36,6 +40,7 @@ public record PostListResponse(
                 .writer(post.getUser().getName())
                 .title(post.getTitle())
                 .content(post.getContent())
+                .category(post.getCategory())
                 .likeCount(likeCount)
                 .commentCount(commentCount)
                 .createdAt(post.getCreatedAt())

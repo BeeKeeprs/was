@@ -72,7 +72,7 @@ public class PostService {
             throw new BusinessException(ErrorType.POST_ACCESS_DENIED);
         }
 
-        post.update(request.title(), request.content());
+        post.update(request.title(), request.content(), request.category());
     }
 
     @Transactional

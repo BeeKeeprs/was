@@ -3,6 +3,7 @@ package kr.co.webee.presentation.community.controller;
 import kr.co.webee.application.community.service.CommunityService;
 import kr.co.webee.presentation.community.api.CommunityApi;
 import kr.co.webee.presentation.community.dto.response.ActiveUserResponse;
+import kr.co.webee.presentation.community.dto.response.TrendingCategoryResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,5 +22,11 @@ public class CommunityController implements CommunityApi {
     @GetMapping("/active-users")
     public List<ActiveUserResponse> getActiveUsers() {
         return communityService.getActiveUsers();
+    }
+
+    @Override
+    @GetMapping("/trending-categories")
+    public List<TrendingCategoryResponse> getTrendingCategories() {
+        return communityService.getTrendingCategories();
     }
 }

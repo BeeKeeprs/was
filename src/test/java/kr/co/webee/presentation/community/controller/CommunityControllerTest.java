@@ -2,7 +2,9 @@ package kr.co.webee.presentation.community.controller;
 
 import kr.co.webee.application.community.service.CommunityService;
 import kr.co.webee.config.TestWebConfig;
+import kr.co.webee.domain.post.type.PostCategory;
 import kr.co.webee.presentation.community.dto.response.ActiveUserResponse;
+import kr.co.webee.presentation.community.dto.response.TrendingCategoryResponse;
 import kr.co.webee.presentation.config.WebConfig;
 import kr.co.webee.presentation.support.resolver.UserIdArgumentResolver;
 import org.junit.jupiter.api.DisplayName;
@@ -90,6 +92,55 @@ class CommunityControllerTest {
 
             //when - then
             mockMvc.perform(get("/api/v1/community/active-users"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.message").value("요청이 성공적으로 처리되었습니다."))
+                    .andExpect(jsonPath("$.data").isArray())
+                    .andExpect(jsonPath("$.data.length()").value(0))
+                    .andDo(print());
+        }
+    }
+
+    @Nested
+    @DisplayName("지금 뜨는 주제 조회")
+    class GetTrendingCategories {
+
+        @Test
+        @DisplayName("지금 뜨는 주제 목록을 조회한다.")
+        void getTrendingCategories() throws Exception {
+            //given
+            List<TrendingCategoryResponse> response = List.of(
+                    TrendingCategoryResponse.builder()
+                            .category(PostCategory.KNOWHOW)
+                            .postCount(14)
+                            .build(),
+                    TrendingCategoryResponse.builder()
+                            .category(PostCategory.QUESTION)
+                            .postCount(9)
+                            .build()
+            );
+            when(communityService.getTrendingCategories()).thenReturn(response);
+
+            //when - then
+            mockMvc.perform(get("/api/v1/community/trending-categories"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.message").value("요청이 성공적으로 처리되었습니다."))
+                    .andExpect(jsonPath("$.data").isArray())
+                    .andExpect(jsonPath("$.data.length()").value(2))
+                    .andExpect(jsonPath("$.data[0].category").value("KNOWHOW"))
+                    .andExpect(jsonPath("$.data[0].postCount").value(14))
+                    .andExpect(jsonPath("$.data[1].category").value("QUESTION"))
+                    .andExpect(jsonPath("$.data[1].postCount").value(9))
+                    .andDo(print());
+        }
+
+        @Test
+        @DisplayName("뜨는 주제가 없으면 빈 배열을 반환한다.")
+        void getTrendingCategoriesEmpty() throws Exception {
+            //given
+            when(communityService.getTrendingCategories()).thenReturn(List.of());
+
+            //when - then
+            mockMvc.perform(get("/api/v1/community/trending-categories"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.message").value("요청이 성공적으로 처리되었습니다."))
                     .andExpect(jsonPath("$.data").isArray())

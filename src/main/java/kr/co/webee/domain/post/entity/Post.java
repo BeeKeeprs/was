@@ -2,6 +2,8 @@ package kr.co.webee.domain.post.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import kr.co.webee.domain.common.BaseTimeEntity;
+import kr.co.webee.domain.post.type.PostCategory;
 import kr.co.webee.domain.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -37,8 +40,12 @@ public class Post extends BaseTimeEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PostCategory category;
+
     @Builder
-    private Post(String title, String content, User user) {
+    private Post(String title, String content, User user, PostCategory category) {
         if (!StringUtils.hasText(title)) {
             throw new IllegalArgumentException("title은 null이거나 빈 문자열이 될 수 없습니다.");
         }
@@ -48,9 +55,10 @@ public class Post extends BaseTimeEntity {
         this.title = title;
         this.content = content;
         this.user = Objects.requireNonNull(user, "user는 null이 될 수 없습니다.");
+        this.category = Objects.requireNonNull(category, "category는 null이 될 수 없습니다.");
     }
 
-    public void update(String title, String content) {
+    public void update(String title, String content, PostCategory category) {
         if (!StringUtils.hasText(title)) {
             throw new IllegalArgumentException("title은 null이거나 빈 문자열이 될 수 없습니다.");
         }
@@ -59,6 +67,7 @@ public class Post extends BaseTimeEntity {
         }
         this.title = title;
         this.content = content;
+        this.category = Objects.requireNonNull(category, "category는 null이 될 수 없습니다.");
     }
 
     public boolean isWrittenBy(Long userId) {

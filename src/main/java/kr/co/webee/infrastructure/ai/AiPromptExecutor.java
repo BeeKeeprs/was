@@ -5,6 +5,7 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
+import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Component;
@@ -22,10 +23,10 @@ public class AiPromptExecutor {
     private final SimpleLoggerAdvisor loggerAdvisor;
     private final MessageChatMemoryAdvisor memoryAdvisor;
 
-    public String run(String input, Consumer<AdvisorBuilder.Builder> config) {
+    public ChatResponse run(String input, Consumer<AdvisorBuilder.Builder> config) {
         var builder = AdvisorBuilder.builder(vectorStore, promptRegistry, loggerAdvisor, memoryAdvisor);
         config.accept(builder);
-        return buildRequest(input, builder).call().content();
+        return buildRequest(input, builder).call().chatResponse();
     }
 
     public <T> T run(String input, Consumer<AdvisorBuilder.Builder> config, Class<T> clazz) {

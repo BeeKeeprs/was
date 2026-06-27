@@ -42,6 +42,8 @@ public class User extends BaseTimeEntity {
 
     private LocalDateTime deletedAt;
 
+    private LocalDateTime lastActivityAt;
+
     @Builder
     public User(String username, String password, String name, String phoneNumber, boolean businessRegistered) {
         if (!StringUtils.hasText(username)) {
@@ -71,5 +73,9 @@ public class User extends BaseTimeEntity {
 
     public void updateProfileImageUrl(String profileImageUrl) {
         this.profileImageUrl = profileImageUrl;
+    }
+
+    public void updateLastActivityAt(LocalDateTime lastActivityAt) {
+        this.lastActivityAt = lastActivityAt;
     }
 }

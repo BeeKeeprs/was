@@ -34,7 +34,7 @@ public class AssistantService {
         String convId = StringUtils.isBlank(conversationId) ? UUID.randomUUID().toString() : conversationId;
 
         RagSearchOptions ragOptions = new RagSearchOptions(
-                "type != 'faq' AND type != 'guide'",
+                "category == 'bee'",
                 topK,
                 similarityThreshold
         );

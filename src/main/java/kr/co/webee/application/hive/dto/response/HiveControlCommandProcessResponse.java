@@ -1,45 +1,30 @@
 package kr.co.webee.application.hive.dto.response;
 
-import kr.co.webee.domain.hive.type.ControlType;
 import lombok.Builder;
 
 @Builder
 public record HiveControlCommandProcessResponse(
         String commandId,
         Long hiveId,
-        ControlType type,
         boolean success,
-        Boolean autoEnabled,
-        Boolean manualEnabled,
-        Boolean isOn,
+        Double targetTemperature,
+        Double targetHumidity,
         String message
 ) {
-    public static HiveControlCommandProcessResponse autoSuccess(String commandId, Long hiveId, ControlType type, boolean autoEnabled) {
+    public static HiveControlCommandProcessResponse success(String commandId, Long hiveId, Double targetTemperature, Double targetHumidity) {
         return HiveControlCommandProcessResponse.builder()
                 .commandId(commandId)
                 .hiveId(hiveId)
-                .type(type)
                 .success(true)
-                .autoEnabled(autoEnabled)
+                .targetTemperature(targetTemperature)
+                .targetHumidity(targetHumidity)
                 .build();
     }
 
-    public static HiveControlCommandProcessResponse manualSuccess(String commandId, Long hiveId, ControlType type, boolean manualEnabled, Boolean isOn) {
+    public static HiveControlCommandProcessResponse failure(String commandId, Long hiveId, String message) {
         return HiveControlCommandProcessResponse.builder()
                 .commandId(commandId)
                 .hiveId(hiveId)
-                .type(type)
-                .success(true)
-                .manualEnabled(manualEnabled)
-                .isOn(isOn)
-                .build();
-    }
-
-    public static HiveControlCommandProcessResponse failure(String commandId, Long hiveId, ControlType type, String message) {
-        return HiveControlCommandProcessResponse.builder()
-                .commandId(commandId)
-                .hiveId(hiveId)
-                .type(type)
                 .success(false)
                 .message(message)
                 .build();

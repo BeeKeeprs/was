@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kr.co.webee.application.hive.dto.response.HiveControlListResponse;
 import kr.co.webee.common.error.ErrorType;
-import kr.co.webee.presentation.hive.dto.request.HiveAutoControlRequest;
 import kr.co.webee.presentation.hive.dto.request.HiveManualControlRequest;
 import kr.co.webee.presentation.support.annotation.ApiDocsErrorType;
 import kr.co.webee.presentation.support.annotation.UserId;
@@ -18,10 +17,10 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@Tag(name = "벌통 센서 제어 API", description = "벌통 센서 제어 관련 API")
+@Tag(name = "벌통 제어 API", description = "벌통 온도·습도 목표값 설정 API")
 public interface HiveControlApi {
 
-    @Operation(summary = "제어 설정 조회", description = "벌통의 자동제어 및 수동제어 설정 상태를 조회합니다.")
+    @Operation(summary = "제어 설정 조회", description = "벌통의 현재 목표 온도·습도를 조회합니다.")
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
@@ -40,40 +39,11 @@ public interface HiveControlApi {
             @Parameter(hidden = true) @UserId Long userId
     );
 
-    @Operation(summary = "센서 자동제어 설정", description = "벌통 센서의 자동제어 활성화 여부를 설정합니다.")
+    @Operation(summary = "목표값 설정", description = "벌통의 목표 온도·습도를 설정합니다.")
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "설정 성공",
-                    content = @Content(
-                            mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(type = "string", example = "OK")
-                    )
-            ),
-    })
-    @ApiDocsErrorType({ErrorType.HIVE_NOT_FOUND, ErrorType.HIVE_AUTO_CONTROL_BLOCKED_BY_MANUAL, ErrorType.HIVE_AUTO_CONTROL_BLOCKED_BY_SCHEDULE})
-    String setAutoControl(
-            @Parameter(description = "벌통 ID", example = "1", required = true)
-            @PathVariable Long hiveId,
-
-            @Parameter(hidden = true) @UserId Long userId,
-
-            @Parameter(
-                    description = "자동제어 설정 요청 JSON",
-                    required = true,
-                    content = @Content(
-                            mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = HiveAutoControlRequest.class)
-                    )
-            )
-            @RequestBody @Valid HiveAutoControlRequest request
-    );
-
-    @Operation(summary = "센서 수동제어", description = "벌통 센서를 수동으로 ON/OFF 합니다.")
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "요청 성공",
+                    description = "설정 요청 성공",
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(type = "string", example = "OK")
@@ -88,7 +58,7 @@ public interface HiveControlApi {
             @Parameter(hidden = true) @UserId Long userId,
 
             @Parameter(
-                    description = "수동제어 요청 JSON",
+                    description = "목표값 설정 요청 JSON",
                     required = true,
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,

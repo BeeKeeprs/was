@@ -35,56 +35,24 @@ public class HiveControl extends BaseTimeEntity {
     @Column(nullable = false)
     private ControlType type;
 
-    @Column(nullable = false)
-    private boolean autoEnabled;
-
-    @Column(nullable = false)
-    private boolean manualEnabled;
-
-    @Column(nullable = false)
-    private boolean isOn;
+    @Column
+    private Double targetValue;
 
     @Builder
-    private HiveControl(Hive hive, ControlType type, boolean autoEnabled, boolean manualEnabled, boolean isOn) {
+    private HiveControl(Hive hive, ControlType type, Double targetValue) {
         this.hive = Objects.requireNonNull(hive, "hive는 null이 될 수 없습니다.");
         this.type = Objects.requireNonNull(type, "type은 null이 될 수 없습니다.");
-        this.autoEnabled = autoEnabled;
-        this.manualEnabled = manualEnabled;
-        this.isOn = isOn;
+        this.targetValue = targetValue;
     }
 
-    public static HiveControl createAutoControl(Hive hive, ControlType type, boolean autoEnabled) {
+    public static HiveControl create(Hive hive, ControlType type) {
         return HiveControl.builder()
                 .hive(hive)
                 .type(type)
-                .autoEnabled(autoEnabled)
-                .manualEnabled(false)
-                .isOn(false)
                 .build();
     }
 
-    public static HiveControl createManualControl(Hive hive, ControlType type, boolean isOn) {
-        return HiveControl.builder()
-                .hive(hive)
-                .type(type)
-                .autoEnabled(false)
-                .manualEnabled(true)
-                .isOn(isOn)
-                .build();
-    }
-
-    public void updateAutoControl(boolean autoEnabled) {
-        this.autoEnabled = autoEnabled;
-        this.manualEnabled = false;
-    }
-
-    public void enableManualControl(boolean isOn) {
-        this.autoEnabled = false;
-        this.manualEnabled = true;
-        this.isOn = isOn;
-    }
-
-    public void disableManualControl() {
-        this.manualEnabled = false;
+    public void updateTargetValue(double targetValue) {
+        this.targetValue = targetValue;
     }
 }

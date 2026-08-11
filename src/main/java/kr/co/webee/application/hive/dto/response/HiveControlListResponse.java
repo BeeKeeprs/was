@@ -8,31 +8,21 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public record HiveControlListResponse(
-        List<AutoControlSetting> auto,
-        List<ManualControlSetting> manual
+        List<ControlSetting> controls
 ) {
-    public record AutoControlSetting(ControlType type, boolean enabled) {}
-
-    public record ManualControlSetting(ControlType type, boolean isOn) {}
+    public record ControlSetting(ControlType type, Double targetValue) {}
 
     public static HiveControlListResponse of(List<HiveControl> controls) {
         Map<ControlType, HiveControl> controlMap = controls.stream()
                 .collect(Collectors.toMap(HiveControl::getType, c -> c));
 
-        List<AutoControlSetting> auto = ControlType.autoControlTypes().stream()
+        List<ControlSetting> settings = ControlType.autoControlTypes().stream()
                 .map(type -> {
                     HiveControl control = controlMap.get(type);
-                    return new AutoControlSetting(type, control != null && control.isAutoEnabled());
+                    return new ControlSetting(type, control != null ? control.getTargetValue() : null);
                 })
                 .toList();
 
-        List<ManualControlSetting> manual = ControlType.manualControlTypes().stream()
-                .map(type -> {
-                    HiveControl control = controlMap.get(type);
-                    return new ManualControlSetting(type, control != null && control.isManualEnabled() && control.isOn());
-                })
-                .toList();
-
-        return new HiveControlListResponse(auto, manual);
+        return new HiveControlListResponse(settings);
     }
 }

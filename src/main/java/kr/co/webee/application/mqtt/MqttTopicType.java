@@ -20,7 +20,7 @@ public enum MqttTopicType {
         return Arrays.stream(values())
                 .filter(type -> type.matches(topic))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("topic: %s이 존재하지 않습니다.".formatted(topic)));
+                .orElse(null);
     }
 
     private boolean matches(String topic) {

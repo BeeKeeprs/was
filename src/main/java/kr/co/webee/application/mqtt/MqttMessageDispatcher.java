@@ -31,10 +31,16 @@ public class MqttMessageDispatcher implements MessageHandler {
     }
 
     private void dispatch(String topic, String macAddress, Object payload) {
-        MqttMessageHandler handler = handlerMap.get(MqttTopicType.from(topic));
+        MqttTopicType topicType = MqttTopicType.from(topic);
+        if (topicType == null) {
+            log.debug("처리하지 않는 MQTT 토픽 무시: {}", topic);
+            return;
+        }
 
+        MqttMessageHandler handler = handlerMap.get(topicType);
         if (handler == null) {
-            throw new IllegalStateException("topic: %s에 대한 handler가 존재하지 않습니다.".formatted(topic));
+            log.warn("topic: {}에 대한 handler가 존재하지 않습니다.", topic);
+            return;
         }
 
         handler.handle(payload, macAddress);

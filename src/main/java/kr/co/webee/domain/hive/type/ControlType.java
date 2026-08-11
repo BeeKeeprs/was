@@ -10,19 +10,11 @@ import java.util.List;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public enum ControlType {
     TEMPERATURE("온도"),
-    HUMIDITY("습도"),
-    FAN("팬"),
-    HEATER("히터"),
-    COOLER("냉각기"),
-    CIRCULATION("환기");
+    HUMIDITY("습도");
 
     private final String description;
 
     public static List<ControlType> autoControlTypes() {
-        return List.of(TEMPERATURE, HUMIDITY, FAN);
-    }
-
-    public static List<ControlType> manualControlTypes() {
-        return List.of(HEATER, COOLER, FAN, CIRCULATION);
+        return List.of(TEMPERATURE, HUMIDITY);
     }
 }

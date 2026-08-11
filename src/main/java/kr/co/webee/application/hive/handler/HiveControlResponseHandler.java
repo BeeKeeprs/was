@@ -9,7 +9,6 @@ import kr.co.webee.application.mqtt.MqttTopicType;
 import kr.co.webee.application.sse.service.SseEmitterService;
 import kr.co.webee.application.sse.type.SseEventType;
 import kr.co.webee.common.util.JsonConverter;
-import kr.co.webee.domain.hive.type.ControlMode;
 import kr.co.webee.infrastructure.redis.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,9 +44,7 @@ public class HiveControlResponseHandler implements MqttMessageHandler {
 
         HivePendingCommand pending = jsonConverter.convert(stored, HivePendingCommand.class);
 
-        HiveControlCommandProcessResponse result = pending.mode() == ControlMode.MANUAL
-                ? hiveControlService.processManualControlCommandResponse(pending, response)
-                : hiveControlService.processAutoControlCommandResponse(pending, response);
+        HiveControlCommandProcessResponse result = hiveControlService.processManualControlCommandResponse(pending, response);
 
         sseEmitterService.sendToClient(SseEventType.HIVE_CONTROL_RESULT, pending.userId(), result);
     }

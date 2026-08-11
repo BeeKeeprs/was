@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import kr.co.webee.application.hive.dto.response.HiveControlListResponse;
 import kr.co.webee.application.hive.service.HiveControlService;
 import kr.co.webee.presentation.hive.api.HiveControlApi;
-import kr.co.webee.presentation.hive.dto.request.HiveAutoControlRequest;
 import kr.co.webee.presentation.hive.dto.request.HiveManualControlRequest;
 import kr.co.webee.presentation.support.annotation.UserId;
 import lombok.RequiredArgsConstructor;
@@ -28,17 +27,6 @@ public class HiveControlController implements HiveControlApi {
             @UserId Long userId
     ) {
         return hiveControlService.getControlList(hiveId, userId);
-    }
-
-    @Override
-    @PostMapping("/{hiveId}/control/auto")
-    public String setAutoControl(
-            @PathVariable Long hiveId,
-            @UserId Long userId,
-            @RequestBody @Valid HiveAutoControlRequest request
-    ) {
-        hiveControlService.setAutoControl(hiveId, userId, request);
-        return "OK";
     }
 
     @Override

@@ -59,13 +59,7 @@ public class TestFixture {
     }
 
     public static HiveControl createHiveControl(ControlType type, Hive hive) {
-        return HiveControl.builder()
-                .hive(hive)
-                .type(type != null ? type : ControlType.FAN)
-                .autoEnabled(false)
-                .manualEnabled(false)
-                .isOn(false)
-                .build();
+        return HiveControl.create(hive, type != null ? type : ControlType.TEMPERATURE);
     }
 
     public static HiveControlSchedule createHiveControlSchedule(Hive hive) {

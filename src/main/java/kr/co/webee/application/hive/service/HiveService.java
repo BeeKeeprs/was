@@ -3,7 +3,6 @@ package kr.co.webee.application.hive.service;
 import kr.co.webee.common.error.ErrorType;
 import kr.co.webee.common.error.exception.BusinessException;
 import kr.co.webee.domain.hive.entity.Hive;
-import kr.co.webee.domain.hive.repository.HiveBeeCountRepository;
 import kr.co.webee.domain.hive.repository.HiveControlRepository;
 import kr.co.webee.domain.hive.repository.HiveControlScheduleRepository;
 import kr.co.webee.domain.hive.repository.HiveGateActionRepository;
@@ -29,7 +28,6 @@ public class HiveService {
     private final HiveRepository hiveRepository;
     private final UserRepository userRepository;
     private final HiveTelemetryRepository hiveTelemetryRepository;
-    private final HiveBeeCountRepository hiveBeeCountRepository;
     private final HiveControlRepository hiveControlRepository;
     private final HiveControlScheduleRepository hiveControlScheduleRepository;
     private final HiveGateActionRepository hiveGateActionRepository;
@@ -77,7 +75,6 @@ public class HiveService {
                 .orElseThrow(() -> new BusinessException(ErrorType.HIVE_NOT_FOUND));
 
         hiveTelemetryRepository.deleteAllByHiveId(hiveId);
-        hiveBeeCountRepository.deleteAllByHiveId(hiveId);
         hiveControlRepository.deleteAllByHiveId(hiveId);
         hiveControlScheduleRepository.deleteAllByHiveId(hiveId);
         hiveGateActionRepository.deleteAllByHiveId(hiveId);

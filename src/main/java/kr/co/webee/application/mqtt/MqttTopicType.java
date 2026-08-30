@@ -1,20 +1,25 @@
 package kr.co.webee.application.mqtt;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
 
 @Getter
-@RequiredArgsConstructor
 public enum MqttTopicType {
-    TELEMETRY("telemetry"),
-    CONNECTION("connection"),
-    BEE_COUNT("bee-count"),
-    ALERT("alert"),
-    CONTROL_RESPONSE("control/response");
+    TELEMETRY("hive", "telemetry"),
+    CONNECTION("hive", "connection"),
+    ALERT("hive", "alert"),
+    CONTROL_RESPONSE("hive", "control/response"),
+    GATE_TELEMETRY("gate", "telemetry"),
+    GATE_BEE_COUNT("gate", "bee-count");
 
+    private final String prefix;
     private final String suffix;
+
+    MqttTopicType(String prefix, String suffix) {
+        this.prefix = prefix;
+        this.suffix = suffix;
+    }
 
     public static MqttTopicType from(String topic) {
         return Arrays.stream(values())
@@ -24,6 +29,6 @@ public enum MqttTopicType {
     }
 
     private boolean matches(String topic) {
-        return topic.endsWith(suffix);
+        return topic.startsWith(prefix + "/") && topic.endsWith("/" + suffix);
     }
 }

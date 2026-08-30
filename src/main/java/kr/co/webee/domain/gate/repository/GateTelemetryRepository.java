@@ -9,4 +9,5 @@ import java.util.List;
 
 @Repository
 public interface GateTelemetryRepository extends JpaRepository<GateTelemetry, Long> {
+    List<GateTelemetry> findByGateIdAndRecordedAtBetween(Long gateId, LocalDateTime start, LocalDateTime end);
 }

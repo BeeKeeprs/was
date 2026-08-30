@@ -8,4 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface GateRepository extends JpaRepository<Gate, Long> {
+    Optional<Gate> findByMacAddress(String macAddress);
 }

@@ -1,7 +1,6 @@
 package kr.co.webee.support.util;
 
 import kr.co.webee.domain.hive.entity.Hive;
-import kr.co.webee.domain.hive.entity.HiveBeeCount;
 import kr.co.webee.domain.hive.entity.HiveControl;
 import kr.co.webee.domain.hive.entity.HiveControlSchedule;
 import kr.co.webee.domain.hive.entity.HiveGateAction;
@@ -47,14 +46,6 @@ public class TestFixture {
                 .actionType(actionType != null ? actionType : GateActionType.OPEN_ONLY)
                 .actionTime(actionTime != null ? actionTime : LocalTime.of(9, 0))
                 .repeatEnabled(false)
-                .build();
-    }
-
-    public static HiveBeeCount createHiveBeeCount(Hive hive) {
-        return HiveBeeCount.builder()
-                .hive(hive)
-                .count(100)
-                .recordedAt(LocalDateTime.now())
                 .build();
     }
 

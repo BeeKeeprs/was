@@ -143,7 +143,9 @@ mqtt:
   broker-url: ${MQTT_BROKER_URL:tcp://localhost:1883}
   inbound-client-id: ${MQTT_INBOUND_CLIENT_ID:server-inbound}
   outbound-client-id: ${MQTT_OUTBOUND_CLIENT_ID:server-outbound}
-  topic-filter: ${MQTT_TOPIC_FILTER:server-inbound}
+  topic-filters:
+    - hive/+/#
+    - gate/+/#
   username: ${MQTT_USERNAME:username}
   password: ${MQTT_PASSWORD:password}
 

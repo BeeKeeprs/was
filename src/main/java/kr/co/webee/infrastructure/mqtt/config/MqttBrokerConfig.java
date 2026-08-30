@@ -49,7 +49,7 @@ public class MqttBrokerConfig {
         var adapter = new MqttPahoMessageDrivenChannelAdapter(
                 properties.getInboundClientId(),
                 mqttClientFactory,
-                properties.getTopicFilter()
+                properties.getTopicFilters().toArray(String[]::new)
         );
         adapter.setCompletionTimeout(5000);
         adapter.setConverter(new DefaultPahoMessageConverter());

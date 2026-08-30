@@ -4,7 +4,6 @@ import kr.co.webee.annotation.IntegrationTest;
 import kr.co.webee.common.error.ErrorType;
 import kr.co.webee.common.error.exception.BusinessException;
 import kr.co.webee.domain.hive.entity.Hive;
-import kr.co.webee.domain.hive.repository.HiveBeeCountRepository;
 import kr.co.webee.domain.hive.repository.HiveControlRepository;
 import kr.co.webee.domain.hive.repository.HiveControlScheduleRepository;
 import kr.co.webee.domain.hive.repository.HiveGateActionRepository;
@@ -44,9 +43,6 @@ class HiveServiceTest {
     private HiveGateActionRepository hiveGateActionRepository;
 
     @Autowired
-    private HiveBeeCountRepository hiveBeeCountRepository;
-
-    @Autowired
     private HiveControlRepository hiveControlRepository;
 
     @Autowired
@@ -64,7 +60,6 @@ class HiveServiceTest {
     @BeforeEach
     void setUp() {
         hiveGateActionRepository.deleteAllInBatch();
-        hiveBeeCountRepository.deleteAllInBatch();
         hiveControlRepository.deleteAllInBatch();
         hiveControlScheduleRepository.deleteAllInBatch();
         hiveReplacementHistoryRepository.deleteAllInBatch();
@@ -235,7 +230,6 @@ class HiveServiceTest {
         @DisplayName("벌통을 삭제하면 연관된 자식 엔티티도 모두 삭제된다.")
         void deleteHiveWithChildren() {
             //given
-            hiveBeeCountRepository.save(TestFixture.createHiveBeeCount(hive));
             hiveControlRepository.save(TestFixture.createHiveControl(null, hive));
             hiveControlScheduleRepository.save(TestFixture.createHiveControlSchedule(hive));
             hiveReplacementHistoryRepository.save(TestFixture.createHiveReplacementHistory(hive));
@@ -247,7 +241,6 @@ class HiveServiceTest {
 
             //then
             assertThat(hiveRepository.findById(hive.getId())).isEmpty();
-            assertThat(hiveBeeCountRepository.findAll()).isEmpty();
             assertThat(hiveControlRepository.findAll()).isEmpty();
             assertThat(hiveControlScheduleRepository.findAll()).isEmpty();
             assertThat(hiveReplacementHistoryRepository.findAll()).isEmpty();

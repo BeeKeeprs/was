@@ -71,6 +71,10 @@ public enum ErrorType {
     HIVE_REPLACEMENT_HISTORY_INVALID_DATE(BAD_REQUEST, DEBUG, "HIVE_009", "교체 일자는 가장 최근 교체 일자 이후여야 합니다"),
     HIVE_GATE_ACTION_NOT_FOUND(NOT_FOUND, DEBUG, "HIVE_010", "개폐기 동작을 찾을 수 없습니다"),
 
+    // GateErrorType
+    GATE_MAC_ADDRESS_ALREADY_EXISTS(CONFLICT, DEBUG, "GATE_001", "이미 등록된 개폐기 MAC 주소입니다."),
+    GATE_NOT_FOUND(NOT_FOUND, DEBUG, "GATE_002", "개폐기를 찾을 수 없습니다"),
+
     // PostErrorType
     POST_NOT_FOUND(NOT_FOUND, DEBUG, "POST_001", "게시글을 찾을 수 없습니다"),
     POST_ACCESS_DENIED(FORBIDDEN, DEBUG, "POST_002", "해당 게시글에 대한 권한이 없습니다"),

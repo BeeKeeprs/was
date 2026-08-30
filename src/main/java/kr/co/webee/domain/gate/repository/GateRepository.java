@@ -8,6 +8,8 @@ import java.util.Optional;
 
 @Repository
 public interface GateRepository extends JpaRepository<Gate, Long> {
+    boolean existsByMacAddress(String macAddress);
+
     Optional<Gate> findByMacAddress(String macAddress);
 
     Optional<Gate> findByIdAndUserId(Long id, Long userId);

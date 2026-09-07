@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 public enum SseEventType {
     CONNECT("SSE 연결"),
     HIVE_CONTROL_RESULT("벌통 제어 결과"),
+    HIVE_TELEMETRY("벌통 온습도"),
     TEST("테스트용");
 
     private final String value;

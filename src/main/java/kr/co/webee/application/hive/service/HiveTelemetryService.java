@@ -1,6 +1,9 @@
 package kr.co.webee.application.hive.service;
 
 import kr.co.webee.application.hive.dto.request.HiveTelemetryRequest;
+import kr.co.webee.application.hive.dto.response.HiveTelemetrySseResponse;
+import kr.co.webee.application.sse.service.SseEmitterService;
+import kr.co.webee.application.sse.type.SseEventType;
 import kr.co.webee.common.error.ErrorType;
 import kr.co.webee.common.error.exception.BusinessException;
 import kr.co.webee.domain.hive.entity.Hive;
@@ -29,6 +32,7 @@ import java.util.stream.Collectors;
 public class HiveTelemetryService {
     private final HiveRepository hiveRepository;
     private final HiveTelemetryRepository hiveTelemetryRepository;
+    private final SseEmitterService sseEmitterService;
 
     @Transactional
     public void recordTelemetry(HiveTelemetryRequest request, String macAddress) {
@@ -38,6 +42,9 @@ public class HiveTelemetryService {
         HiveTelemetry telemetry = request.toEntity(hive);
 
         hiveTelemetryRepository.save(telemetry);
+
+        sseEmitterService.sendToClient(SseEventType.HIVE_TELEMETRY, hive.getUser().getId(),
+                HiveTelemetrySseResponse.from(telemetry));
     }
 
     @Transactional(readOnly = true)

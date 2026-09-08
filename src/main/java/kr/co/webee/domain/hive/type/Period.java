@@ -12,7 +12,8 @@ import java.time.temporal.TemporalAdjusters;
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public enum Period {
+public enum Period implements SlotStrategy {
+    HOUR("한시간", null),
     DAY("하루", DateTimeFormatter.ofPattern("HH:00")),
     WEEK("일주일", DateTimeFormatter.ofPattern("MM/dd")),
     MONTH("한달", DateTimeFormatter.ofPattern("MM/dd"));
@@ -22,6 +23,7 @@ public enum Period {
 
     public LocalDateTime truncate(LocalDateTime dateTime) {
         return switch (this) {
+            case HOUR -> dateTime.truncatedTo(ChronoUnit.HOURS);
             case DAY -> dateTime.truncatedTo(ChronoUnit.HOURS);
             case WEEK -> dateTime.toLocalDate().atStartOfDay();
             case MONTH -> dateTime.toLocalDate()
@@ -32,6 +34,7 @@ public enum Period {
 
     public LocalDateTime startFrom(LocalDateTime now) {
         return truncate(switch (this) {
+            case HOUR -> now;
             case DAY -> now.minusDays(1);
             case WEEK -> now.minusWeeks(1);
             case MONTH -> now.minusMonths(1);
@@ -40,6 +43,7 @@ public enum Period {
 
     public LocalDateTime next(LocalDateTime dateTime) {
         return switch (this) {
+            case HOUR -> dateTime.plusHours(1);
             case DAY -> dateTime.plusHours(1);
             case WEEK -> dateTime.plusDays(1);
             case MONTH -> dateTime.plusWeeks(1);

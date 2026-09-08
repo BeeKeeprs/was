@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -17,44 +18,40 @@ public class SseEmitterService {
     private final SseEmitterRepository sseEmitterRepository;
 
     public SseEmitter subscribe(Long userId) {
-        SseEmitter sseEmitter = sseEmitterRepository.save(userId, new SseEmitter()); // timeout 시간은 일단 default로 설정
+        SseEmitter sseEmitter = sseEmitterRepository.save(userId, new SseEmitter());
 
-        // sse 연결 끝날 시 삭제 콜백 등록
-        sseEmitter.onCompletion(() ->
-                sseEmitterRepository.deleteById(userId)
-        );
+        sseEmitter.onCompletion(() -> sseEmitterRepository.delete(userId, sseEmitter));
 
-        // sse timeout 발생 시 삭제 콜백 등록
         sseEmitter.onTimeout(() -> {
-                    sseEmitter.complete();
-                    sseEmitterRepository.deleteById(userId);
-                }
-        );
+            sseEmitter.complete();
+            sseEmitterRepository.delete(userId, sseEmitter);
+        });
 
-        // 첫 구독 시 더미 데이터 전송(emitter 생성 후 만료 시간까지 데이터 전송을 하지 않을 경우, 재연결 요청 시 503 에러 발생)
         sendToClient(SseEventType.CONNECT, userId, SSE_CONNECT_DATA);
 
         return sseEmitter;
     }
 
     public void sendToClient(SseEventType eventType, Long userId, Object data) {
-        SseEmitter sseEmitter = sseEmitterRepository.findById(userId);
+        List<SseEmitter> userEmitters = sseEmitterRepository.findAllByUserId(userId);
 
-        if (sseEmitter == null) {
+        if (userEmitters.isEmpty()) {
             log.debug("SSE emitter가 없습니다. userId={}, eventType={}", userId, eventType);
             return;
         }
 
-        try {
-            sseEmitter.send(
-                    SseEmitter.event()
-                            .name(eventType.name())
-                            .data(data)
-            );
-        } catch (IOException ex) {
-            log.debug("SSE 연결 종료. userId={}", userId);
-            sseEmitter.complete();
-            sseEmitterRepository.deleteById(userId);
+        for (SseEmitter sseEmitter : List.copyOf(userEmitters)) {
+            try {
+                sseEmitter.send(
+                        SseEmitter.event()
+                                .name(eventType.name())
+                                .data(data)
+                );
+            } catch (IOException ex) {
+                log.debug("SSE 연결 종료. userId={}", userId);
+                sseEmitter.complete();
+                sseEmitterRepository.delete(userId, sseEmitter);
+            }
         }
     }
 }

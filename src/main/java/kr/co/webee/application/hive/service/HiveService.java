@@ -5,7 +5,6 @@ import kr.co.webee.common.error.exception.BusinessException;
 import kr.co.webee.domain.hive.entity.Hive;
 import kr.co.webee.domain.hive.repository.HiveControlRepository;
 import kr.co.webee.domain.hive.repository.HiveControlScheduleRepository;
-import kr.co.webee.domain.hive.repository.HiveGateActionRepository;
 import kr.co.webee.domain.hive.repository.HiveRepository;
 import kr.co.webee.domain.hive.repository.HiveReplacementHistoryRepository;
 import kr.co.webee.domain.hive.repository.HiveTelemetryRepository;
@@ -30,7 +29,6 @@ public class HiveService {
     private final HiveTelemetryRepository hiveTelemetryRepository;
     private final HiveControlRepository hiveControlRepository;
     private final HiveControlScheduleRepository hiveControlScheduleRepository;
-    private final HiveGateActionRepository hiveGateActionRepository;
     private final HiveReplacementHistoryRepository hiveReplacementHistoryRepository;
 
     @Transactional
@@ -77,7 +75,6 @@ public class HiveService {
         hiveTelemetryRepository.deleteAllByHiveId(hiveId);
         hiveControlRepository.deleteAllByHiveId(hiveId);
         hiveControlScheduleRepository.deleteAllByHiveId(hiveId);
-        hiveGateActionRepository.deleteAllByHiveId(hiveId);
         hiveReplacementHistoryRepository.deleteAllByHiveId(hiveId);
         hiveRepository.delete(hive);
     }

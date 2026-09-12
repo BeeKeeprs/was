@@ -6,7 +6,6 @@ import kr.co.webee.common.error.exception.BusinessException;
 import kr.co.webee.domain.hive.entity.Hive;
 import kr.co.webee.domain.hive.repository.HiveControlRepository;
 import kr.co.webee.domain.hive.repository.HiveControlScheduleRepository;
-import kr.co.webee.domain.hive.repository.HiveGateActionRepository;
 import kr.co.webee.domain.hive.repository.HiveRepository;
 import kr.co.webee.domain.hive.repository.HiveReplacementHistoryRepository;
 import kr.co.webee.domain.hive.repository.HiveTelemetryRepository;
@@ -40,9 +39,6 @@ class HiveServiceTest {
     private UserRepository userRepository;
 
     @Autowired
-    private HiveGateActionRepository hiveGateActionRepository;
-
-    @Autowired
     private HiveControlRepository hiveControlRepository;
 
     @Autowired
@@ -59,7 +55,6 @@ class HiveServiceTest {
 
     @BeforeEach
     void setUp() {
-        hiveGateActionRepository.deleteAllInBatch();
         hiveControlRepository.deleteAllInBatch();
         hiveControlScheduleRepository.deleteAllInBatch();
         hiveReplacementHistoryRepository.deleteAllInBatch();
@@ -234,8 +229,6 @@ class HiveServiceTest {
             hiveControlScheduleRepository.save(TestFixture.createHiveControlSchedule(hive));
             hiveReplacementHistoryRepository.save(TestFixture.createHiveReplacementHistory(hive));
             hiveTelemetryRepository.save(TestFixture.createHiveTelemetry(hive));
-            hiveGateActionRepository.save(TestFixture.createHiveGateAction(null, null, null, hive));
-
             //when
             hiveService.deleteHive(hive.getId(), user.getId());
 
@@ -245,7 +238,6 @@ class HiveServiceTest {
             assertThat(hiveControlScheduleRepository.findAll()).isEmpty();
             assertThat(hiveReplacementHistoryRepository.findAll()).isEmpty();
             assertThat(hiveTelemetryRepository.findAll()).isEmpty();
-            assertThat(hiveGateActionRepository.findAll()).isEmpty();
         }
 
         @Test

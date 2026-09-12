@@ -12,7 +12,8 @@ public enum MqttTopicType {
     CONTROL_RESPONSE("hive", "control/response"),
     GATE_TELEMETRY("gate", "telemetry"),
     GATE_BEE_COUNT("gate", "bee-count"),
-    GATE_TUNNEL_ALERT("gate", "tunnel-alert");
+    GATE_TUNNEL_ALERT("gate", "tunnel-alert"),
+    GATE_COMMAND_RESULT("gate", "result");
 
     private final String prefix;
     private final String suffix;

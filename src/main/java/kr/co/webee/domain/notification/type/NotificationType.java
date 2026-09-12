@@ -26,6 +26,6 @@ public enum NotificationType {
 
     public String buildGateTunnelAlertContent(String gateName, String tunnel, int sensor, int blockedSeconds) {
         String tunnelLabel = "entrance".equals(tunnel) ? "입구" : "출구";
-        return "[%s] %s 동굴 %d번 센서가 %d초 동안 지속 감지됐습니다.".formatted(gateName, tunnelLabel, sensor, blockedSeconds);
+        return "[%s] %s 통로 %d번 센서가 %d초 동안 지속 감지됐습니다.".formatted(gateName, tunnelLabel, sensor, blockedSeconds);
     }
 }

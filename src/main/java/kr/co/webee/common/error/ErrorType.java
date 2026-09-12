@@ -76,6 +76,9 @@ public enum ErrorType {
     GATE_NOT_FOUND(NOT_FOUND, DEBUG, "GATE_002", "개폐기를 찾을 수 없습니다"),
     GATE_TIME_CARD_NOT_FOUND(NOT_FOUND, DEBUG, "GATE_003", "개폐기 시간 제어 카드를 찾을 수 없습니다"),
     GATE_COUNT_CARD_NOT_FOUND(NOT_FOUND, DEBUG, "GATE_004", "개폐기 마릿수 제어 카드를 찾을 수 없습니다"),
+    GATE_OFFLINE(BAD_REQUEST, DEBUG, "GATE_005", "개폐기가 오프라인 상태입니다"),
+    GATE_COMMAND_NOT_FOUND(NOT_FOUND, DEBUG, "GATE_006", "개폐기 명령을 찾을 수 없습니다"),
+    GATE_COMMAND_INVALID_PAYLOAD(BAD_REQUEST, DEBUG, "GATE_007", "카드 종류에 맞지 않는 payload입니다"),
 
     // PostErrorType
     POST_NOT_FOUND(NOT_FOUND, DEBUG, "POST_001", "게시글을 찾을 수 없습니다"),

@@ -2,7 +2,6 @@ package kr.co.webee.application.gate.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
-import kr.co.webee.domain.gate.entity.Gate;
 import kr.co.webee.domain.gate.entity.GateTimeCard;
 import kr.co.webee.domain.gate.type.GateTimeActionType;
 
@@ -24,9 +23,9 @@ public record GateTimeCardRequest(
         @Schema(description = "메모", example = "남쪽 과수원 아침 개방")
         String memo
 ) {
-    public GateTimeCard toEntity(Gate gate) {
+    public GateTimeCard toEntity(Long userId) {
         return GateTimeCard.builder()
-                .gate(gate)
+                .userId(userId)
                 .actionType(actionType)
                 .startHour(startHour)
                 .endHour(endHour)

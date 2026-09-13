@@ -2,12 +2,9 @@ package kr.co.webee.domain.gate.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import kr.co.webee.domain.common.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -33,9 +30,8 @@ public class GateCountCard extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "gate_id", nullable = false)
-    private Gate gate;
+    @Column(nullable = false)
+    private Long userId;
 
     @Column(nullable = false)
     private int repeatDays;
@@ -66,12 +62,12 @@ public class GateCountCard extends BaseTimeEntity {
     private String memo;
 
     @Builder
-    private GateCountCard(Gate gate, int repeatDays, int minCount, int maxCount,
+    private GateCountCard(Long userId, int repeatDays, int minCount, int maxCount,
                           Integer startHour, Integer endHour,
                           boolean withinEntranceOpen, boolean withinExitOpen,
                           boolean aboveEntranceOpen, boolean aboveExitOpen,
                           String memo) {
-        this.gate = Objects.requireNonNull(gate, "gate는 null이 될 수 없습니다.");
+        this.userId = Objects.requireNonNull(userId, "userId는 null이 될 수 없습니다.");
         this.repeatDays = repeatDays;
         this.minCount = minCount;
         this.maxCount = maxCount;

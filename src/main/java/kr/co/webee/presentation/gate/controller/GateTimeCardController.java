@@ -19,48 +19,44 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RequestMapping("/api/v1/gates")
+@RequestMapping("/api/v1/cards")
 @RequiredArgsConstructor
 @RestController
 public class GateTimeCardController {
 
     private final GateTimeCardService gateTimeCardService;
 
-    @PostMapping("/{gateId}/cards/time")
+    @PostMapping("/time")
     @ResponseStatus(HttpStatus.CREATED)
     public GateTimeCardResponse createCard(
-            @PathVariable Long gateId,
             @UserId Long userId,
             @RequestBody @Valid GateTimeCardRequest request
     ) {
-        return gateTimeCardService.createCard(gateId, userId, request);
+        return gateTimeCardService.createCard(userId, request);
     }
 
-    @GetMapping("/{gateId}/cards/time")
+    @GetMapping("/time")
     public List<GateTimeCardResponse> getCards(
-            @PathVariable Long gateId,
             @UserId Long userId
     ) {
-        return gateTimeCardService.getCards(gateId, userId);
+        return gateTimeCardService.getCards(userId);
     }
 
-    @PutMapping("/{gateId}/cards/time/{cardId}")
+    @PutMapping("/time/{cardId}")
     public GateTimeCardResponse updateCard(
-            @PathVariable Long gateId,
             @PathVariable Long cardId,
             @UserId Long userId,
             @RequestBody @Valid GateTimeCardRequest request
     ) {
-        return gateTimeCardService.updateCard(gateId, userId, cardId, request);
+        return gateTimeCardService.updateCard(userId, cardId, request);
     }
 
-    @DeleteMapping("/{gateId}/cards/time/{cardId}")
+    @DeleteMapping("/time/{cardId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCard(
-            @PathVariable Long gateId,
             @PathVariable Long cardId,
             @UserId Long userId
     ) {
-        gateTimeCardService.deleteCard(gateId, userId, cardId);
+        gateTimeCardService.deleteCard(userId, cardId);
     }
 }

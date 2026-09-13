@@ -19,48 +19,44 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RequestMapping("/api/v1/gates")
+@RequestMapping("/api/v1/cards")
 @RequiredArgsConstructor
 @RestController
 public class GateCountCardController {
 
     private final GateCountCardService gateCountCardService;
 
-    @PostMapping("/{gateId}/cards/count")
+    @PostMapping("/count")
     @ResponseStatus(HttpStatus.CREATED)
     public GateCountCardResponse createCard(
-            @PathVariable Long gateId,
             @UserId Long userId,
             @RequestBody @Valid GateCountCardRequest request
     ) {
-        return gateCountCardService.createCard(gateId, userId, request);
+        return gateCountCardService.createCard(userId, request);
     }
 
-    @GetMapping("/{gateId}/cards/count")
+    @GetMapping("/count")
     public List<GateCountCardResponse> getCards(
-            @PathVariable Long gateId,
             @UserId Long userId
     ) {
-        return gateCountCardService.getCards(gateId, userId);
+        return gateCountCardService.getCards(userId);
     }
 
-    @PutMapping("/{gateId}/cards/count/{cardId}")
+    @PutMapping("/count/{cardId}")
     public GateCountCardResponse updateCard(
-            @PathVariable Long gateId,
             @PathVariable Long cardId,
             @UserId Long userId,
             @RequestBody @Valid GateCountCardRequest request
     ) {
-        return gateCountCardService.updateCard(gateId, userId, cardId, request);
+        return gateCountCardService.updateCard(userId, cardId, request);
     }
 
-    @DeleteMapping("/{gateId}/cards/count/{cardId}")
+    @DeleteMapping("/count/{cardId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCard(
-            @PathVariable Long gateId,
             @PathVariable Long cardId,
             @UserId Long userId
     ) {
-        gateCountCardService.deleteCard(gateId, userId, cardId);
+        gateCountCardService.deleteCard(userId, cardId);
     }
 }

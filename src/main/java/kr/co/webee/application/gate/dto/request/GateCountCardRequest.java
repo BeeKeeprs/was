@@ -2,8 +2,6 @@ package kr.co.webee.application.gate.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import kr.co.webee.domain.gate.entity.Gate;
 import kr.co.webee.domain.gate.entity.GateCountCard;
 
 @Schema(description = "개폐기 마릿수 제어 카드 요청")
@@ -40,9 +38,9 @@ public record GateCountCardRequest(
         @Schema(description = "메모", example = "남쪽 과수원")
         String memo
 ) {
-    public GateCountCard toEntity(Gate gate) {
+    public GateCountCard toEntity(Long userId) {
         return GateCountCard.builder()
-                .gate(gate)
+                .userId(userId)
                 .repeatDays(repeatDays)
                 .minCount(minCount)
                 .maxCount(maxCount)

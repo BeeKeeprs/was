@@ -4,12 +4,9 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import kr.co.webee.domain.common.BaseTimeEntity;
 import kr.co.webee.domain.gate.type.GateTimeActionType;
 import lombok.AccessLevel;
@@ -28,9 +25,8 @@ public class GateTimeCard extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "gate_id", nullable = false)
-    private Gate gate;
+    @Column(nullable = false)
+    private Long userId;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -49,9 +45,9 @@ public class GateTimeCard extends BaseTimeEntity {
     private String memo;
 
     @Builder
-    private GateTimeCard(Gate gate, GateTimeActionType actionType, Integer startHour, Integer endHour,
+    private GateTimeCard(Long userId, GateTimeActionType actionType, Integer startHour, Integer endHour,
                          boolean repeatEnabled, String memo) {
-        this.gate = Objects.requireNonNull(gate, "gate는 null이 될 수 없습니다.");
+        this.userId = Objects.requireNonNull(userId, "userId는 null이 될 수 없습니다.");
         this.actionType = Objects.requireNonNull(actionType, "actionType은 null이 될 수 없습니다.");
         this.startHour = startHour;
         this.endHour = endHour;

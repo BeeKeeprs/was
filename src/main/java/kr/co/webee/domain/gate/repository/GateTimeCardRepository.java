@@ -7,6 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface GateTimeCardRepository extends JpaRepository<GateTimeCard, Long> {
-    List<GateTimeCard> findAllByGateId(Long gateId);
-    Optional<GateTimeCard> findByIdAndGateId(Long id, Long gateId);
+    List<GateTimeCard> findAllByUserId(Long userId);
+    Optional<GateTimeCard> findByIdAndUserId(Long id, Long userId);
 }

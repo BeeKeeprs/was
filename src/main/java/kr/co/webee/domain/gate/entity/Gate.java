@@ -49,6 +49,13 @@ public class Gate extends BaseTimeEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    public void updateConnection(boolean isConnected) {
+        this.isConnected = isConnected;
+        if (isConnected) {
+            this.lastConnectedAt = LocalDateTime.now();
+        }
+    }
+
     @Builder
     private Gate(String macAddress, String name, String region, String location, String memo, User user) {
         if (!StringUtils.hasText(macAddress)) {

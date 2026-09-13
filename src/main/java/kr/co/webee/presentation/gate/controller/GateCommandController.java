@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import kr.co.webee.application.gate.dto.request.GateCommandRequest;
 import kr.co.webee.application.gate.dto.response.GateCommandAcceptedResponse;
 import kr.co.webee.application.gate.dto.response.GateCommandStatusResponse;
+import kr.co.webee.application.gate.dto.response.GateCurrentCommandResponse;
 import kr.co.webee.application.gate.service.GateCommandService;
 import kr.co.webee.presentation.support.annotation.UserId;
 import lombok.RequiredArgsConstructor;
@@ -40,5 +41,13 @@ public class GateCommandController {
             @UserId Long userId
     ) {
         return gateCommandService.getCommandStatus(gateId, userId, commandId);
+    }
+
+    @GetMapping("/{gateId}/commands/current")
+    public GateCurrentCommandResponse getCurrentCommand(
+            @PathVariable Long gateId,
+            @UserId Long userId
+    ) {
+        return gateCommandService.getCurrentCommand(gateId, userId);
     }
 }

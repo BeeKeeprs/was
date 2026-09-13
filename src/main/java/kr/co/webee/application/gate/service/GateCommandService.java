@@ -7,6 +7,7 @@ import kr.co.webee.application.gate.dto.GateCommandResultMessage;
 import kr.co.webee.application.gate.dto.request.GateCommandRequest;
 import kr.co.webee.application.gate.dto.response.GateCommandAcceptedResponse;
 import kr.co.webee.application.gate.dto.response.GateCommandStatusResponse;
+import kr.co.webee.application.gate.dto.response.GateCurrentCommandResponse;
 import kr.co.webee.common.error.ErrorType;
 import kr.co.webee.common.error.exception.BusinessException;
 import kr.co.webee.domain.gate.entity.Gate;
@@ -14,7 +15,9 @@ import kr.co.webee.domain.gate.entity.GateCommand;
 import kr.co.webee.domain.gate.repository.GateCommandRepository;
 import kr.co.webee.domain.gate.repository.GateRepository;
 import kr.co.webee.domain.gate.type.GateCardType;
+import kr.co.webee.domain.gate.type.GateCommandOperation;
 import kr.co.webee.domain.gate.type.GateCommandStatus;
+import kr.co.webee.domain.gate.type.GateExecutionStatus;
 import kr.co.webee.infrastructure.mqtt.config.MqttBrokerConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,19 +54,33 @@ public class GateCommandService {
             throw new BusinessException(ErrorType.GATE_OFFLINE);
         }
 
-        validatePayload(request.cardType(), request.payload());
-
+        GateCommandOperation operation = request.resolvedOperation();
         String commandId = UUID.randomUUID().toString();
-        String payloadJson = serializePayload(request.payload());
+        GateCommand command;
 
-        GateCommand command = gateCommandRepository.save(GateCommand.builder()
-                .id(commandId)
-                .gate(gate)
-                .cardType(request.cardType())
-                .payloadJson(payloadJson)
-                .build());
+        if (operation == GateCommandOperation.CANCEL) {
+            validateCancelRequest(request);
+            command = gateCommandRepository.save(GateCommand.builder()
+                    .id(commandId)
+                    .gate(gate)
+                    .operation(GateCommandOperation.CANCEL)
+                    .targetCommandId(request.targetCommandId())
+                    .build());
+        } else {
+            validateExecuteRequest(request);
+            String payloadJson = serializePayload(request.payload());
+            command = gateCommandRepository.save(GateCommand.builder()
+                    .id(commandId)
+                    .gate(gate)
+                    .operation(GateCommandOperation.EXECUTE)
+                    .cardType(request.cardType())
+                    .title(request.title())
+                    .memo(request.memo())
+                    .payloadJson(payloadJson)
+                    .build());
+        }
 
-        publishToMqtt(gate.getMacAddress(), commandId, request);
+        publishToMqtt(gate.getMacAddress(), commandId, operation, request);
 
         return GateCommandAcceptedResponse.from(command);
     }
@@ -79,10 +96,31 @@ public class GateCommandService {
         return GateCommandStatusResponse.from(command);
     }
 
+    @Transactional(readOnly = true)
+    public GateCurrentCommandResponse getCurrentCommand(Long gateId, Long userId) {
+        gateRepository.findByIdAndUserId(gateId, userId)
+                .orElseThrow(() -> new BusinessException(ErrorType.GATE_NOT_FOUND));
+
+        return gateCommandRepository.findByGateIdAndExecutionStatus(gateId, GateExecutionStatus.ACTIVE)
+                .map(command -> GateCurrentCommandResponse.from(command, parsePayload(command.getPayloadJson())))
+                .orElse(null);
+    }
+
     @Transactional
     public void handleResult(GateCommandResultMessage result) {
         gateCommandRepository.findById(result.commandId()).ifPresentOrElse(
-                command -> command.complete(result.status(), result.detail()),
+                command -> {
+                    command.complete(result.status(), result.detail());
+
+                    if ("OK".equals(result.status()) && result.executionCommandId() != null) {
+                        if ("ACTIVE".equals(result.executionStatus())) {
+                            command.activate();
+                        } else if ("CANCELLED".equals(result.executionStatus())) {
+                            gateCommandRepository.findById(result.executionCommandId())
+                                    .ifPresent(GateCommand::cancel);
+                        }
+                    }
+                },
                 () -> log.warn("결과에 해당하는 명령 없음 commandId={}", result.commandId())
         );
     }
@@ -98,6 +136,22 @@ public class GateCommandService {
             command.timeout();
             log.info("개폐기 명령 타임아웃 commandId={}", command.getId());
         });
+    }
+
+    private void validateExecuteRequest(GateCommandRequest request) {
+        if (request.cardType() == null) {
+            throw new BusinessException(ErrorType.FAILED_VALIDATION);
+        }
+        if (request.title() == null || request.title().isBlank()) {
+            throw new BusinessException(ErrorType.FAILED_VALIDATION);
+        }
+        validatePayload(request.cardType(), request.payload());
+    }
+
+    private void validateCancelRequest(GateCommandRequest request) {
+        if (request.targetCommandId() == null || request.targetCommandId().isBlank()) {
+            throw new BusinessException(ErrorType.FAILED_VALIDATION);
+        }
     }
 
     private void validatePayload(GateCardType cardType, JsonNode payload) {
@@ -152,14 +206,31 @@ public class GateCommandService {
         return payload.toString();
     }
 
-    private void publishToMqtt(String macAddress, String commandId, GateCommandRequest request) {
+    private JsonNode parsePayload(String payloadJson) {
+        if (payloadJson == null) return null;
+        try {
+            return objectMapper.readTree(payloadJson);
+        } catch (Exception e) {
+            log.warn("payloadJson 파싱 실패: {}", payloadJson, e);
+            return null;
+        }
+    }
+
+    private void publishToMqtt(String macAddress, String commandId, GateCommandOperation operation,
+                               GateCommandRequest request) {
         try {
             ObjectNode mqttPayload = objectMapper.createObjectNode();
             mqttPayload.put("commandId", commandId);
             mqttPayload.put("gateId", macAddress);
-            mqttPayload.put("cardType", request.cardType().name());
-            if (request.payload() != null && !request.payload().isNull()) {
-                mqttPayload.set("payload", request.payload());
+            mqttPayload.put("operation", operation.name());
+
+            if (operation == GateCommandOperation.CANCEL) {
+                mqttPayload.put("targetCommandId", request.targetCommandId());
+            } else {
+                mqttPayload.put("cardType", request.cardType().name());
+                if (request.payload() != null && !request.payload().isNull()) {
+                    mqttPayload.set("payload", request.payload());
+                }
             }
 
             String topic = "gate/%s/command".formatted(macAddress);

@@ -11,6 +11,12 @@ public record HiveTelemetryRequest(
         Double externalTemperature,
         Double externalHumidity,
         Double co2,
+        String peltierMode,
+        Double peltierDutyPct,
+        Double fanHotDutyPct,
+        Double fanColdDutyPct,
+        String fanState,
+        Double targetTemperature,
         LocalDateTime timestamp
 ) {
     public HiveTelemetry toEntity(Hive hive) {
@@ -20,6 +26,12 @@ public record HiveTelemetryRequest(
                 .externalTemperature(externalTemperature)
                 .externalHumidity(externalHumidity)
                 .co2(co2)
+                .peltierMode(peltierMode)
+                .peltierDutyPct(peltierDutyPct)
+                .fanHotDutyPct(fanHotDutyPct)
+                .fanColdDutyPct(fanColdDutyPct)
+                .fanState(fanState)
+                .targetTemperature(targetTemperature)
                 .recordedAt(timestamp)
                 .hive(hive)
                 .build();

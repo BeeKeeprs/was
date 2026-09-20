@@ -4,6 +4,7 @@ import kr.co.webee.application.hive.dto.request.HiveTelemetryRequest;
 import kr.co.webee.application.hive.dto.response.HiveTelemetrySseResponse;
 import kr.co.webee.application.hive.dto.response.HiveTelemetryResponse;
 import kr.co.webee.application.hive.dto.response.HiveTelemetryResponse.DataPoint;
+import kr.co.webee.application.hive.dto.response.HiveTelemetryResponse.HwIssue;
 import kr.co.webee.application.sse.service.SseEmitterService;
 import kr.co.webee.application.sse.type.SseEventType;
 import kr.co.webee.common.error.ErrorType;
@@ -75,12 +76,29 @@ public class HiveTelemetryService {
         List<HiveTelemetry> telemetries = hiveTelemetryRepository.findByHiveIdAndRecordedAtBetween(hiveId, start, end);
 
         Map<LocalDateTime, List<Double>> grouped = groupBySlot(sensorType, telemetries, strategy);
+        Map<LocalDateTime, List<HwIssue>> issuesGrouped = groupIssuesBySlot(telemetries, strategy);
 
         List<DataPoint> data = generateSlots(start, end, strategy).stream()
-                .map(slot -> DataPoint.of(strategy.formatLabel(slot), calculateAverage(slot, grouped)))
+                .map(slot -> DataPoint.of(
+                        strategy.formatLabel(slot),
+                        calculateAverage(slot, grouped),
+                        issuesGrouped.getOrDefault(slot, List.of())
+                ))
                 .toList();
 
         return HiveTelemetryResponse.of(sensorType, period, data);
+    }
+
+    private Map<LocalDateTime, List<HwIssue>> groupIssuesBySlot(List<HiveTelemetry> telemetries, SlotStrategy strategy) {
+        return telemetries.stream()
+                .filter(t -> t.getHwIssue() != null)
+                .collect(Collectors.groupingBy(
+                        t -> strategy.truncate(t.getRecordedAt()),
+                        Collectors.mapping(
+                                t -> new HwIssue(t.getHwIssue(), t.getHwIssueTimestamp()),
+                                Collectors.toList()
+                        )
+                ));
     }
 
     private Map<LocalDateTime, List<Double>> groupBySlot(SensorType sensorType, List<HiveTelemetry> telemetries,

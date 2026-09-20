@@ -21,6 +21,8 @@ public record HiveTelemetryRequest(
         Boolean externalSensorValid,
         Double peltierCoolCurrentA,
         Double peltierHeatCurrentA,
+        String hwIssue,
+        String hwIssueTimestamp,
         LocalDateTime timestamp
 ) {
     public HiveTelemetry toEntity(Hive hive) {
@@ -40,6 +42,8 @@ public record HiveTelemetryRequest(
                 .externalSensorValid(externalSensorValid)
                 .peltierCoolCurrentA(peltierCoolCurrentA)
                 .peltierHeatCurrentA(peltierHeatCurrentA)
+                .hwIssue(hwIssue)
+                .hwIssueTimestamp(hwIssueTimestamp)
                 .recordedAt(timestamp)
                 .hive(hive)
                 .build();

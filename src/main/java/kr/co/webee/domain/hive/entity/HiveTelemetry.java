@@ -54,8 +54,10 @@ public class HiveTelemetry {
 
     private Boolean externalSensorValid;
 
+    @Column(name = "peltier_cool_current_a")
     private Double peltierCoolCurrentA;
 
+    @Column(name = "peltier_heat_current_a")
     private Double peltierHeatCurrentA;
 
     @Column(nullable = false, updatable = false)

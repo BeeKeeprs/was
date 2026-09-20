@@ -17,6 +17,10 @@ public record HiveTelemetrySseResponse(
         Double fanColdDutyPct,
         String fanState,
         Double targetTemperature,
+        Boolean internalSensorValid,
+        Boolean externalSensorValid,
+        Double peltierCoolCurrentA,
+        Double peltierHeatCurrentA,
         LocalDateTime recordedAt
 ) {
     public static HiveTelemetrySseResponse from(HiveTelemetry telemetry) {
@@ -33,6 +37,10 @@ public record HiveTelemetrySseResponse(
                 telemetry.getFanColdDutyPct(),
                 telemetry.getFanState(),
                 telemetry.getTargetTemperature(),
+                telemetry.getInternalSensorValid(),
+                telemetry.getExternalSensorValid(),
+                telemetry.getPeltierCoolCurrentA(),
+                telemetry.getPeltierHeatCurrentA(),
                 telemetry.getRecordedAt()
         );
     }

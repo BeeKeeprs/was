@@ -21,6 +21,8 @@ public record HiveTelemetrySseResponse(
         Boolean externalSensorValid,
         Double peltierCoolCurrentA,
         Double peltierHeatCurrentA,
+        String hwIssue,
+        String hwIssueTimestamp,
         LocalDateTime recordedAt
 ) {
     public static HiveTelemetrySseResponse from(HiveTelemetry telemetry) {
@@ -41,6 +43,8 @@ public record HiveTelemetrySseResponse(
                 telemetry.getExternalSensorValid(),
                 telemetry.getPeltierCoolCurrentA(),
                 telemetry.getPeltierHeatCurrentA(),
+                telemetry.getHwIssue(),
+                telemetry.getHwIssueTimestamp(),
                 telemetry.getRecordedAt()
         );
     }

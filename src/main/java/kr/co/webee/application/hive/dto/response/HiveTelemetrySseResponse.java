@@ -11,6 +11,12 @@ public record HiveTelemetrySseResponse(
         Double externalTemperature,
         Double externalHumidity,
         Double co2,
+        String peltierMode,
+        Double peltierDutyPct,
+        Double fanHotDutyPct,
+        Double fanColdDutyPct,
+        String fanState,
+        Double targetTemperature,
         LocalDateTime recordedAt
 ) {
     public static HiveTelemetrySseResponse from(HiveTelemetry telemetry) {
@@ -21,6 +27,12 @@ public record HiveTelemetrySseResponse(
                 telemetry.getExternalTemperature(),
                 telemetry.getExternalHumidity(),
                 telemetry.getCo2(),
+                telemetry.getPeltierMode(),
+                telemetry.getPeltierDutyPct(),
+                telemetry.getFanHotDutyPct(),
+                telemetry.getFanColdDutyPct(),
+                telemetry.getFanState(),
+                telemetry.getTargetTemperature(),
                 telemetry.getRecordedAt()
         );
     }

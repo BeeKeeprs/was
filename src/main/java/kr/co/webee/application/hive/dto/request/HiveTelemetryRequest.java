@@ -17,6 +17,10 @@ public record HiveTelemetryRequest(
         Double fanColdDutyPct,
         String fanState,
         Double targetTemperature,
+        Boolean internalSensorValid,
+        Boolean externalSensorValid,
+        Double peltierCoolCurrentA,
+        Double peltierHeatCurrentA,
         LocalDateTime timestamp
 ) {
     public HiveTelemetry toEntity(Hive hive) {
@@ -32,6 +36,10 @@ public record HiveTelemetryRequest(
                 .fanColdDutyPct(fanColdDutyPct)
                 .fanState(fanState)
                 .targetTemperature(targetTemperature)
+                .internalSensorValid(internalSensorValid)
+                .externalSensorValid(externalSensorValid)
+                .peltierCoolCurrentA(peltierCoolCurrentA)
+                .peltierHeatCurrentA(peltierHeatCurrentA)
                 .recordedAt(timestamp)
                 .hive(hive)
                 .build();

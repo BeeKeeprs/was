@@ -50,6 +50,14 @@ public class HiveTelemetry {
 
     private Double targetTemperature;
 
+    private Boolean internalSensorValid;
+
+    private Boolean externalSensorValid;
+
+    private Double peltierCoolCurrentA;
+
+    private Double peltierHeatCurrentA;
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime recordedAt;
 
@@ -58,7 +66,10 @@ public class HiveTelemetry {
                           Double internalHumidity, Double externalHumidity,
                           Double co2, String peltierMode, Double peltierDutyPct,
                           Double fanHotDutyPct, Double fanColdDutyPct,
-                          String fanState, Double targetTemperature, LocalDateTime recordedAt) {
+                          String fanState, Double targetTemperature,
+                          Boolean internalSensorValid, Boolean externalSensorValid,
+                          Double peltierCoolCurrentA, Double peltierHeatCurrentA,
+                          LocalDateTime recordedAt) {
         this.hive = Objects.requireNonNull(hive, "hive는 null이 될 수 없습니다.");
         this.internalTemperature = internalTemperature;
         this.externalTemperature = externalTemperature;
@@ -71,6 +82,10 @@ public class HiveTelemetry {
         this.fanColdDutyPct = fanColdDutyPct;
         this.fanState = fanState;
         this.targetTemperature = targetTemperature;
+        this.internalSensorValid = internalSensorValid;
+        this.externalSensorValid = externalSensorValid;
+        this.peltierCoolCurrentA = peltierCoolCurrentA;
+        this.peltierHeatCurrentA = peltierHeatCurrentA;
         this.recordedAt = Objects.requireNonNull(recordedAt, "recordedAt은 null이 될 수 없습니다.");
     }
 }

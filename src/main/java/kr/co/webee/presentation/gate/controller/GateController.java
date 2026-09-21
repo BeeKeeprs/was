@@ -6,12 +6,18 @@ import kr.co.webee.application.gate.service.GateConnectionService;
 import kr.co.webee.application.gate.service.GateService;
 import kr.co.webee.presentation.gate.api.GateApi;
 import kr.co.webee.presentation.gate.dto.request.GateRegisterRequest;
+import kr.co.webee.presentation.gate.dto.request.GateUpdateRequest;
+import kr.co.webee.presentation.gate.dto.response.GateDetailResponse;
+import kr.co.webee.presentation.gate.dto.response.GateListResponse;
 import kr.co.webee.presentation.gate.dto.response.GateRegisterResponse;
 import kr.co.webee.presentation.support.annotation.UserId;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,11 +35,34 @@ public class GateController implements GateApi {
         return gateService.registerGate(request, userId);
     }
 
+    @Override
+    @GetMapping
+    public GateListResponse getAllGates(@UserId Long userId) {
+        return gateService.getAllGates(userId);
+    }
+
+    @Override
+    @GetMapping("/{gateId}")
+    public GateDetailResponse getGateDetail(@PathVariable Long gateId, @UserId Long userId) {
+        return gateService.getGateDetail(gateId, userId);
+    }
+
+    @Override
+    @PutMapping("/{gateId}")
+    public ResponseEntity<Void> updateGate(@PathVariable Long gateId, @RequestBody @Valid GateUpdateRequest request, @UserId Long userId) {
+        gateService.updateGate(gateId, userId, request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    @DeleteMapping("/{gateId}")
+    public ResponseEntity<Void> deleteGate(@PathVariable Long gateId, @UserId Long userId) {
+        gateService.deleteGate(gateId, userId);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/{gateId}/connection")
-    public GateConnectionResponse getConnection(
-            @PathVariable Long gateId,
-            @UserId Long userId
-    ) {
+    public GateConnectionResponse getConnection(@PathVariable Long gateId, @UserId Long userId) {
         return gateConnectionService.getConnection(gateId, userId);
     }
 }

@@ -56,6 +56,13 @@ public class Gate extends BaseTimeEntity {
         }
     }
 
+    public void update(String name, String region, String location, String memo) {
+        if (StringUtils.hasText(name)) this.name = name;
+        this.region = region;
+        this.location = location;
+        this.memo = memo;
+    }
+
     @Builder
     private Gate(String macAddress, String name, String region, String location, String memo, User user) {
         if (!StringUtils.hasText(macAddress)) {

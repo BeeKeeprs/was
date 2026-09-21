@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface GateBeeCountRepository extends JpaRepository<GateBeeCount, Long> {
     List<GateBeeCount> findByGateIdAndRecordedAtBetween(Long gateId, LocalDateTime start, LocalDateTime end);
+
+    void deleteAllByGateId(Long gateId);
 }

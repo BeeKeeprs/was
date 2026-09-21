@@ -13,4 +13,5 @@ public interface GateCommandRepository extends JpaRepository<GateCommand, String
     Optional<GateCommand> findByIdAndGateId(String id, Long gateId);
     List<GateCommand> findAllByStatusAndCreatedAtBefore(GateCommandStatus status, LocalDateTime before);
     Optional<GateCommand> findByGateIdAndExecutionStatus(Long gateId, GateExecutionStatus executionStatus);
+    void deleteAllByGateId(Long gateId);
 }

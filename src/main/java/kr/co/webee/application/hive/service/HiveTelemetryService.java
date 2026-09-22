@@ -15,7 +15,6 @@ import kr.co.webee.domain.hive.repository.HiveRepository;
 import kr.co.webee.domain.hive.repository.HiveTelemetryRepository;
 import kr.co.webee.domain.hive.type.Interval;
 import kr.co.webee.domain.hive.type.Period;
-import kr.co.webee.domain.hive.type.SensorType;
 import kr.co.webee.domain.hive.type.SlotStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -51,7 +51,7 @@ public class HiveTelemetryService {
     }
 
     @Transactional(readOnly = true)
-    public HiveTelemetryResponse getTelemetry(Long hiveId, Long userId, Period period, SensorType sensorType,
+    public HiveTelemetryResponse getTelemetry(Long hiveId, Long userId, Period period,
                                                LocalDateTime from, Interval interval) {
         hiveRepository.findByIdAndUserId(hiveId, userId)
                 .orElseThrow(() -> new BusinessException(ErrorType.HIVE_NOT_FOUND));
@@ -75,59 +75,64 @@ public class HiveTelemetryService {
 
         List<HiveTelemetry> telemetries = hiveTelemetryRepository.findByHiveIdAndRecordedAtBetween(hiveId, start, end);
 
-        Map<LocalDateTime, List<Double>> grouped = groupBySlot(sensorType, telemetries, strategy);
-        Map<LocalDateTime, List<HwIssue>> issuesGrouped = groupIssuesBySlot(telemetries, strategy);
+        Map<LocalDateTime, List<HiveTelemetry>> grouped = telemetries.stream()
+                .collect(Collectors.groupingBy(t -> strategy.truncate(t.getRecordedAt())));
 
         List<DataPoint> data = generateSlots(start, end, strategy).stream()
-                .map(slot -> DataPoint.of(
-                        strategy.formatLabel(slot),
-                        calculateAverage(slot, grouped),
-                        issuesGrouped.getOrDefault(slot, List.of())
-                ))
+                .map(slot -> aggregateSlot(strategy.formatLabel(slot), grouped.getOrDefault(slot, List.of())))
                 .toList();
 
-        return HiveTelemetryResponse.of(sensorType, period, data);
+        return HiveTelemetryResponse.of(period, data);
     }
 
-    private Map<LocalDateTime, List<HwIssue>> groupIssuesBySlot(List<HiveTelemetry> telemetries, SlotStrategy strategy) {
-        return telemetries.stream()
+    private DataPoint aggregateSlot(String label, List<HiveTelemetry> slotData) {
+        if (slotData.isEmpty()) {
+            return DataPoint.builder().label(label).issues(List.of()).build();
+        }
+
+        HiveTelemetry last = slotData.get(slotData.size() - 1);
+
+        List<HwIssue> issues = slotData.stream()
                 .filter(t -> t.getHwIssue() != null)
-                .collect(Collectors.groupingBy(
-                        t -> strategy.truncate(t.getRecordedAt()),
-                        Collectors.mapping(
-                                t -> new HwIssue(t.getHwIssue(), t.getHwIssueTimestamp()),
-                                Collectors.toList()
-                        )
-                ));
+                .map(t -> new HwIssue(t.getHwIssue(), t.getHwIssueTimestamp()))
+                .toList();
+
+        return DataPoint.builder()
+                .label(label)
+                .internalTemperature(average(slotData, HiveTelemetry::getInternalTemperature))
+                .externalTemperature(average(slotData, HiveTelemetry::getExternalTemperature))
+                .internalHumidity(average(slotData, HiveTelemetry::getInternalHumidity))
+                .externalHumidity(average(slotData, HiveTelemetry::getExternalHumidity))
+                .co2(average(slotData, HiveTelemetry::getCo2))
+                .peltierMode(last.getPeltierMode())
+                .peltierDutyPct(average(slotData, HiveTelemetry::getPeltierDutyPct))
+                .fanHotDutyPct(average(slotData, HiveTelemetry::getFanHotDutyPct))
+                .fanColdDutyPct(average(slotData, HiveTelemetry::getFanColdDutyPct))
+                .fanState(last.getFanState())
+                .targetTemperature(average(slotData, HiveTelemetry::getTargetTemperature))
+                .internalSensorValid(last.getInternalSensorValid())
+                .externalSensorValid(last.getExternalSensorValid())
+                .peltierCoolCurrentA(average(slotData, HiveTelemetry::getPeltierCoolCurrentA))
+                .peltierHeatCurrentA(average(slotData, HiveTelemetry::getPeltierHeatCurrentA))
+                .issues(issues)
+                .build();
     }
 
-    private Map<LocalDateTime, List<Double>> groupBySlot(SensorType sensorType, List<HiveTelemetry> telemetries,
-                                                          SlotStrategy strategy) {
-        return telemetries.stream()
-                .collect(Collectors.groupingBy(
-                        t -> strategy.truncate(t.getRecordedAt()),
-                        Collectors.mapping(sensorType::extract, Collectors.toList())
-                ));
+    private Double average(List<HiveTelemetry> slotData, Function<HiveTelemetry, Double> extractor) {
+        List<Double> values = slotData.stream()
+                .map(extractor)
+                .filter(Objects::nonNull)
+                .toList();
+        return values.isEmpty() ? null : values.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
     }
 
     private List<LocalDateTime> generateSlots(LocalDateTime start, LocalDateTime end, SlotStrategy strategy) {
         List<LocalDateTime> slots = new ArrayList<>();
-
         LocalDateTime current = strategy.truncate(start);
-
         while (!current.isAfter(end)) {
             slots.add(current);
             current = strategy.next(current);
         }
         return slots;
-    }
-
-    private Double calculateAverage(LocalDateTime slot, Map<LocalDateTime, List<Double>> grouped) {
-        List<Double> values = grouped.getOrDefault(slot, List.of()).stream()
-                .filter(Objects::nonNull)
-                .toList();
-
-        return values.isEmpty() ? null
-                : values.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
     }
 }

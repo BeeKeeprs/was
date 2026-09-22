@@ -3,7 +3,6 @@ package kr.co.webee.presentation.hive.controller;
 import kr.co.webee.application.hive.service.HiveTelemetryService;
 import kr.co.webee.domain.hive.type.Interval;
 import kr.co.webee.domain.hive.type.Period;
-import kr.co.webee.domain.hive.type.SensorType;
 import kr.co.webee.presentation.hive.api.HiveTelemetryApi;
 import kr.co.webee.application.hive.dto.response.HiveTelemetryResponse;
 import kr.co.webee.presentation.support.annotation.UserId;
@@ -29,10 +28,9 @@ public class HiveTelemetryController implements HiveTelemetryApi {
             @PathVariable Long hiveId,
             @UserId Long userId,
             @RequestParam Period period,
-            @RequestParam SensorType sensorType,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
             @RequestParam(required = false) Interval interval
     ) {
-        return hiveTelemetryService.getTelemetry(hiveId, userId, period, sensorType, from, interval);
+        return hiveTelemetryService.getTelemetry(hiveId, userId, period, from, interval);
     }
 }

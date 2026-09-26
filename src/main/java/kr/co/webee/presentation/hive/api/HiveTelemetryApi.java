@@ -52,7 +52,7 @@ public interface HiveTelemetryApi {
             @Parameter(description = "조회 시작 시각 (period=HOUR 시 필수, ISO-8601)", example = "2026-09-08T10:00:00")
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
 
-            @Parameter(description = "집계 간격 (period=HOUR 시 필수, ONE_MIN/FIVE_MIN/TEN_MIN)", example = "FIVE_MIN")
+            @Parameter(description = "집계 간격 (period=HOUR 시 필수, TEN_SEC/ONE_MIN/FIVE_MIN/TEN_MIN)", example = "FIVE_MIN")
             @RequestParam(required = false) Interval interval
     );
 }

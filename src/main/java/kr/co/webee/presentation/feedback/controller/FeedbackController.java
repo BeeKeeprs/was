@@ -3,8 +3,7 @@ package kr.co.webee.presentation.feedback.controller;
 import jakarta.validation.Valid;
 import kr.co.webee.application.feedback.service.FeedbackService;
 import kr.co.webee.presentation.feedback.api.FeedbackApi;
-import kr.co.webee.presentation.feedback.dto.FeedbackSubmitRequest;
-import kr.co.webee.presentation.support.annotation.UserId;
+import kr.co.webee.presentation.feedback.dto.request.FeedbackSubmitRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,8 +18,8 @@ public class FeedbackController implements FeedbackApi {
 
     @Override
     @PostMapping
-    public String submitFeedback(@RequestBody @Valid FeedbackSubmitRequest request, @UserId Long userId) {
-        feedbackService.submitFeedback(request, userId);
+    public String submitFeedback(@RequestBody @Valid FeedbackSubmitRequest request) {
+        feedbackService.submitFeedback(request);
         return "OK";
     }
 }

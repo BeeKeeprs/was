@@ -1,23 +1,31 @@
 package kr.co.webee.application.feedback.service;
 
-import jakarta.persistence.EntityNotFoundException;
-import kr.co.webee.domain.user.entity.User;
-import kr.co.webee.domain.user.repository.UserRepository;
 import kr.co.webee.infrastructure.mail.MailService;
-import kr.co.webee.presentation.feedback.dto.FeedbackSubmitRequest;
+import kr.co.webee.presentation.feedback.dto.request.FeedbackSubmitRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class FeedbackService {
     private final MailService mailService;
-    private final UserRepository userRepository;
 
-    public void submitFeedback(FeedbackSubmitRequest request, Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+    public void submitFeedback(FeedbackSubmitRequest request) {
+        String content = """
+                이름: %s
+                전화번호: %s
+                이메일: %s
+                소속: %s
+                관심 제품: %s
 
-        mailService.sendEmail(request.content(), user.getName(), request.email());
+                문의 내용:
+                %s
+                """.formatted(request.name(), getDisplayValue(request.phone()), getDisplayValue(request.email()),
+                getDisplayValue(request.organization()), request.interestProduct().getValue(), request.message());
+        mailService.sendEmail("webee 사용자 피드백", content);
+    }
+
+    private String getDisplayValue(String value) {
+        return value == null || value.isBlank() ? "미입력" : value;
     }
 }

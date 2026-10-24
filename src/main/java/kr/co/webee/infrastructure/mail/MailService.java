@@ -14,20 +14,19 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class MailService {
-    private static final String title = "webee 사용자 피드백";
     @Value("${spring.mail.username}")
     private String email;
 
     private final JavaMailSender mailSender;
 
-    public void sendEmail(String content, String name, String userEmail) {
+    public void sendEmail(String subject, String content) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
             helper.setTo(email);
-            helper.setSubject(title);
-            helper.setText("<h3>" + name + "님이 주신 문의입니다.</h3><p>이메일: " + userEmail + "</p><p>" + content + "</p>", true);
+            helper.setSubject(subject);
+            helper.setText(content, false);
 
             mailSender.send(message);
         } catch (Exception e) {

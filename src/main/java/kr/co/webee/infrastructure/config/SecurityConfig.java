@@ -38,6 +38,7 @@ public class SecurityConfig {
             "/api/v1/auth/preorder/phone",
             "/api/v1/auth/phone/**",
             "/api/v1/oauth/sign-in/**",
+            "/api/v1/suggestions",
             "/actuator/**"
     };
 

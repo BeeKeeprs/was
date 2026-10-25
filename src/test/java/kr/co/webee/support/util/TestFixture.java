@@ -1,5 +1,6 @@
 package kr.co.webee.support.util;
 
+import kr.co.webee.domain.inquiry.type.InterestProduct;
 import kr.co.webee.domain.hive.entity.Hive;
 import kr.co.webee.domain.hive.entity.HiveControl;
 import kr.co.webee.domain.hive.entity.HiveControlSchedule;
@@ -11,6 +12,8 @@ import kr.co.webee.domain.news.entity.NewsArticleKeyword;
 import kr.co.webee.domain.post.entity.Post;
 import kr.co.webee.domain.post.type.PostCategory;
 import kr.co.webee.domain.user.entity.User;
+import kr.co.webee.presentation.inquiry.dto.request.InquirySubmitRequest;
+import kr.co.webee.presentation.feedback.dto.FeedbackSubmitRequest;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -90,5 +93,25 @@ public class TestFixture {
                 .newsArticle(article)
                 .keyword(keyword != null ? keyword : "꿀벌")
                 .build();
+    }
+    public static InquirySubmitRequest createInquirySubmitRequest() {
+        return createInquirySubmitRequest("홍길동", "010-1234-5678", "user@example.com", "위비",
+                InterestProduct.SMART_HIVE, "도입 문의");
+    }
+
+    public static InquirySubmitRequest createInquirySubmitRequest(String name, String phone, String email,
+                                                                   String organization, InterestProduct interestProduct,
+                                                                   String message) {
+        return InquirySubmitRequest.builder()
+                .name(name)
+                .phone(phone)
+                .email(email)
+                .organization(organization)
+                .interestProduct(interestProduct)
+                .message(message)
+                .build();
+    }
+    public static FeedbackSubmitRequest createFeedbackSubmitRequest() {
+        return new FeedbackSubmitRequest("user@example.com", "서비스 개선 문의");
     }
 }

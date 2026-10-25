@@ -21,13 +21,22 @@ public class MailService {
     private final JavaMailSender mailSender;
 
     public void sendEmail(String content, String name, String userEmail) {
+        String body = "<h3>" + name + "님이 주신 문의입니다.</h3><p>이메일: " + userEmail + "</p><p>" + content + "</p>";
+        sendMail(title, body, true);
+    }
+
+    public void sendEmail(String subject, String content) {
+        sendMail(subject, content, false);
+    }
+
+    private void sendMail(String subject, String content, boolean html) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
             helper.setTo(email);
-            helper.setSubject(title);
-            helper.setText("<h3>" + name + "님이 주신 문의입니다.</h3><p>이메일: " + userEmail + "</p><p>" + content + "</p>", true);
+            helper.setSubject(subject);
+            helper.setText(content, html);
 
             mailSender.send(message);
         } catch (Exception e) {

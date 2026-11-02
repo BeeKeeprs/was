@@ -3,6 +3,7 @@ package kr.co.webee.presentation.gate.dto.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import kr.co.webee.domain.gate.entity.Gate;
+import kr.co.webee.domain.hive.entity.Hive;
 import kr.co.webee.domain.user.entity.User;
 import lombok.Builder;
 
@@ -24,9 +25,12 @@ public record GateRegisterRequest(
         String macAddress,
 
         @Schema(description = "메모", example = "점검 필요")
-        String memo
+        String memo,
+
+        @Schema(description = "연결할 벌통 ID (선택)", example = "1", nullable = true)
+        Long hiveId
 ) {
-    public Gate toEntity(User user) {
+    public Gate toEntity(User user, Hive hive) {
         return Gate.builder()
                 .name(name)
                 .region(region)
@@ -34,6 +38,7 @@ public record GateRegisterRequest(
                 .macAddress(macAddress)
                 .memo(memo)
                 .user(user)
+                .hive(hive)
                 .build();
     }
 }

@@ -18,6 +18,9 @@ public record GateUpdateRequest(
         String location,
 
         @Schema(description = "메모", example = "점검 완료")
-        String memo
+        String memo,
+
+        @Schema(description = "연결할 벌통 ID (선택, 없으면 연결 해제)", example = "1", nullable = true)
+        Long hiveId
 ) {
 }

@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import kr.co.webee.domain.common.BaseTimeEntity;
+import kr.co.webee.domain.hive.entity.Hive;
 import kr.co.webee.domain.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -49,6 +50,10 @@ public class Gate extends BaseTimeEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "hive_id")
+    private Hive hive;
+
     public void updateConnection(boolean isConnected) {
         this.isConnected = isConnected;
         if (isConnected) {
@@ -56,15 +61,16 @@ public class Gate extends BaseTimeEntity {
         }
     }
 
-    public void update(String name, String region, String location, String memo) {
+    public void update(String name, String region, String location, String memo, Hive hive) {
         if (StringUtils.hasText(name)) this.name = name;
         this.region = region;
         this.location = location;
         this.memo = memo;
+        this.hive = hive;
     }
 
     @Builder
-    private Gate(String macAddress, String name, String region, String location, String memo, User user) {
+    private Gate(String macAddress, String name, String region, String location, String memo, User user, Hive hive) {
         if (!StringUtils.hasText(macAddress)) {
             throw new IllegalArgumentException("macAddress는 null이거나 빈 문자열이 될 수 없습니다.");
         }
@@ -78,5 +84,6 @@ public class Gate extends BaseTimeEntity {
         this.memo = memo;
         this.isConnected = false;
         this.user = Objects.requireNonNull(user, "user는 null이 될 수 없습니다.");
+        this.hive = hive;
     }
 }

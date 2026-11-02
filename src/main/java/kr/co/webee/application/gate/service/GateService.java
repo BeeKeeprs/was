@@ -7,6 +7,8 @@ import kr.co.webee.domain.gate.repository.GateBeeCountRepository;
 import kr.co.webee.domain.gate.repository.GateCommandRepository;
 import kr.co.webee.domain.gate.repository.GateRepository;
 import kr.co.webee.domain.gate.repository.GateTelemetryRepository;
+import kr.co.webee.domain.hive.entity.Hive;
+import kr.co.webee.domain.hive.repository.HiveRepository;
 import kr.co.webee.domain.user.entity.User;
 import kr.co.webee.domain.user.repository.UserRepository;
 import kr.co.webee.presentation.gate.dto.request.GateRegisterRequest;
@@ -25,6 +27,7 @@ import java.util.List;
 public class GateService {
     private final GateRepository gateRepository;
     private final UserRepository userRepository;
+    private final HiveRepository hiveRepository;
     private final GateTelemetryRepository gateTelemetryRepository;
     private final GateBeeCountRepository gateBeeCountRepository;
     private final GateCommandRepository gateCommandRepository;
@@ -38,14 +41,16 @@ public class GateService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BusinessException(ErrorType.USER_NOT_FOUND));
 
-        Gate gate = gateRepository.save(request.toEntity(user));
+        Hive hive = findHive(request.hiveId(), userId);
+
+        Gate gate = gateRepository.save(request.toEntity(user, hive));
 
         return GateRegisterResponse.of(gate.getId());
     }
 
     @Transactional(readOnly = true)
     public GateListResponse getAllGates(Long userId) {
-        List<Gate> gates = gateRepository.findAllByUserId(userId);
+        List<Gate> gates = gateRepository.findAllByUserIdWithHive(userId);
         return GateListResponse.from(gates);
     }
 
@@ -53,6 +58,7 @@ public class GateService {
     public GateDetailResponse getGateDetail(Long gateId, Long userId) {
         Gate gate = gateRepository.findByIdAndUserId(gateId, userId)
                 .orElseThrow(() -> new BusinessException(ErrorType.GATE_NOT_FOUND));
+
         return GateDetailResponse.from(gate);
     }
 
@@ -60,7 +66,10 @@ public class GateService {
     public void updateGate(Long gateId, Long userId, GateUpdateRequest request) {
         Gate gate = gateRepository.findByIdAndUserId(gateId, userId)
                 .orElseThrow(() -> new BusinessException(ErrorType.GATE_NOT_FOUND));
-        gate.update(request.name(), request.region(), request.location(), request.memo());
+
+        Hive hive = findHive(request.hiveId(), userId);
+
+        gate.update(request.name(), request.region(), request.location(), request.memo(), hive);
     }
 
     @Transactional
@@ -72,5 +81,14 @@ public class GateService {
         gateBeeCountRepository.deleteAllByGateId(gateId);
         gateCommandRepository.deleteAllByGateId(gateId);
         gateRepository.delete(gate);
+    }
+
+    private Hive findHive(Long hiveId, Long userId) {
+        if (hiveId == null) {
+            return null;
+        }
+
+        return hiveRepository.findByIdAndUserId(hiveId, userId)
+                .orElseThrow(() -> new BusinessException(ErrorType.HIVE_NOT_FOUND));
     }
 }

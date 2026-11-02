@@ -28,7 +28,7 @@ public interface GateApi {
     @ApiResponses(@ApiResponse(responseCode = "200", description = "등록 성공",
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                     schema = @Schema(implementation = GateRegisterResponse.class))))
-    @ApiDocsErrorType(ErrorType.GATE_MAC_ADDRESS_ALREADY_EXISTS)
+    @ApiDocsErrorType({ErrorType.GATE_MAC_ADDRESS_ALREADY_EXISTS, ErrorType.HIVE_NOT_FOUND})
     GateRegisterResponse registerGate(
             @Parameter(description = "개폐기 등록 요청 JSON", required = true,
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
@@ -53,9 +53,9 @@ public interface GateApi {
             @Parameter(hidden = true) @UserId Long userId
     );
 
-    @Operation(summary = "개폐기 수정", description = "개폐기 정보를 수정합니다.")
+    @Operation(summary = "개폐기 수정", description = "개폐기 정보를 수정합니다. hiveId를 보내면 해당 벌통과 연결하고, 보내지 않으면(null) 연결을 해제합니다.")
     @ApiResponses(@ApiResponse(responseCode = "204", description = "수정 성공"))
-    @ApiDocsErrorType(ErrorType.GATE_NOT_FOUND)
+    @ApiDocsErrorType({ErrorType.GATE_NOT_FOUND, ErrorType.HIVE_NOT_FOUND})
     ResponseEntity<Void> updateGate(
             @Parameter(description = "개폐기 ID") @PathVariable Long gateId,
             @RequestBody @Valid GateUpdateRequest request,

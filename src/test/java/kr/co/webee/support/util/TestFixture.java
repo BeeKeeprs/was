@@ -1,6 +1,7 @@
 package kr.co.webee.support.util;
 
 import kr.co.webee.domain.inquiry.type.InterestProduct;
+import kr.co.webee.domain.gate.entity.Gate;
 import kr.co.webee.domain.hive.entity.Hive;
 import kr.co.webee.domain.hive.entity.HiveControl;
 import kr.co.webee.domain.hive.entity.HiveControlSchedule;
@@ -37,6 +38,17 @@ public class TestFixture {
                 .region("서울")
                 .location("강남구")
                 .user(user)
+                .build();
+    }
+
+    public static Gate createGate(String macAddress, User user, Hive hive) {
+        return Gate.builder()
+                .macAddress(macAddress != null ? macAddress : "11:22:33:44:55:66")
+                .name("테스트 개폐기")
+                .region("서울")
+                .location("남쪽 출입구")
+                .user(user)
+                .hive(hive)
                 .build();
     }
 

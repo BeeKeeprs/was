@@ -49,6 +49,9 @@ public record GateListResponse(
             @Schema(description = "메모", example = "점검 필요", nullable = true)
             String memo,
 
+            @Schema(description = "연결된 벌통 (없으면 null)", nullable = true)
+            GateHiveResponse hive,
+
             @Schema(description = "연결 상태")
             boolean isConnected,
 
@@ -63,6 +66,7 @@ public record GateListResponse(
                     .location(gate.getLocation())
                     .macAddress(gate.getMacAddress())
                     .memo(gate.getMemo())
+                    .hive(GateHiveResponse.from(gate.getHive()))
                     .isConnected(gate.isConnected())
                     .createdAt(gate.getCreatedAt())
                     .build();

@@ -2,6 +2,8 @@ package kr.co.webee.domain.gate.repository;
 
 import kr.co.webee.domain.gate.entity.Gate;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,5 +17,11 @@ public interface GateRepository extends JpaRepository<Gate, Long> {
 
     Optional<Gate> findByIdAndUserId(Long id, Long userId);
 
-    List<Gate> findAllByUserId(Long userId);
+    @Query("""
+            select g
+            from Gate g
+            left join fetch g.hive
+            where g.user.id = :userId
+            """)
+    List<Gate> findAllByUserIdWithHive(@Param("userId") Long userId);
 }
